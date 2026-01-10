@@ -12,4 +12,3 @@ from .services.document_service import DocumentService
 from .services.retrieval_service import RetrievalService
 
 __all__ = ["ChatService", "DocumentService", "RetrievalService"]
-
