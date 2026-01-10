@@ -1,4 +1,5 @@
 {
+  "/add-patient/page": "app/add-patient/page.js",
   "/biomechanics/page": "app/biomechanics/page.js",
   "/dashboard/page": "app/dashboard/page.js",
   "/exercises/page": "app/exercises/page.js",

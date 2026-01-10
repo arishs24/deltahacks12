@@ -143,7 +143,7 @@ export default function DashboardPage() {
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-medium text-clinical-grey-600">View Simulations</p>
+                        <p className="text-sm font-medium text-clinical-grey-600">Simulation Status</p>
                         <div className="mt-2 flex items-center gap-2">
                           {getStatusIcon(selectedPatient.simulationStatus)}
                           <span className="text-sm font-medium text-clinical-grey-900">
@@ -192,9 +192,18 @@ export default function DashboardPage() {
                     <div className="flex items-center gap-3">
                       <Calendar className="h-5 w-5 text-clinical-grey-400" />
                       <div>
-                        <p className="text-sm text-clinical-grey-600">Age / Gender</p>
+                        <p className="text-sm text-clinical-grey-600">Age</p>
                         <p className="font-medium text-clinical-grey-900">
-                          {selectedPatient.age} years, {selectedPatient.gender}
+                          {selectedPatient.age} years
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <User className="h-5 w-5 text-clinical-grey-400" />
+                      <div>
+                        <p className="text-sm text-clinical-grey-600">Gender</p>
+                        <p className="font-medium text-clinical-grey-900">
+                          {selectedPatient.gender}
                         </p>
                       </div>
                     </div>
