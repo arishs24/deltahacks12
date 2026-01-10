@@ -1,83 +1,137 @@
-# Knee Injury Clinical Decision Support Tool
+# Moorcheh Chat Boilerplate
 
-A production-ready frontend application for knee injury diagnostics and rehabilitation planning, built with React, TypeScript, and Tailwind CSS.
+A Next.js boilerplate for building AI-powered chat applications with customizable themes, fonts, and branding.
 
-## Features
+## Quick Start
 
-- **Dashboard**: Patient selection and clinical summary with simulation status
-- **Knee Model Viewer**: Interactive 3D visualization placeholder with gait scenario toggles
-- **Biomechanics Data Panel**: Detailed charts for ligament stress, strain, and tissue stiffness
-- **Exercise Recommendations**: AI-assisted rehabilitation exercises with safety indicators
-- **Settings**: Application information and disclaimers
-
-## Tech Stack
-
-- **React 18** with TypeScript
-- **Vite** for fast development and building
-- **Tailwind CSS** for styling
-- **React Router** for navigation
-- **Lucide React** for icons
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+ and npm/yarn/pnpm
-
-### Installation
-
-1. Install dependencies:
+1. **Install dependencies:**
 ```bash
 npm install
 ```
 
-2. Start the development server:
+2. **Get your API key:**
+   - Visit [Moorcheh Console API Keys](https://console.moorcheh.ai/api-keys)
+   - Copy your API key
+
+3. **Create text namespace and upload documents:**
+   - Visit [Moorcheh Console Namespaces](https://console.moorcheh.ai/namespaces)
+   - Create a new text namespace
+   - Upload your documents to the namespace
+
+4. **Set up environment variable:**
+   - Create `.env.local` in your project root (or use your existing env setup)
+   - Add your API key:
+```bash
+NEXT_PUBLIC_MOORCHEH_API_KEY=your_api_key_here
+```
+
+5. **Configure API request body:**
+   - Visit [Moorcheh Console Playground](https://console.moorcheh.ai/playground)
+   - Configure your namespace, model, and settings
+   - Export the complete JSON configuration
+   - Create `config/api-config.json` and paste the configuration
+   - See `config/README.md` for detailed instructions
+
+6. **Start development server:**
 ```bash
 npm run dev
 ```
 
-3. Open your browser to the URL shown in the terminal (typically `http://localhost:5173`)
+Open [http://localhost:3000](http://localhost:3000) to see your chat application.
 
-### Build for Production
+**Complete setup:** Visit [http://localhost:3000/landing](http://localhost:3000/landing) to configure your chat application through our 4-step interactive setup:
+1. **API Key Setup** - Connect to Moorcheh AI services
+2. **Branding** - Configure app name, company, and contact info
+3. **Theme Selection** - Choose from 10+ beautiful themes
+4. **Typography & Complete** - Configure fonts and finish setup
 
-```bash
-npm run build
-```
+**Test your customizations:** Visit [http://localhost:3000/demo](http://localhost:3000/demo) to test themes and fonts.
 
-The built files will be in the `dist` directory.
+**Build your app:** Use `components/ui` for additional UI components throughout your application.
 
-### Preview Production Build
+## Features
 
-```bash
-npm run preview
-```
+- **Next.js 15** with React 19 and TypeScript
+- **Pre-built chat components** ready to use
+- **Moorcheh AI integration** with easy configuration
+- **10+ Customizable themes** with Tailwind CSS
+- **30+ fonts** with Next.js optimization
+- **Tailwind CSS** and Radix UI components
+- **Complete branding system** via appearance.json configuration
+- **Interactive setup flow** with live preview and automatic configuration saving
+
+## Configuration Guides
+
+- **API Setup**: `config/README.md` - Configure your AI API
+- **Branding**: `BRANDING_GUIDE.md` - Customize app name, logo, colors
+- **Themes & Fonts**: `customize/README.md` - Change appearance
 
 ## Project Structure
 
 ```
-src/
-├── components/
-│   ├── layout/          # Layout components (Sidebar, Header, Layout)
-│   └── ui/              # Reusable UI components (Card, Badge, ToggleGroup, etc.)
-├── pages/               # Page components (Dashboard, Viewer, etc.)
-├── data/                # Mock data
-├── types/               # TypeScript type definitions
-├── App.tsx              # Main app component with routing
-├── main.tsx             # Entry point
-└── index.css            # Global styles
+your-project/
+├── app/                    # Next.js pages
+├── components/             # React components
+│   ├── chat/              # Chat components
+│   └── ui/                # UI components
+├── config/                 # API configuration
+├── customize/              # Themes and fonts
+├── hooks/                  # React hooks
+├── lib/                    # Utilities
+└── public/                 # Static files
 ```
 
-## Design Guidelines
+## Customization
 
-- **Color Palette**: Clinical blues and greys for a medical-grade appearance
-- **Typography**: Clean, readable fonts with appropriate contrast
-- **Accessibility**: WCAG-compliant color contrasts and semantic HTML
-- **Responsive**: Mobile-first responsive design
+### Change Theme
+```typescript
+// customize/themes/theme-config.ts
+export const themeConfig = {
+  defaultTheme: 'dark', // 'light', 'dark', 'blue', 'green'
+};
+```
 
-## Disclaimer
+### Change Fonts  
+```typescript
+// customize/fonts/font-config.ts
+export const fontConfig = {
+  primaryFont: 'Inter',
+  monoFont: 'Fira Code',
+};
+```
 
-This is a research tool and not a medical device. All recommendations should be interpreted within the context of comprehensive clinical evaluation.
+### Change Chat Mode
+```typescript
+// lib/chat-config.ts
+export const chatConfig = {
+  type: 'interface', // 'interface' or 'widget'
+};
+```
 
-## License
+### Change Branding
+```json
+// config/appearance.json
+{
+  "branding": {
+    "appName": "My Chat App",
+    "appTitle": "My Chat",
+    "appSubtitle": "Your AI assistant",
+    "companyName": "My Company",
+    "contactEmail": "support@mycompany.com"
+  }
+}
+```
 
-Proprietary - Internal use only
+## Deployment
+
+Deploy to Vercel with one click:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
+
+Or follow the [Next.js deployment guide](https://nextjs.org/docs/app/building-your-application/deploying).
+
+## Support
+
+- [Chat Boilerplate Documentation](https://docs.moorcheh.ai/integrations/chat-boilerplate/overview) - Complete guide and API reference
+- [Moorcheh Console](https://console.moorcheh.ai) - API configuration
+- [Next.js Documentation](https://nextjs.org/docs) - Framework guide

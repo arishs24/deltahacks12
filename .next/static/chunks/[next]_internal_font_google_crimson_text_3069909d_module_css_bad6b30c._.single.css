@@ -1,0 +1,101 @@
+/* [next]/internal/font/google/crimson_text_3069909d.module.css [app-client] (css) */
+@font-face {
+  font-family: Crimson Text;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../media/fbbaab576802ce13-s.5fd6b288.woff2") format("woff2");
+  unicode-range: U+102-103, U+110-111, U+128-129, U+168-169, U+1A0-1A1, U+1AF-1B0, U+300-301, U+303-304, U+308-309, U+323, U+329, U+1EA0-1EF9, U+20AB;
+}
+
+@font-face {
+  font-family: Crimson Text;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../media/2974af112c3c407f-s.cb8aeb53.woff2") format("woff2");
+  unicode-range: U+100-2BA, U+2BD-2C5, U+2C7-2CC, U+2CE-2D7, U+2DD-2FF, U+304, U+308, U+329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: Crimson Text;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../media/385c0eceff071084-s.p.6649861c.woff2") format("woff2");
+  unicode-range: U+??, U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+304, U+308, U+329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: Crimson Text;
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../media/0b7add2c0053031d-s.c876204d.woff2") format("woff2");
+  unicode-range: U+102-103, U+110-111, U+128-129, U+168-169, U+1A0-1A1, U+1AF-1B0, U+300-301, U+303-304, U+308-309, U+323, U+329, U+1EA0-1EF9, U+20AB;
+}
+
+@font-face {
+  font-family: Crimson Text;
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../media/81f99a1396e562be-s.719667dd.woff2") format("woff2");
+  unicode-range: U+100-2BA, U+2BD-2C5, U+2C7-2CC, U+2CE-2D7, U+2DD-2FF, U+304, U+308, U+329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: Crimson Text;
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../media/466e772c7ca57446-s.p.bd0aa820.woff2") format("woff2");
+  unicode-range: U+??, U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+304, U+308, U+329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: Crimson Text;
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../media/150c9981d4a73e67-s.faccdf65.woff2") format("woff2");
+  unicode-range: U+102-103, U+110-111, U+128-129, U+168-169, U+1A0-1A1, U+1AF-1B0, U+300-301, U+303-304, U+308-309, U+323, U+329, U+1EA0-1EF9, U+20AB;
+}
+
+@font-face {
+  font-family: Crimson Text;
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../media/fdeb920f9c9b2114-s.07d62299.woff2") format("woff2");
+  unicode-range: U+100-2BA, U+2BD-2C5, U+2C7-2CC, U+2CE-2D7, U+2DD-2FF, U+304, U+308, U+329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: Crimson Text;
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../media/96517858ba4c7305-s.p.dd70e23b.woff2") format("woff2");
+  unicode-range: U+??, U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+304, U+308, U+329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: Crimson Text Fallback;
+  src: local(Times New Roman);
+  ascent-override: 97.5%;
+  descent-override: 36.01%;
+  line-gap-override: 0.0%;
+  size-adjust: 97.36%;
+}
+
+.crimson_text_3069909d-module__wq1qZW__className {
+  font-family: Crimson Text, Crimson Text Fallback;
+  font-style: normal;
+}
+
+.crimson_text_3069909d-module__wq1qZW__variable {
+  --font-crimson-text: "Crimson Text", "Crimson Text Fallback";
+}
+
+/*# sourceMappingURL=%5Bnext%5D_internal_font_google_crimson_text_3069909d_module_css_bad6b30c._.single.css.map*/
