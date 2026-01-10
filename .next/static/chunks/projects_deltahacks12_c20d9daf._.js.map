@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///Users/mihirpullakhandam/Documents/projects/deltahacks12/app/page.tsx"],"sourcesContent":["'use client';\r\n\r\nimport { useRouter } from 'next/navigation';\r\nimport { useEffect } from 'react';\r\n\r\nexport default function Home() {\r\n  const router = useRouter();\r\n  \r\n  useEffect(() => {\r\n    router.push('/dashboard');\r\n  }, [router]);\r\n\r\n  return null;\r\n}\r\n"],"names":[],"mappings":";;;;AAEA;AACA;;AAHA;;;AAKe,SAAS;;IACtB,MAAM,SAAS,IAAA,8KAAS;IAExB,IAAA,sMAAS;0BAAC;YACR,OAAO,IAAI,CAAC;QACd;yBAAG;QAAC;KAAO;IAEX,OAAO;AACT;GARwB;;QACP,8KAAS;;;KADF","debugId":null}},
+    {"offset": {"line": 40, "column": 0}, "map": {"version":3,"sources":["file:///Users/mihirpullakhandam/Documents/projects/deltahacks12/node_modules/next/navigation.js"],"sourcesContent":["module.exports = require('./dist/client/components/navigation')\n"],"names":[],"mappings":"AAAA,OAAO,OAAO","ignoreList":[0],"debugId":null}}]
+}
