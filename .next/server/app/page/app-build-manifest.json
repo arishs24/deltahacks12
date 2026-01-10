@@ -1,27 +1,27 @@
 {
   "pages": {
     "/page": [
-      "static/chunks/18271_next_dist_07c6d71c._.js",
-      "static/chunks/projects_deltahacks12_app_favicon_ico_mjs_88c13407._.js",
-      "static/chunks/[root-of-the-server]__21313baf._.css",
-      "static/chunks/projects_deltahacks12_4bb2ce1f._.js",
-      "static/chunks/projects_deltahacks12_app_layout_tsx_41ba8571._.js",
-      "static/chunks/18271_next_dist_client_components_builtin_global-error_189c4060.js",
-      "static/chunks/projects_deltahacks12_2776d1a9._.js",
-      "static/chunks/18271_tailwind-merge_dist_bundle-mjs_mjs_91009fc3._.js",
-      "static/chunks/18271_next_8e7f7870._.js",
-      "static/chunks/18271_micromark-core-commonmark_dev_lib_a2500757._.js",
-      "static/chunks/18271_9c2b1455._.js",
-      "static/chunks/projects_deltahacks12_app_page_tsx_189c4060._.js",
-      "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_36bb4e05._.js",
-      "static/chunks/18271_next_dist_compiled_react-dom_3b52febd._.js",
-      "static/chunks/18271_next_dist_compiled_next-devtools_index_358e4300.js",
-      "static/chunks/18271_next_dist_compiled_d7022695._.js",
-      "static/chunks/18271_next_dist_client_df3ac852._.js",
-      "static/chunks/18271_next_dist_6e4d221d._.js",
-      "static/chunks/18271_@swc_helpers_cjs_754a50c7._.js",
-      "static/chunks/projects_deltahacks12_a0ff3932._.js",
-      "static/chunks/turbopack-projects_deltahacks12_7bb15ea3._.js"
+      "static/chunks/node_modules_next_dist_8db7fb1f._.js",
+      "static/chunks/app_favicon_ico_mjs_e98bdb63._.js",
+      "static/chunks/[root-of-the-server]__acb5add6._.css",
+      "static/chunks/_8daff229._.js",
+      "static/chunks/app_layout_tsx_0a548d63._.js",
+      "static/chunks/node_modules_next_dist_client_components_builtin_global-error_141486d4.js",
+      "static/chunks/_4121cc6c._.js",
+      "static/chunks/node_modules_tailwind-merge_dist_bundle-mjs_mjs_56b6fd65._.js",
+      "static/chunks/node_modules_next_83473b4b._.js",
+      "static/chunks/node_modules_micromark-core-commonmark_dev_lib_fc41dd51._.js",
+      "static/chunks/node_modules_63256813._.js",
+      "static/chunks/app_page_tsx_141486d4._.js",
+      "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_57d40746._.js",
+      "static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js",
+      "static/chunks/node_modules_next_dist_compiled_next-devtools_index_a9cb0712.js",
+      "static/chunks/node_modules_next_dist_compiled_5150ccfd._.js",
+      "static/chunks/node_modules_next_dist_client_cf1d9188._.js",
+      "static/chunks/node_modules_next_dist_b0daae9a._.js",
+      "static/chunks/node_modules_@swc_helpers_cjs_b3dc30d6._.js",
+      "static/chunks/_a0ff3932._.js",
+      "static/chunks/turbopack-_cdba956c._.js"
     ]
   }
 }
