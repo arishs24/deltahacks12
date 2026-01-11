@@ -1,0 +1,65 @@
+# Synovia Move: Patient-Specific Knee Digital Twin
+# Core dependencies for MRI processing, segmentation, meshing, and FEA
+
+# ============================================================================
+# CORE SCIENTIFIC COMPUTING
+# ============================================================================
+numpy>=1.21.0
+scipy>=1.7.0
+
+# ============================================================================
+# MEDICAL IMAGE PROCESSING
+# ============================================================================
+nibabel>=3.2.0          # NIfTI file I/O
+pydicom>=2.2.0           # DICOM file I/O
+scikit-image>=0.18.0     # Image processing (marching cubes, morphology)
+
+# ============================================================================
+# DEEP LEARNING / SEGMENTATION
+# ============================================================================
+torch>=1.10.0            # PyTorch (for nnU-Net or MONAI)
+# Optional: Install MONAI for segmentation
+# pip install monai
+# Optional: Install nnU-Net
+# pip install nnunet
+
+# ============================================================================
+# MESHING AND 3D PROCESSING
+# ============================================================================
+pyvista>=0.32.0          # 3D visualization and mesh processing
+vtk>=9.0.0               # VTK (dependency of PyVista)
+
+# Optional: Gmsh for advanced meshing
+# pip install gmsh
+# Or download from: https://gmsh.info/
+
+# Optional: TetGen (via PyVista or standalone)
+# PyVista includes basic TetGen functionality
+
+# ============================================================================
+# FINITE ELEMENT ANALYSIS
+# ============================================================================
+# FEBio: Download and install from https://febio.org/
+# Add FEBio to PATH or specify path in fea_solver.py
+
+# FEniCS for real FEA solver (REQUIRED for real FEA)
+# Install with: conda install -c conda-forge fenics
+# Or follow instructions at: https://fenicsproject.org/download/
+monai>=1.0.0          # MONAI for real segmentation (REQUIRED)
+
+# ============================================================================
+# VISUALIZATION
+# ============================================================================
+matplotlib>=3.4.0        # 2D plotting (trends, comparisons)
+
+# ============================================================================
+# UTILITIES
+# ============================================================================
+pathlib2>=2.3.6; python_version < '3.4'  # Path handling (Python < 3.4)
+
+# ============================================================================
+# DEVELOPMENT / TESTING (Optional)
+# ============================================================================
+# pytest>=6.2.0          # Testing framework
+# black>=21.0.0          # Code formatting
+# flake8>=3.9.0          # Linting
