@@ -3,25 +3,25 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
-  LayoutDashboard, 
   Eye, 
   Settings,
   Stethoscope,
-  UserPlus
+  UserPlus,
+  Calendar
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useView } from '@/contexts/ViewContext';
 
 const clinicianNavigation = [
-  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Add Patient', href: '/add-patient', icon: UserPlus },
   { name: 'Model Viewer', href: '/viewer', icon: Eye },
+  { name: 'Recovery Planner', href: '/planner', icon: Calendar },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
 const patientNavigation = [
-  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Model Viewer', href: '/viewer', icon: Eye },
+  { name: 'Recovery Planner', href: '/planner', icon: Calendar },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
@@ -34,7 +34,7 @@ export default function Sidebar() {
     <div className="flex h-screen w-64 flex-col bg-clinical-grey-900 text-white flex-shrink-0">
       <div className="flex h-16 items-center border-b border-clinical-grey-800 px-6">
         <Stethoscope className="h-6 w-6 text-clinical-blue-400 mr-2" />
-        <span className="text-lg font-semibold">Knee CDS</span>
+        <span className="text-lg font-semibold">PatellaScope</span>
       </div>
       <nav className="flex-1 space-y-1 px-3 py-4">
         {navigation.map((item) => {
@@ -59,10 +59,10 @@ export default function Sidebar() {
       </nav>
       <div className="border-t border-clinical-grey-800 p-4">
         <p className="text-xs text-clinical-grey-400">
-          Clinical Decision Support Tool
+          Advanced Knee Biomechanics Platform
         </p>
         <p className="text-xs text-clinical-grey-500 mt-1">
-          Version 1.0.0
+          PatellaScope v1.0.0
         </p>
       </div>
     </div>

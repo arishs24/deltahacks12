@@ -26,6 +26,12 @@ import { ExerciseList } from '@/components/exercises/ExerciseList';
 import { ModelEvaluationCard } from '@/components/dashboard/ModelEvaluationCard';
 import { ClinicalInterpretationCard } from '@/components/dashboard/ClinicalInterpretationCard';
 import { RecommendedExercisesCard } from '@/components/dashboard/RecommendedExercisesCard';
+import { FEASimulationResults } from '@/components/viewer/FEASimulationResults';
+import { SurgerySimulation } from '@/components/viewer/SurgerySimulation';
+import { runFEASimulation, TearType, FEASimulationResult } from '@/lib/fea-simulation';
+import { SurgeryResult } from '@/lib/surgery-simulation';
+import { Button } from '@/components/ui/button';
+import { Play, Loader2 } from 'lucide-react';
 
 type SafetyFilter = 'all' | 'safe' | 'caution';
 type LoadFilter = 'all' | 'Low' | 'Moderate' | 'High';
@@ -77,6 +83,15 @@ export default function ViewerPage() {
     useState<ExerciseRecommendationResponse | null>(null);
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [evaluationError, setEvaluationError] = useState<string | null>(null);
+
+  // FEA Simulation state
+  const [detectedTearType, setDetectedTearType] = useState<TearType>(null);
+  const [feaResults, setFeaResults] = useState<FEASimulationResult | null>(null);
+  const [isRunningSimulation, setIsRunningSimulation] = useState(false);
+  const [simulationError, setSimulationError] = useState<string | null>(null);
+  
+  // Surgery Simulation state
+  const [surgeryResult, setSurgeryResult] = useState<SurgeryResult | null>(null);
 
   // Get selected patient - use John Smith in Patient view, otherwise use selected patient from MongoDB data
   const selectedPatient = useMemo(() => {
@@ -143,7 +158,53 @@ export default function ViewerPage() {
   useEffect(() => {
     setEvaluationResults(null);
     setEvaluationError(null);
+    setFeaResults(null);
+    setDetectedTearType(null);
   }, [selectedPatient?.id]);
+
+  // Handle tear type detection from STLViewer
+  const handleTearTypeDetected = (tearType: TearType) => {
+    setDetectedTearType(tearType);
+    setFeaResults(null); // Clear previous results
+    setSimulationError(null);
+    
+    // Save tear type for recovery planner
+    if (selectedPatient?.id && tearType) {
+      localStorage.setItem(`tear_type_${selectedPatient.id}`, tearType);
+    }
+  };
+
+  // Handle FEA simulation
+  const handleRunSimulation = async () => {
+    if (!detectedTearType || !selectedPatient) {
+      setSimulationError('Please upload an MRI file first to detect the tear type');
+      return;
+    }
+
+    setIsRunningSimulation(true);
+    setSimulationError(null);
+
+    try {
+      const results = await runFEASimulation(
+        detectedTearType,
+        selectedPatient.weight,
+        selectedPatient.height
+      );
+      setFeaResults(results);
+      
+      // Save initial FEA results for recovery tracking
+      if (selectedPatient?.id) {
+        localStorage.setItem(`fea_initial_${selectedPatient.id}`, JSON.stringify(results));
+      }
+    } catch (error) {
+      console.error('FEA simulation error:', error);
+      setSimulationError(
+        error instanceof Error ? error.message : 'Failed to run simulation'
+      );
+    } finally {
+      setIsRunningSimulation(false);
+    }
+  };
 
   const handleEvaluateModel = async () => {
     if (!selectedPatient) return;
@@ -265,10 +326,56 @@ export default function ViewerPage() {
           <div className="lg:col-span-3">
             <Card>
               <CardContent className="p-6 h-[600px]">
-                <STLViewer stlPath="/examples/Knee_Anatomy.stl" />
+                <STLViewer 
+                  stlPath="/examples/Knee_Anatomy.stl" 
+                  onTearTypeDetected={handleTearTypeDetected}
+                />
               </CardContent>
             </Card>
           </div>
+
+          {/* Run Simulation Button - Only show after MRI is processed */}
+          {detectedTearType && (
+            <div className="lg:col-span-4">
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-lg font-semibold mb-1">
+                        FEA Simulation Ready
+                      </h3>
+                      <p className="text-sm text-clinical-grey-600">
+                        Detected: {detectedTearType === 'mcl_grade3' ? 'Grade 3 MCL Tear' : 'ACL Tear'}
+                      </p>
+                    </div>
+                    <Button
+                      onClick={handleRunSimulation}
+                      disabled={isRunningSimulation}
+                      className="bg-clinical-blue-600 hover:bg-clinical-blue-700 text-white"
+                      size="lg"
+                    >
+                      {isRunningSimulation ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Running Simulation...
+                        </>
+                      ) : (
+                        <>
+                          <Play className="h-4 w-4 mr-2" />
+                          Run FEA Simulation
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                  {simulationError && (
+                    <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                      <p className="text-sm text-red-800">{simulationError}</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          )}
 
           {/* Evaluate Model Button */}
           <ModelEvaluationCard
@@ -293,6 +400,36 @@ export default function ViewerPage() {
             />
           )}
         </div>
+
+        {/* FEA Simulation Results */}
+        {feaResults && (
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold text-clinical-grey-900">FEA Simulation Results</h2>
+              <p className="mt-1 text-clinical-grey-600">
+                Finite Element Analysis showing stress, tension, and critical findings
+              </p>
+            </div>
+            <FEASimulationResults results={feaResults} />
+          </div>
+        )}
+
+        {/* Surgery Simulation - Full Width Section */}
+        {feaResults && detectedTearType && (
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-3xl font-bold text-clinical-grey-900">Surgical Planning & Simulation</h2>
+              <p className="mt-2 text-lg text-clinical-grey-600">
+                Plan surgical procedures, simulate outcomes, and mark incisions on the 3D model
+              </p>
+            </div>
+            <SurgerySimulation 
+              tearType={detectedTearType}
+              onSurgeryComplete={(result) => setSurgeryResult(result)}
+            />
+          </div>
+        )}
+
 
         {/* Biomechanics Data Panel Section */}
         <div className="space-y-6">
