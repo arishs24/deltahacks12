@@ -56,6 +56,10 @@ class ExerciseRecommendationResponse(BaseModel):
         default=None,
         description="The RAG interpretation from Moorcheh knowledge base that was used to generate the recommendations. This shows what information was retrieved from the knowledge base.",
     )
+    gemini_feedback: Optional[str] = Field(
+        default=None,
+        description="Feedback from Gemini LLM about any struggles, limitations, or concerns when generating the response. This includes warnings if general knowledge was used instead of RAG data, or if the RAG interpretation was insufficient. Null if no issues were encountered.",
+    )
 
     class Config:
         json_schema_extra = {
@@ -64,5 +68,6 @@ class ExerciseRecommendationResponse(BaseModel):
                 "exercises": [{"name": "Hamstring Stretch"}, {"name": "Quad Strengthening"}],
                 "data_sufficient": True,
                 "rag_interpretation": "Based on the biomechanical measurements, the stress values indicate...",
+                "gemini_feedback": None,
             }
         }

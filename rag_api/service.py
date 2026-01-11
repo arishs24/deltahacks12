@@ -152,13 +152,15 @@ Stress/Load Measurements:
 RAG Interpretation from Knowledge Base:
 {rag_interpretation}
 {data_quality_note}
-CRITICAL INSTRUCTIONS:
+CRITICAL INSTRUCTIONS - STRICT ADHERENCE TO RAG DATA:
 - You MUST base your response ONLY on the RAG interpretation provided above
-- If the RAG interpretation indicates insufficient data, missing information, or errors, you MUST reflect this in your response
-- DO NOT invent, estimate, or make up biomechanical values if they are not in the RAG interpretation
-- DO NOT use general knowledge to fill in missing data - only use what is explicitly provided in the RAG interpretation
-- If specific healthy force values are not available in the RAG data, set healthy_forces to an empty object {{}} or only include values that were explicitly mentioned
-- If data is insufficient, provide only GENERAL exercise recommendations that are safe and standard for the patient profile, NOT specific to the measurements
+- DO NOT invent, estimate, or make up ANY information that is not explicitly in the RAG interpretation
+- DO NOT use general knowledge, medical training, or any external information to fill gaps
+- DO NOT create exercises if the RAG interpretation does not explicitly mention or suggest exercises
+- If the RAG interpretation does not mention exercises, set exercises to an EMPTY ARRAY []
+- If the RAG interpretation does not provide specific healthy force values, set healthy_forces to an EMPTY OBJECT {{}}
+- Hallucination (making up information) is considered VERY BAD and must be avoided at all costs
+- If you find yourself wanting to add information not in the RAG interpretation, DO NOT add it - instead, note it in the "gemini_feedback" field
 
 Please provide your response as a JSON object with the following EXACT structure:
 {{
@@ -167,15 +169,29 @@ Please provide your response as a JSON object with the following EXACT structure
         // Dictionary with structure names as keys and numbers as values
         // Examples: "acl": 150.5, "menisci": 200.3, "patellar_tendon": 180.0
         // If data_sufficient is FALSE, use empty object {{}}
-        // Only include structures explicitly mentioned in RAG interpretation
+        // ONLY include structures and values EXPLICITLY mentioned in RAG interpretation
+        // DO NOT invent or estimate values - if not in RAG, use empty object {{}}
     }},
     "exercises": [
         // Array of exercise objects, each with EXACTLY one field: "name"
         // Example: {{"name": "Hamstring Stretch"}}
         // CRITICAL: Use "name" NOT "exercise_name", NOT "exercise", NOT "title"
+        // CRITICAL: ONLY include exercises that are EXPLICITLY mentioned or suggested in the RAG interpretation
+        // If the RAG interpretation does NOT mention exercises, use EMPTY ARRAY []
+        // DO NOT invent exercises based on general knowledge - if RAG doesn't suggest them, don't include them
         // If data_sufficient is FALSE, use empty array []
-        // If data_sufficient is TRUE, provide 5-10 exercises tailored to the measurements
-    ]
+    ],
+    "gemini_feedback": <string or null>
+    // Report any struggles, concerns, or limitations you encountered:
+    // - If you had to resist using general knowledge, mention it here
+    // - If the RAG interpretation was unclear or contradictory, mention it
+    // - If you wanted to add information not in RAG but didn't, note what was missing
+    // - If you successfully used only RAG data with no issues, set to null
+    // Examples:
+    //   null (if no issues)
+    //   "RAG interpretation did not mention specific exercises, so exercises array is empty as required"
+    //   "RAG interpretation lacked specific healthy force values for some structures mentioned in measurements"
+    //   "Had to resist adding general knowledge about knee biomechanics not present in RAG interpretation"
 }}
 
 CRITICAL FIELD REQUIREMENTS:
@@ -183,6 +199,13 @@ CRITICAL FIELD REQUIREMENTS:
 - Do NOT use "exercise_name", "exercise", "title", or any other field name
 - The field must be: "name": "Exercise Name Here"
 - All other fields in exercise objects will be ignored
+- gemini_feedback: Be honest about any struggles or limitations - this helps identify when RAG data is insufficient
+
+ANTI-HALLUCINATION RULES:
+1. If RAG interpretation does NOT mention exercises → exercises = []
+2. If RAG interpretation does NOT provide healthy force values → healthy_forces = {{}}
+3. If you find yourself wanting to add information → DON'T add it, note it in gemini_feedback instead
+4. When in doubt, leave it empty and explain in gemini_feedback
 
 Return ONLY valid JSON, no additional text before or after."""
 
@@ -317,11 +340,19 @@ Return ONLY valid JSON, no additional text before or after."""
                     else:
                         print(f"Warning: Invalid exercise format: {ex}")
 
+            # Extract gemini_feedback
+            gemini_feedback = data.get("gemini_feedback")
+            if gemini_feedback and isinstance(gemini_feedback, str) and gemini_feedback.strip():
+                gemini_feedback = gemini_feedback.strip()
+            else:
+                gemini_feedback = None
+
             return ExerciseRecommendationResponse(
                 healthy_forces=healthy_forces,
                 exercises=exercises,
                 data_sufficient=data_sufficient,
                 rag_interpretation=rag_interpretation,
+                gemini_feedback=gemini_feedback,
             )
 
         except json.JSONDecodeError as e:

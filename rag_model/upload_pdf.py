@@ -62,11 +62,7 @@ def embed_text_with_gemini(client, text: str, model_name: str = "text-embedding-
     """Generate embedding for text using Google Gemini with retry logic."""
     for attempt in range(max_retries):
         try:
-            result = client.models.embed_content(
-                model=model_name,
-                contents=text,
-                config=types.EmbedContentConfig(task_type="RETRIEVAL_DOCUMENT")
-            )
+            result = client.models.embed_content(model=model_name, contents=text, config=types.EmbedContentConfig(task_type="RETRIEVAL_DOCUMENT"))
             return result.embeddings[0].values
         except Exception as e:
             error_str = str(e).lower()
@@ -162,12 +158,17 @@ def upload_to_vector_namespace(pdf_path: str, namespace: str):
     vectors = []
     failed_count = 0
 
+    # Sanitize filename for use in vector IDs (replace spaces with underscores)
+    import re
+
+    sanitized_stem = re.sub(r"[^a-zA-Z0-9_.-]", "_", Path(pdf_path).stem)
+
     for i, chunk in enumerate(chunks, 1):
         print(f"  Processing chunk {i}/{len(chunks)}...", end="\r")
         embedding = embed_text_with_gemini(client, chunk)
         if embedding:
             vectors.append(
-                {"id": f"{Path(pdf_path).stem}_chunk_{i}", "vector": embedding, "metadata": {"source": Path(pdf_path).name, "chunk_index": i, "text": chunk[:200]}}  # Store first 200 chars as preview
+                {"id": f"{sanitized_stem}_chunk_{i}", "vector": embedding, "metadata": {"source": Path(pdf_path).name, "chunk_index": i, "text": chunk[:200]}}  # Store first 200 chars as preview
             )
         else:
             failed_count += 1

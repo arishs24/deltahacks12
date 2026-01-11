@@ -74,8 +74,16 @@ class DocumentService:
         text = self.extract_text_from_pdf(pdf_path)
         filename = Path(pdf_path).name
 
+        # Sanitize filename for use as document ID (Moorcheh doesn't allow spaces)
+        # Replace spaces and other problematic characters with underscores
+        document_id = filename.replace(" ", "_").replace("-", "_")
+        # Remove any other potentially invalid characters, keep alphanumeric, underscores, dots
+        import re
+
+        document_id = re.sub(r"[^a-zA-Z0-9_.-]", "_", document_id)
+
         # Create document for Moorcheh
-        documents = [{"id": filename, "text": text}]  # Use filename as ID
+        documents = [{"id": document_id, "text": text}]
 
         # Upload to Moorcheh using SDK (TEXT namespace only)
         result = self.client.upload_documents(namespace=namespace, documents=documents)
