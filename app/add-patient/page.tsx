@@ -124,25 +124,29 @@ export default function AddPatientPage() {
 
   return (
     <ClinicalLayout>
-      <div className="space-y-6">
-        <div>
+      {/* Layout: Centered form with max-width for readability, consistent vertical spacing */}
+      <div className="space-y-8 max-w-4xl mx-auto">
+        {/* Header Section */}
+        <div className="space-y-2">
           <h1 className="text-3xl font-bold text-clinical-grey-900">Add Patient</h1>
-          <p className="mt-2 text-clinical-grey-600">
+          <p className="text-clinical-grey-600">
             Enter patient information to create a new clinical record
           </p>
         </div>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Section 1: Patient Information - Clear visual separation with Card */}
           <Card>
-            <CardHeader>
+            <CardHeader className="pb-4">
               <CardTitle>Patient Information</CardTitle>
               <CardDescription>
                 Enter basic demographic and physical information for the patient
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
+              {/* Form Fields: Standardized spacing with grid layout for responsive alignment */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Name */}
+                {/* Name Field: Standardized spacing (space-y-2) for label-input pairs */}
                 <div className="space-y-2">
                   <Label htmlFor="name">
                     Name <span className="text-red-500">*</span>
@@ -157,7 +161,7 @@ export default function AddPatientPage() {
                   />
                 </div>
 
-                {/* Age */}
+                {/* Age Field */}
                 <div className="space-y-2">
                   <Label htmlFor="age">
                     Age <span className="text-red-500">*</span>
@@ -174,7 +178,7 @@ export default function AddPatientPage() {
                   />
                 </div>
 
-                {/* Gender */}
+                {/* Gender Field */}
                 <div className="space-y-2">
                   <Label htmlFor="gender">
                     Gender <span className="text-red-500">*</span>
@@ -191,7 +195,7 @@ export default function AddPatientPage() {
                   </Select>
                 </div>
 
-                {/* Height */}
+                {/* Height Field */}
                 <div className="space-y-2">
                   <Label htmlFor="height">
                     Height (cm) <span className="text-red-500">*</span>
@@ -208,7 +212,7 @@ export default function AddPatientPage() {
                   />
                 </div>
 
-                {/* Weight */}
+                {/* Weight Field */}
                 <div className="space-y-2">
                   <Label htmlFor="weight">
                     Weight (kg) <span className="text-red-500">*</span>
@@ -228,15 +232,16 @@ export default function AddPatientPage() {
             </CardContent>
           </Card>
 
+          {/* Section 2: Injury Details - Separate section for better visual grouping */}
           <Card>
-            <CardHeader>
-              <CardTitle>Clinical Information</CardTitle>
+            <CardHeader className="pb-4">
+              <CardTitle>Injury Details</CardTitle>
               <CardDescription>
-                Enter injury details and rehabilitation stage
+                Enter injury type and rehabilitation stage information
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Injury Type */}
+              {/* Injury Type Field */}
               <div className="space-y-2">
                 <Label htmlFor="injuryType">
                   Injury Type <span className="text-red-500">*</span>
@@ -251,7 +256,7 @@ export default function AddPatientPage() {
                 />
               </div>
 
-              {/* Rehab Stage */}
+              {/* Rehab Stage Field */}
               <div className="space-y-2">
                 <Label htmlFor="rehabStage">
                   Rehab Stage <span className="text-red-500">*</span>
@@ -272,66 +277,77 @@ export default function AddPatientPage() {
                   </SelectContent>
                 </Select>
               </div>
-
-              {/* Affected Structures */}
-              <div className="space-y-3">
-                <Label>
-                  Affected Structures <span className="text-red-500">*</span>
-                </Label>
-                <div className="p-4 border border-clinical-grey-200 rounded-lg bg-clinical-grey-50 space-y-4">
-                  {STRUCTURE_GROUPS.map((group) => (
-                    <div key={group.type} className="space-y-2">
-                      <h4 className="text-sm font-semibold text-clinical-grey-900 border-b border-clinical-grey-200 pb-1">
-                        {group.type}
-                      </h4>
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 pl-2">
-                        {group.structures.map((structure) => (
-                          <div key={structure} className="flex items-center space-x-2">
-                            <Checkbox
-                              id={`structure-${structure}`}
-                              checked={formData.affectedStructures.includes(structure)}
-                              onCheckedChange={() => handleStructureToggle(structure)}
-                            />
-                            <Label
-                              htmlFor={`structure-${structure}`}
-                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-                            >
-                              {structure}
-                            </Label>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                {formData.affectedStructures.length === 0 && (
-                  <p className="text-sm text-clinical-grey-500">
-                    Please select at least one affected structure
-                  </p>
-                )}
-                {formData.affectedStructures.length > 0 && (
-                  <div className="mt-2">
-                    <p className="text-xs text-clinical-grey-600 mb-2">
-                      Selected ({formData.affectedStructures.length}):
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {formData.affectedStructures.map((structure) => (
-                        <span
-                          key={structure}
-                          className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-clinical-blue-100 text-clinical-blue-800 border border-clinical-blue-200"
-                        >
-                          {structure}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
             </CardContent>
           </Card>
 
-          {/* Submit Button */}
-          <div className="flex justify-end gap-4">
+          {/* Section 3: Affected Structures - Enhanced spacing and visual grouping */}
+          <Card>
+            <CardHeader className="pb-4">
+              <CardTitle>Affected Structures</CardTitle>
+              <CardDescription>
+                Select all knee structures affected by the injury
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Structure Groups: Improved spacing with consistent padding and visual separation */}
+              <div className="p-5 border border-clinical-grey-200 rounded-lg bg-clinical-grey-50 space-y-5">
+                {STRUCTURE_GROUPS.map((group, groupIndex) => (
+                  <div key={group.type} className={groupIndex > 0 ? 'pt-5 border-t border-clinical-grey-200' : ''}>
+                    {/* Group Header: Clear visual separation with consistent styling */}
+                    <h4 className="text-sm font-semibold text-clinical-grey-900 mb-3">
+                      {group.type}
+                    </h4>
+                    {/* Structure Options: Consistent spacing and alignment for checkboxes */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                      {group.structures.map((structure) => (
+                        <div key={structure} className="flex items-center space-x-2.5">
+                          <Checkbox
+                            id={`structure-${structure}`}
+                            checked={formData.affectedStructures.includes(structure)}
+                            onCheckedChange={() => handleStructureToggle(structure)}
+                            className="flex-shrink-0"
+                          />
+                          <Label
+                            htmlFor={`structure-${structure}`}
+                            className="text-sm font-medium leading-normal cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            {structure}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Selected Structures Display: Improved spacing and styling */}
+              {formData.affectedStructures.length === 0 && (
+                <p className="text-sm text-clinical-grey-500 italic">
+                  Please select at least one affected structure
+                </p>
+              )}
+              {formData.affectedStructures.length > 0 && (
+                <div className="pt-2 space-y-2">
+                  <p className="text-sm font-medium text-clinical-grey-700">
+                    Selected ({formData.affectedStructures.length}):
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {formData.affectedStructures.map((structure) => (
+                      <span
+                        key={structure}
+                        className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-clinical-blue-100 text-clinical-blue-800 border border-clinical-blue-200"
+                      >
+                        {structure}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Submit Actions: Improved spacing and alignment */}
+          <div className="flex justify-end gap-4 pt-2">
             <Button
               type="button"
               variant="outline"
@@ -361,9 +377,9 @@ export default function AddPatientPage() {
           </div>
         </form>
 
-        {/* Information Note */}
+        {/* Information Note: Consistent spacing with form sections */}
         <Card className="bg-clinical-blue-50 border-clinical-blue-200">
-          <CardContent className="p-4">
+          <CardContent className="p-5">
             <p className="text-sm text-clinical-grey-700">
               <strong>Note:</strong> This form currently saves data to the browser console for testing.
               MongoDB integration will be added in a future update to persist patient records.
