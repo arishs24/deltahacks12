@@ -1,0 +1,21 @@
+# RAG API Requirements
+# Python 3.10+
+
+# FastAPI and server
+fastapi
+uvicorn[standard]
+
+# Pydantic for data validation
+pydantic
+
+# Google Gemini API (prefer new package, fallback to old)
+google-genai
+
+# Environment variables
+python-dotenv
+
+# Dependencies from rag_model (needed to import)
+moorcheh-sdk
+pypdf
+PyPDF2
+typing-extensions
