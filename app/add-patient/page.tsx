@@ -45,9 +45,8 @@ interface PatientFormData {
 }
 
 export default function AddPatientPage() {
-  // Form state
-  // TODO: Replace with MongoDB save operation when backend is integrated
-  // Future: const { mutate: savePatient } = useMutation(savePatientToMongoDB)
+  // Form state - Client-side state management
+  // Server-side MongoDB operations are handled via /api/patients API route
   const [formData, setFormData] = useState<PatientFormData>({
     name: '',
     age: '',
@@ -94,32 +93,52 @@ export default function AddPatientPage() {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // TODO: Replace with MongoDB save operation when backend is integrated
-    // Future: await savePatientToMongoDB(formData)
-    // For now, log to console for testing
-    console.log('Patient Form Data:', {
-      ...formData,
-      age: formData.age ? parseInt(formData.age, 10) : undefined,
-      height: formData.height ? parseFloat(formData.height) : undefined,
-      weight: formData.weight ? parseFloat(formData.weight) : undefined,
-    });
-    
-    // Reset form after submission
-    setFormData({
-      name: '',
-      age: '',
-      gender: 'Male',
-      height: '',
-      weight: '',
-      injuryType: '',
-      rehabStage: 'Initial',
-      affectedStructures: [],
-    });
-    
-    alert('Patient data logged to console (see browser dev tools). MongoDB integration pending.');
+    // Client-side validation
+    if (formData.affectedStructures.length === 0) {
+      alert('Please select at least one affected structure');
+      return;
+    }
+
+    try {
+      // Send POST request to server-side API route
+      // Server-side code handles MongoDB connection and data persistence
+      const response = await fetch('/api/patients', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        // Handle error response from API
+        throw new Error(data.error || 'Failed to save patient');
+      }
+
+      // Success - reset form and show success message
+      setFormData({
+        name: '',
+        age: '',
+        gender: 'Male',
+        height: '',
+        weight: '',
+        injuryType: '',
+        rehabStage: 'Initial',
+        affectedStructures: [],
+      });
+      
+      alert(`Patient "${formData.name}" has been successfully saved to the database!`);
+    } catch (error) {
+      // Handle network errors or API errors
+      console.error('Error saving patient:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save patient. Please try again.';
+      alert(`Error: ${errorMessage}`);
+    }
   };
 
   return (
@@ -381,8 +400,7 @@ export default function AddPatientPage() {
         <Card className="bg-clinical-blue-50 border-clinical-blue-200">
           <CardContent className="p-5">
             <p className="text-sm text-clinical-grey-700">
-              <strong>Note:</strong> This form currently saves data to the browser console for testing.
-              MongoDB integration will be added in a future update to persist patient records.
+              <strong>Note:</strong> Patient data is saved to MongoDB Atlas. All information is securely stored in the database.
             </p>
           </CardContent>
         </Card>
