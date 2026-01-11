@@ -9,6 +9,7 @@ interface ChartPlaceholderProps {
   data?: Array<{ x: number; y: number }>;
   trend?: 'up' | 'down' | 'neutral';
   unit?: string;
+  hideNumbers?: boolean; // Patient-specific UI: Hide numerical values while keeping visual trends
 }
 
 export default function ChartPlaceholder({
@@ -18,6 +19,7 @@ export default function ChartPlaceholder({
   data,
   trend = 'neutral',
   unit = '',
+  hideNumbers = false,
 }: ChartPlaceholderProps) {
   const TrendIcon = trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : Minus;
   const trendColor =
@@ -64,7 +66,7 @@ export default function ChartPlaceholder({
             stroke="#d1d5db"
             strokeWidth="2"
           />
-          {/* Y-axis label */}
+          {/* Y-axis label - Patient-specific UI: Hide units in Patient view */}
           <text
             x="15"
             y="120"
@@ -73,7 +75,7 @@ export default function ChartPlaceholder({
             fill="#6b7280"
             textAnchor="middle"
           >
-            {yAxisLabel} {unit && `(${unit})`}
+            {yAxisLabel} {!hideNumbers && unit && `(${unit})`}
           </text>
           {/* X-axis label */}
           <text
@@ -113,11 +115,14 @@ export default function ChartPlaceholder({
           ))}
         </svg>
       </div>
-      <div className="mt-2 flex justify-between text-xs text-clinical-grey-500">
-        <span>Min: {minY.toFixed(1)}{unit}</span>
-        <span>Max: {maxY.toFixed(1)}{unit}</span>
-        <span>Mean: {(chartData.reduce((a, b) => a + b.y, 0) / chartData.length).toFixed(1)}{unit}</span>
-      </div>
+      {/* Patient-specific UI: Hide numerical statistics in Patient view while keeping visual trends */}
+      {!hideNumbers && (
+        <div className="mt-2 flex justify-between text-xs text-clinical-grey-500">
+          <span>Min: {minY.toFixed(1)}{unit}</span>
+          <span>Max: {maxY.toFixed(1)}{unit}</span>
+          <span>Mean: {(chartData.reduce((a, b) => a + b.y, 0) / chartData.length).toFixed(1)}{unit}</span>
+        </div>
+      )}
     </div>
   );
 }

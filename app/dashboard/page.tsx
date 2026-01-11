@@ -108,29 +108,29 @@ export default function DashboardPage() {
             </Card>
           )}
 
-          {/* Patient Summary */}
+          {/* Patient Summary - Improved spacing: Normalized gaps and consistent card heights */}
           {displayPatient && (
-            <div className={isPatientView ? '' : 'lg:col-span-2 space-y-6'}>
-              {/* Summary Cards */}
+            <div className={isPatientView ? 'space-y-6' : 'lg:col-span-2 space-y-6'}>
+              {/* Summary Cards - Improved spacing: Consistent gap-4, aligned card heights */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Card>
-                  <CardContent className="p-6">
+                <Card className="flex flex-col">
+                  <CardContent className="p-6 flex-1 flex flex-col justify-between">
                     <div className="flex items-center justify-between">
-                      <div>
+                      <div className="flex-1">
                         <p className="text-sm font-medium text-clinical-grey-600">Injury Type</p>
                         <p className="mt-1 text-lg font-semibold text-clinical-grey-900">
                           {displayPatient.injuryType}
                         </p>
                       </div>
-                      <AlertCircle className="h-8 w-8 text-clinical-blue-600" />
+                      <AlertCircle className="h-8 w-8 text-clinical-blue-600 flex-shrink-0 ml-4" />
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card>
-                  <CardContent className="p-6">
+                <Card className="flex flex-col">
+                  <CardContent className="p-6 flex-1 flex flex-col justify-between">
                     <div className="flex items-center justify-between">
-                      <div>
+                      <div className="flex-1">
                         <p className="text-sm font-medium text-clinical-grey-600">Rehab Stage</p>
                         <div className="mt-2">
                           <Badge
@@ -149,15 +149,15 @@ export default function DashboardPage() {
                           </Badge>
                         </div>
                       </div>
-                      <Activity className="h-8 w-8 text-clinical-blue-600" />
+                      <Activity className="h-8 w-8 text-clinical-blue-600 flex-shrink-0 ml-4" />
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card>
-                  <CardContent className="p-6">
+                <Card className="flex flex-col">
+                  <CardContent className="p-6 flex-1 flex flex-col justify-between">
                     <div className="flex items-center justify-between">
-                      <div>
+                      <div className="flex-1">
                         <p className="text-sm font-medium text-clinical-grey-600">Simulation Status</p>
                         <div className="mt-2 flex items-center gap-2">
                           {getStatusIcon(displayPatient.simulationStatus)}
@@ -166,13 +166,13 @@ export default function DashboardPage() {
                           </span>
                         </div>
                       </div>
-                      <CheckCircle2 className="h-8 w-8 text-clinical-blue-600" />
+                      <CheckCircle2 className="h-8 w-8 text-clinical-blue-600 flex-shrink-0 ml-4" />
                     </div>
                   </CardContent>
                 </Card>
               </div>
 
-              {/* Affected Structures */}
+              {/* Affected Structures - Improved spacing: Consistent padding */}
               <Card>
                 <CardHeader>
                   <CardTitle>Affected Structures</CardTitle>
@@ -188,25 +188,26 @@ export default function DashboardPage() {
                 </CardContent>
               </Card>
 
-              {/* Patient Details */}
+              {/* Patient Details - Improved spacing: Consistent padding and grid alignment */}
+              {/* Patient-specific UI: Show "User Information" in Patient view, "Patient Information" in Clinician view */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Patient Information</CardTitle>
+                  <CardTitle>{isPatientView ? 'User Information' : 'Patient Information'}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="flex items-center gap-3">
-                      <User className="h-5 w-5 text-clinical-grey-400" />
-                      <div>
+                      <User className="h-5 w-5 text-clinical-grey-400 flex-shrink-0" />
+                      <div className="min-w-0">
                         <p className="text-sm text-clinical-grey-600">Name</p>
-                        <p className="font-medium text-clinical-grey-900">
+                        <p className="font-medium text-clinical-grey-900 truncate">
                           {displayPatient.name}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Calendar className="h-5 w-5 text-clinical-grey-400" />
-                      <div>
+                      <Calendar className="h-5 w-5 text-clinical-grey-400 flex-shrink-0" />
+                      <div className="min-w-0">
                         <p className="text-sm text-clinical-grey-600">Age</p>
                         <p className="font-medium text-clinical-grey-900">
                           {displayPatient.age} years
@@ -214,8 +215,8 @@ export default function DashboardPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <User className="h-5 w-5 text-clinical-grey-400" />
-                      <div>
+                      <User className="h-5 w-5 text-clinical-grey-400 flex-shrink-0" />
+                      <div className="min-w-0">
                         <p className="text-sm text-clinical-grey-600">Gender</p>
                         <p className="font-medium text-clinical-grey-900">
                           {displayPatient.gender}
@@ -223,8 +224,8 @@ export default function DashboardPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Ruler className="h-5 w-5 text-clinical-grey-400" />
-                      <div>
+                      <Ruler className="h-5 w-5 text-clinical-grey-400 flex-shrink-0" />
+                      <div className="min-w-0">
                         <p className="text-sm text-clinical-grey-600">Height</p>
                         <p className="font-medium text-clinical-grey-900">
                           {displayPatient.height} cm
@@ -232,8 +233,8 @@ export default function DashboardPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Weight className="h-5 w-5 text-clinical-grey-400" />
-                      <div>
+                      <Weight className="h-5 w-5 text-clinical-grey-400 flex-shrink-0" />
+                      <div className="min-w-0">
                         <p className="text-sm text-clinical-grey-600">Weight</p>
                         <p className="font-medium text-clinical-grey-900">
                           {displayPatient.weight} kg

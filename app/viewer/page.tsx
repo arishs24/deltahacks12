@@ -309,7 +309,7 @@ export default function ViewerPage() {
                     <Box className="h-48 w-48 text-clinical-grey-300" />
                   </div>
 
-                  {/* Overlay information */}
+                  {/* Overlay information - Patient-specific UI: Simplified for Patient view, full details for Clinician */}
                   <div className="relative z-10 text-center space-y-4 p-6">
                     <div className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-sm border border-clinical-grey-200">
                       <Layers className="h-5 w-5 text-clinical-blue-600" />
@@ -317,49 +317,56 @@ export default function ViewerPage() {
                         3D Knee Model Viewer
                       </span>
                     </div>
-                    <div className="bg-white/90 backdrop-blur-sm rounded-lg p-4 border border-clinical-grey-200">
-                      <p className="text-sm text-clinical-grey-600 mb-2">
-                        <span className="font-semibold">Patient:</span> {selectedPatient?.name}
-                      </p>
-                      <p className="text-sm text-clinical-grey-600 mb-2">
-                        <span className="font-semibold">Gait Scenario:</span> {gaitScenario.charAt(0).toUpperCase() + gaitScenario.slice(1)}
-                      </p>
-                      <p className="text-sm text-clinical-grey-600">
-                        <span className="font-semibold">Visible Tissues:</span>{' '}
-                        {Array.from(visibleTissues)
-                          .map((t) => tissues.find((ts) => ts.value === t)?.label)
-                          .join(', ') || 'None'}
-                      </p>
-                    </div>
+                    {/* Clinician-only: Show detailed labels and patient information */}
+                    {!isPatientView && (
+                      <div className="bg-white/90 backdrop-blur-sm rounded-lg p-4 border border-clinical-grey-200">
+                        <p className="text-sm text-clinical-grey-600 mb-2">
+                          <span className="font-semibold">Patient:</span> {selectedPatient?.name}
+                        </p>
+                        <p className="text-sm text-clinical-grey-600 mb-2">
+                          <span className="font-semibold">Gait Scenario:</span> {gaitScenario.charAt(0).toUpperCase() + gaitScenario.slice(1)}
+                        </p>
+                        <p className="text-sm text-clinical-grey-600">
+                          <span className="font-semibold">Visible Tissues:</span>{' '}
+                          {Array.from(visibleTissues)
+                            .map((t) => tissues.find((ts) => ts.value === t)?.label)
+                            .join(', ') || 'None'}
+                        </p>
+                      </div>
+                    )}
+                    {/* Patient-specific: Simplified description without technical details */}
                     <p className="text-xs text-clinical-grey-500 max-w-md">
-                      This placeholder will be replaced with an interactive 3D visualization
-                      showing stress/strain distributions across knee tissues in real-time.
+                      {isPatientView
+                        ? 'Interactive 3D visualization of your knee model for rehabilitation planning.'
+                        : 'This placeholder will be replaced with an interactive 3D visualization showing stress/strain distributions across knee tissues in real-time.'}
                     </p>
                   </div>
 
-                  {/* Simulated biomechanical data overlay */}
-                  <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-sm rounded-lg p-4 border border-clinical-grey-200 shadow-sm">
-                    <div className="grid grid-cols-3 gap-4 text-center">
-                      <div>
-                        <p className="text-xs text-clinical-grey-600">Peak Stress</p>
-                        <p className="text-lg font-semibold text-clinical-grey-900">
-                          {gaitScenario === 'standing' ? '2.4' : gaitScenario === 'walking' ? '8.7' : '15.2'} MPa
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-clinical-grey-600">Max Strain</p>
-                        <p className="text-lg font-semibold text-clinical-grey-900">
-                          {gaitScenario === 'standing' ? '0.03' : gaitScenario === 'walking' ? '0.12' : '0.24'}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-clinical-grey-600">Load Factor</p>
-                        <p className="text-lg font-semibold text-clinical-grey-900">
-                          {gaitScenario === 'standing' ? '1.0x' : gaitScenario === 'walking' ? '2.8x' : '5.2x'}
-                        </p>
+                  {/* Simulated biomechanical data overlay - Clinician-only: Hide numerical data in Patient view */}
+                  {!isPatientView && (
+                    <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-sm rounded-lg p-4 border border-clinical-grey-200 shadow-sm">
+                      <div className="grid grid-cols-3 gap-4 text-center">
+                        <div>
+                          <p className="text-xs text-clinical-grey-600">Peak Stress</p>
+                          <p className="text-lg font-semibold text-clinical-grey-900">
+                            {gaitScenario === 'standing' ? '2.4' : gaitScenario === 'walking' ? '8.7' : '15.2'} MPa
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-clinical-grey-600">Max Strain</p>
+                          <p className="text-lg font-semibold text-clinical-grey-900">
+                            {gaitScenario === 'standing' ? '0.03' : gaitScenario === 'walking' ? '0.12' : '0.24'}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-clinical-grey-600">Load Factor</p>
+                          <p className="text-lg font-semibold text-clinical-grey-900">
+                            {gaitScenario === 'standing' ? '1.0x' : gaitScenario === 'walking' ? '2.8x' : '5.2x'}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -375,16 +382,18 @@ export default function ViewerPage() {
             </p>
           </div>
 
-          {/* Summary Statistics */}
+          {/* Summary Statistics - Patient-specific UI: Hide numerical values in Patient view, keep structure for visual consistency */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-clinical-grey-600">Average Ligament Stress</p>
-                    <p className="mt-1 text-2xl font-bold text-clinical-grey-900">
-                      {avgStress.toFixed(1)} MPa
-                    </p>
+                    {!isPatientView && (
+                      <p className="mt-1 text-2xl font-bold text-clinical-grey-900">
+                        {avgStress.toFixed(1)} MPa
+                      </p>
+                    )}
                   </div>
                   <div className="rounded-full bg-clinical-blue-100 p-3">
                     <BarChart3 className="h-6 w-6 text-clinical-blue-600" />
@@ -398,9 +407,11 @@ export default function ViewerPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-clinical-grey-600">Average Strain</p>
-                    <p className="mt-1 text-2xl font-bold text-clinical-grey-900">
-                      {(avgStrain * 100).toFixed(2)}%
-                    </p>
+                    {!isPatientView && (
+                      <p className="mt-1 text-2xl font-bold text-clinical-grey-900">
+                        {(avgStrain * 100).toFixed(2)}%
+                      </p>
+                    )}
                   </div>
                   <div className="rounded-full bg-green-100 p-3">
                     <TrendingUp className="h-6 w-6 text-green-600" />
@@ -414,9 +425,11 @@ export default function ViewerPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-clinical-grey-600">Average Stiffness</p>
-                    <p className="mt-1 text-2xl font-bold text-clinical-grey-900">
-                      {avgStiffness.toFixed(0)} N/m
-                    </p>
+                    {!isPatientView && (
+                      <p className="mt-1 text-2xl font-bold text-clinical-grey-900">
+                        {avgStiffness.toFixed(0)} N/m
+                      </p>
+                    )}
                   </div>
                   <div className="rounded-full bg-yellow-100 p-3">
                     <Activity className="h-6 w-6 text-yellow-600" />
@@ -426,7 +439,7 @@ export default function ViewerPage() {
             </Card>
           </div>
 
-          {/* Charts */}
+          {/* Charts - Patient-specific UI: Hide numbers in Patient view, show visual trends only */}
           <div className="space-y-6">
             <ChartPlaceholder
               title="Ligament Stress Over Time"
@@ -435,6 +448,7 @@ export default function ViewerPage() {
               data={ligamentStressData}
               trend="down"
               unit="MPa"
+              hideNumbers={isPatientView}
             />
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -445,6 +459,7 @@ export default function ViewerPage() {
                 data={strainData}
                 trend="down"
                 unit="%"
+                hideNumbers={isPatientView}
               />
 
               <ChartPlaceholder
@@ -454,11 +469,12 @@ export default function ViewerPage() {
                 data={stiffnessData}
                 trend="up"
                 unit="N/m"
+                hideNumbers={isPatientView}
               />
             </div>
           </div>
 
-          {/* Data Interpretation */}
+          {/* Data Interpretation - Patient-specific UI: Remove numerical references in Patient view */}
           <Card>
             <CardContent className="p-6">
               <h3 className="text-lg font-semibold text-clinical-grey-900 mb-4">Clinical Interpretation</h3>
@@ -466,25 +482,25 @@ export default function ViewerPage() {
                 <div>
                   <h4 className="font-semibold text-clinical-grey-900 mb-2">Stress Trends</h4>
                   <p>
-                    Ligament stress shows a gradual decrease over the 30-day monitoring period,
-                    indicating positive healing response. Current values are within acceptable
-                    ranges for intermediate rehabilitation stage.
+                    {isPatientView
+                      ? 'Ligament stress shows a gradual decrease over the monitoring period, indicating positive healing response. Progress is within acceptable ranges for your current rehabilitation stage.'
+                      : 'Ligament stress shows a gradual decrease over the 30-day monitoring period, indicating positive healing response. Current values are within acceptable ranges for intermediate rehabilitation stage.'}
                   </p>
                 </div>
                 <div>
                   <h4 className="font-semibold text-clinical-grey-900 mb-2">Strain Analysis</h4>
                   <p>
-                    Tissue strain demonstrates progressive reduction, suggesting improved tissue
-                    integrity and load distribution. Monitor for any sudden increases which may
-                    indicate overloading.
+                    {isPatientView
+                      ? 'Tissue strain demonstrates progressive reduction, suggesting improved tissue integrity and load distribution. Monitor for any sudden changes which may indicate overloading.'
+                      : 'Tissue strain demonstrates progressive reduction, suggesting improved tissue integrity and load distribution. Monitor for any sudden increases which may indicate overloading.'}
                   </p>
                 </div>
                 <div>
                   <h4 className="font-semibold text-clinical-grey-900 mb-2">Stiffness Progression</h4>
                   <p>
-                    Increasing stiffness values reflect tissue healing and remodeling processes.
-                    These changes are consistent with expected rehabilitation progression for
-                    ligament injuries.
+                    {isPatientView
+                      ? 'Increasing stiffness reflects tissue healing and remodeling processes. These changes are consistent with expected rehabilitation progression for ligament injuries.'
+                      : 'Increasing stiffness values reflect tissue healing and remodeling processes. These changes are consistent with expected rehabilitation progression for ligament injuries.'}
                   </p>
                 </div>
               </div>

@@ -2,5 +2,6 @@
   "/add-patient/page": "app/add-patient/page.js",
   "/dashboard/page": "app/dashboard/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/settings/page": "app/settings/page.js",
   "/viewer/page": "app/viewer/page.js"
 }
