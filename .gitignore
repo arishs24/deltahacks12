@@ -48,6 +48,7 @@ cache/
 *.nii
 *.nii.gz
 *.dicom
+.next/
 
 # Large files
 *.pkl

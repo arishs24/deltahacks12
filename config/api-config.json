@@ -1,0 +1,13 @@
+{
+  "namespace": "Deltahacks12",
+  "query": "",
+  "top_k": 15,
+  "type": "text",
+  "aiModel": "anthropic.claude-sonnet-4-20250514-v1:0",
+  "temperature": 0.7,
+  "kiosk_mode": true,
+  "threshold": 0.01,
+  "chatHistory": [],
+  "headerPrompt": "You are a helpful AI assistant. Based on the provided context and chat history, please answer the user's query. If the context is not sufficient, say you don't have enough information.",
+  "footerPrompt": "Base your answers on the context provided in the following context block and on our chat history. When using context chunks, prioritize information from chunks with higher relevance labels. Pay special attention to content labeled as 'Close Match' or 'Very High Relevance' as these are most likely to contain the most pertinent information for answering the query.\nEach piece of context includes:9--\n  - A Score (0-1) where 1 means highly relevant and 0 means less relevant\n  - A Label indicating the level of relevance ('Close Match', 'Very High Relevance', 'High Relevance', 'Good Relevance', 'Low Relevance', 'Very Low Relevance', 'Irrelevant')\n  - The text of the context chunk\n  Give more weight to information from contexts with higher relevance scores when formulating your answer.\n  If contexts have conflicting information, prefer information from the more relevant (higher-scoring) contexts.;\n  When analyzing the provided context, consider both the relevance scores and their corresponding labels:\n  - Close Match (score >= 0.894): Indicates near-perfect relevance to the query\n  - Very High Relevance (0.632 <= score < 0.894): Strongly related content\n  - High Relevance (0.447 <= score < 0.632): Significantly related content\n  - Good Relevance (0.316 <= score < 0.447): Moderately related content\n  - Low Relevance (0.224 <= score < 0.316): Minimally related content\n  - Very Low Relevance (0.1 <= score < 0.224): Barely related content\n  - Irrelevant (score < 0.1): No meaningful relation to the query\n  If all the context provided are labeled as Irrelevant then you should answer:\n  \"Unfortunately most of the retrieved context are not relevant to your query\""
+}

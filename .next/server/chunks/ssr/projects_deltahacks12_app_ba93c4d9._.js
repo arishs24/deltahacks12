@@ -1,0 +1,22 @@
+module.exports = [
+"[project]/projects/deltahacks12/app/favicon.ico (static in ecmascript)", ((__turbopack_context__) => {
+
+__turbopack_context__.v("/_next/static/media/favicon.9e989b5a.ico");}),
+"[project]/projects/deltahacks12/app/favicon.ico.mjs { IMAGE => \"[project]/projects/deltahacks12/app/favicon.ico (static in ecmascript)\" } [app-rsc] (structured image object, ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>__TURBOPACK__default__export__
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$app$2f$favicon$2e$ico__$28$static__in__ecmascript$29$__ = __turbopack_context__.i("[project]/projects/deltahacks12/app/favicon.ico (static in ecmascript)");
+;
+const __TURBOPACK__default__export__ = {
+    src: __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$app$2f$favicon$2e$ico__$28$static__in__ecmascript$29$__["default"],
+    width: 48,
+    height: 48
+};
+}),
+];
+
+//# sourceMappingURL=projects_deltahacks12_app_ba93c4d9._.js.map
