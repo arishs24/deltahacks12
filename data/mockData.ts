@@ -9,7 +9,7 @@ export const mockPatients: Patient[] = [
     height: 180, // cm
     weight: 82, // kg
     injuryType: 'ACL Tear (Grade II)',
-    affectedLigaments: ['ACL', 'MCL'],
+    affectedStructures: ['ACL', 'MCL'],
     rehabStage: 'Intermediate',
     simulationStatus: 'complete',
   },
@@ -21,7 +21,7 @@ export const mockPatients: Patient[] = [
     height: 165, // cm
     weight: 62, // kg
     injuryType: 'Meniscal Tear',
-    affectedLigaments: ['ACL'],
+    affectedStructures: ['Medial Meniscus', 'ACL'],
     rehabStage: 'Initial',
     simulationStatus: 'complete',
   },
@@ -33,7 +33,7 @@ export const mockPatients: Patient[] = [
     height: 175, // cm
     weight: 78, // kg
     injuryType: 'PCL Sprain (Grade I)',
-    affectedLigaments: ['PCL'],
+    affectedStructures: ['PCL'],
     rehabStage: 'Advanced',
     simulationStatus: 'pending',
   },
@@ -45,7 +45,7 @@ export const mockPatients: Patient[] = [
     height: 170, // cm
     weight: 68, // kg
     injuryType: 'Multiple Ligament Injury',
-    affectedLigaments: ['ACL', 'PCL', 'MCL'],
+    affectedStructures: ['ACL', 'PCL', 'MCL', 'Articular cartilage'],
     rehabStage: 'Initial',
     simulationStatus: 'processing',
   },

@@ -6,7 +6,7 @@ export interface Patient {
   height: number; // Height in cm
   weight: number; // Weight in kg
   injuryType: string;
-  affectedLigaments: string[];
+  affectedStructures: string[];
   rehabStage: 'Initial' | 'Intermediate' | 'Advanced' | 'Maintenance';
   simulationStatus: 'complete' | 'pending' | 'processing';
 }

@@ -22,7 +22,7 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <div className="flex h-screen w-64 flex-col bg-clinical-grey-900 text-white">
+    <div className="flex h-screen w-64 flex-col bg-clinical-grey-900 text-white flex-shrink-0">
       <div className="flex h-16 items-center border-b border-clinical-grey-800 px-6">
         <Stethoscope className="h-6 w-6 text-clinical-blue-400 mr-2" />
         <span className="text-lg font-semibold">Knee CDS</span>

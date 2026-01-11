@@ -10,8 +10,25 @@ import { Checkbox } from '@/components/ui/checkbox';
 import ClinicalLayout from '@/components/clinical/ClinicalLayout';
 import { UserPlus, Save } from 'lucide-react';
 
-// Available ligaments for multi-select
-const AVAILABLE_LIGAMENTS = ['ACL', 'PCL', 'MCL', 'LCL', 'Meniscus'];
+// Available structures grouped by type
+const STRUCTURE_GROUPS = [
+  {
+    type: 'Ligaments',
+    structures: ['ACL', 'PCL', 'MCL', 'LCL'],
+  },
+  {
+    type: 'Bones',
+    structures: ['Femur', 'Tibia', 'Patella'],
+  },
+  {
+    type: 'Cartilage',
+    structures: ['Articular cartilage', 'Medial Meniscus', 'Lateral Meniscus'],
+  },
+  {
+    type: 'Muscles',
+    structures: ['Quadriceps', 'Hamstrings', 'Gastrocnemius'],
+  },
+];
 
 // Rehab stage options
 const REHAB_STAGES = ['Initial', 'Intermediate', 'Advanced'] as const;
@@ -24,7 +41,7 @@ interface PatientFormData {
   weight: string;
   injuryType: string;
   rehabStage: 'Initial' | 'Intermediate' | 'Advanced';
-  affectedLigaments: string[];
+  affectedStructures: string[];
 }
 
 export default function AddPatientPage() {
@@ -39,7 +56,7 @@ export default function AddPatientPage() {
     weight: '',
     injuryType: '',
     rehabStage: 'Initial',
-    affectedLigaments: [],
+    affectedStructures: [],
   });
 
   const handleInputChange = (field: keyof PatientFormData, value: string) => {
@@ -63,16 +80,16 @@ export default function AddPatientPage() {
     }));
   };
 
-  const handleLigamentToggle = (ligament: string) => {
+  const handleStructureToggle = (structure: string) => {
     setFormData((prev) => {
-      const currentLigaments = prev.affectedLigaments;
-      const isSelected = currentLigaments.includes(ligament);
+      const currentStructures = prev.affectedStructures;
+      const isSelected = currentStructures.includes(structure);
       
       return {
         ...prev,
-        affectedLigaments: isSelected
-          ? currentLigaments.filter((l) => l !== ligament)
-          : [...currentLigaments, ligament],
+        affectedStructures: isSelected
+          ? currentStructures.filter((s) => s !== structure)
+          : [...currentStructures, structure],
       };
     });
   };
@@ -99,7 +116,7 @@ export default function AddPatientPage() {
       weight: '',
       injuryType: '',
       rehabStage: 'Initial',
-      affectedLigaments: [],
+      affectedStructures: [],
     });
     
     alert('Patient data logged to console (see browser dev tools). MongoDB integration pending.');
@@ -256,32 +273,58 @@ export default function AddPatientPage() {
                 </Select>
               </div>
 
-              {/* Affected Ligaments */}
+              {/* Affected Structures */}
               <div className="space-y-3">
                 <Label>
-                  Affected Ligaments <span className="text-red-500">*</span>
+                  Affected Structures <span className="text-red-500">*</span>
                 </Label>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 p-4 border border-clinical-grey-200 rounded-lg bg-clinical-grey-50">
-                  {AVAILABLE_LIGAMENTS.map((ligament) => (
-                    <div key={ligament} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={`ligament-${ligament}`}
-                        checked={formData.affectedLigaments.includes(ligament)}
-                        onCheckedChange={() => handleLigamentToggle(ligament)}
-                      />
-                      <Label
-                        htmlFor={`ligament-${ligament}`}
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-                      >
-                        {ligament}
-                      </Label>
+                <div className="p-4 border border-clinical-grey-200 rounded-lg bg-clinical-grey-50 space-y-4">
+                  {STRUCTURE_GROUPS.map((group) => (
+                    <div key={group.type} className="space-y-2">
+                      <h4 className="text-sm font-semibold text-clinical-grey-900 border-b border-clinical-grey-200 pb-1">
+                        {group.type}
+                      </h4>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 pl-2">
+                        {group.structures.map((structure) => (
+                          <div key={structure} className="flex items-center space-x-2">
+                            <Checkbox
+                              id={`structure-${structure}`}
+                              checked={formData.affectedStructures.includes(structure)}
+                              onCheckedChange={() => handleStructureToggle(structure)}
+                            />
+                            <Label
+                              htmlFor={`structure-${structure}`}
+                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                            >
+                              {structure}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   ))}
                 </div>
-                {formData.affectedLigaments.length === 0 && (
+                {formData.affectedStructures.length === 0 && (
                   <p className="text-sm text-clinical-grey-500">
-                    Please select at least one affected ligament
+                    Please select at least one affected structure
                   </p>
+                )}
+                {formData.affectedStructures.length > 0 && (
+                  <div className="mt-2">
+                    <p className="text-xs text-clinical-grey-600 mb-2">
+                      Selected ({formData.affectedStructures.length}):
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {formData.affectedStructures.map((structure) => (
+                        <span
+                          key={structure}
+                          className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-clinical-blue-100 text-clinical-blue-800 border border-clinical-blue-200"
+                        >
+                          {structure}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 )}
               </div>
             </CardContent>
@@ -301,7 +344,7 @@ export default function AddPatientPage() {
                   weight: '',
                   injuryType: '',
                   rehabStage: 'Initial',
-                  affectedLigaments: [],
+                  affectedStructures: [],
                 });
               }}
             >
@@ -309,7 +352,7 @@ export default function AddPatientPage() {
             </Button>
             <Button
               type="submit"
-              disabled={formData.affectedLigaments.length === 0}
+              disabled={formData.affectedStructures.length === 0}
               className="bg-clinical-blue-600 hover:bg-clinical-blue-700 text-white"
             >
               <Save className="mr-2 h-4 w-4" />

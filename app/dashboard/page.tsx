@@ -157,16 +157,16 @@ export default function DashboardPage() {
                 </Card>
               </div>
 
-              {/* Affected Ligaments */}
+              {/* Affected Structures */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Affected Ligaments</CardTitle>
+                  <CardTitle>Affected Structures</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
-                    {selectedPatient.affectedLigaments.map((ligament) => (
-                      <Badge key={ligament} variant="destructive">
-                        {ligament}
+                    {selectedPatient.affectedStructures.map((structure) => (
+                      <Badge key={structure} variant="destructive">
+                        {structure}
                       </Badge>
                     ))}
                   </div>
