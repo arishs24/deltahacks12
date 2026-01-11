@@ -1,16 +1,21 @@
-import { auth } from '@/lib/auth';
-
 /**
- * Server-Side Authentication Utilities - NextAuth Integration
+ * Server-Side Authentication Utilities - Auth0 Integration
  * 
  * These functions should ONLY be used in Server Components or API Routes.
  * For client components, use the useAuth hook.
+ * 
+ * Note: Since @auth0/nextjs-auth0 v4 doesn't have full App Router support,
+ * these are placeholder utilities. In production, you would:
+ * 1. Use getSession() from @auth0/nextjs-auth0
+ * 2. Validate JWT tokens
+ * 3. Extract user data from session
  */
 
 export interface ServerUser {
-  name?: string | null;
-  email?: string | null;
-  image?: string | null;
+  sub: string;
+  name?: string;
+  email?: string;
+  picture?: string;
   role: 'clinician' | 'patient';
   [key: string]: any;
 }
@@ -18,36 +23,27 @@ export interface ServerUser {
 /**
  * Get the current authenticated user (server-side only)
  * 
- * Usage in Server Components:
+ * Usage in API Routes:
  *   const user = await getAuthUser();
- *   if (!user) redirect('/api/auth/signin');
+ *   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+ * 
+ * TODO: Implement with proper Auth0 session retrieval
+ * For now, this is a placeholder that returns null
  */
 export async function getAuthUser(): Promise<ServerUser | null> {
-  try {
-    const session = await auth();
-    if (!session || !session.user) {
-      return null;
-    }
-
-    const user = session.user as any;
-    const role = user.role || 'patient'; // Default to patient
-
-    return {
-      ...user,
-      role: role as 'clinician' | 'patient',
-    };
-  } catch (error) {
-    console.error('Error getting auth user:', error);
-    return null;
-  }
+  // TODO: Implement Auth0 session retrieval
+  // const session = await getSession();
+  // if (!session || !session.user) return null;
+  // Extract role and return user
+  
+  return null;
 }
 
 /**
  * Require authentication (server-side only)
  * 
- * Usage in Server Components or API Routes:
+ * Usage in API Routes:
  *   const user = await requireAuth();
- *   // user is guaranteed to be defined or redirect happens
  */
 export async function requireAuth(): Promise<ServerUser> {
   const user = await getAuthUser();
