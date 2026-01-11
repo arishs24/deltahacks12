@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
+import { SuccessToast, ErrorToast } from '@/components/ui/success-toast';
 import ClinicalLayout from '@/components/clinical/ClinicalLayout';
 import { UserPlus, Save } from 'lucide-react';
 
@@ -58,6 +59,11 @@ export default function AddPatientPage() {
     affectedStructures: [],
   });
 
+  // Toast notification state
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const [showErrorToast, setShowErrorToast] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
   const handleInputChange = (field: keyof PatientFormData, value: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -98,7 +104,8 @@ export default function AddPatientPage() {
     
     // Client-side validation
     if (formData.affectedStructures.length === 0) {
-      alert('Please select at least one affected structure');
+      setErrorMessage('Please select at least one affected structure');
+      setShowErrorToast(true);
       return;
     }
 
@@ -120,7 +127,8 @@ export default function AddPatientPage() {
         throw new Error(data.error || 'Failed to save patient');
       }
 
-      // Success - reset form and show success message
+      // Success - reset form and show success toast
+      const patientName = formData.name;
       setFormData({
         name: '',
         age: '',
@@ -132,12 +140,14 @@ export default function AddPatientPage() {
         affectedStructures: [],
       });
       
-      alert(`Patient "${formData.name}" has been successfully saved to the database!`);
+      // Show success toast notification
+      setShowSuccessToast(true);
     } catch (error) {
       // Handle network errors or API errors
       console.error('Error saving patient:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Failed to save patient. Please try again.';
-      alert(`Error: ${errorMessage}`);
+      const errorMsg = error instanceof Error ? error.message : 'Failed to save patient. Please try again.';
+      setErrorMessage(errorMsg);
+      setShowErrorToast(true);
     }
   };
 
@@ -405,6 +415,24 @@ export default function AddPatientPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Success Toast Notification */}
+      <SuccessToast
+        isVisible={showSuccessToast}
+        title="Patient Successfully Added"
+        description="The patient has been saved to the database and is now available in the system."
+        onDismiss={() => setShowSuccessToast(false)}
+        duration={5000}
+      />
+
+      {/* Error Toast Notification */}
+      <ErrorToast
+        isVisible={showErrorToast}
+        title="Error Saving Patient"
+        description={errorMessage}
+        onDismiss={() => setShowErrorToast(false)}
+        duration={7000}
+      />
     </ClinicalLayout>
   );
 }

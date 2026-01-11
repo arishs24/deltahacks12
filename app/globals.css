@@ -397,4 +397,33 @@
   .safe-area-right {
     padding-right: env(safe-area-inset-right);
   }
+
+  /* Toast notification animations */
+  @keyframes slide-in-from-right {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes shrink-width {
+    from {
+      width: 100%;
+    }
+    to {
+      width: 0%;
+    }
+  }
+
+  .animate-slide-in-from-right {
+    animation: slide-in-from-right 0.3s ease-out;
+  }
+
+  .animate-shrink-width {
+    animation: shrink-width linear;
+  }
 }
