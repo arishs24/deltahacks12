@@ -1,0 +1,58 @@
+# Ignore Next.js and frontend files (not needed for Python API)
+node_modules/
+.next/
+out/
+app/
+components/
+public/
+hooks/
+contexts/
+customize/
+lib/
+types/
+
+# Ignore frontend configs
+next.config.ts
+next-env.d.ts
+tsconfig.json
+postcss.config.mjs
+eslint.config.mjs
+components.json
+
+# Ignore large datasets and models
+synovia_move/
+examples/
+scripts/
+
+# Ignore documentation
+*.md
+!README.md
+
+# Ignore Windows scripts
+*.ps1
+
+# Ignore test files
+test_*.py
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Ignore environment files (Railway uses env vars)
+.env
+.env.local
+.env.*
+
+# Ignore IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Ignore git
+.git/
+.gitignore

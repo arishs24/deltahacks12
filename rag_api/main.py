@@ -18,7 +18,12 @@ app = FastAPI(title="Exercise Recommendation API", description="API for generati
 # Add CORS middleware to allow requests from Next.js
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],  # Next.js dev server
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "https://*.vercel.app",  # Allow all Vercel deployments (preview & production)
+        "https://deltahacks12.vercel.app",  # Your production domain (update as needed)
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
