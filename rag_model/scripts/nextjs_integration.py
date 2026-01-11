@@ -1,17 +1,26 @@
 """
-Example Next.js API Route Integration
+Example Next.js API Route Integration - Moorcheh Version
 
-This file demonstrates how to integrate the RAG system with Next.js.
+This file demonstrates how to integrate the Moorcheh RAG system with Next.js.
 Copy the relevant functions to your Next.js API routes.
 """
+
+# Load .env file if it exists
+try:
+    from pathlib import Path
+    from dotenv import load_dotenv
+    env_path = Path(__file__).parent / '.env'
+    load_dotenv(dotenv_path=env_path)
+except ImportError:
+    pass  # dotenv not installed, will use system env vars
 
 # ============================================================================
 # Example 1: Simple Query Handler (for Next.js API route)
 # ============================================================================
 
-def handle_rag_query(question: str, namespace: str) -> dict:
+def handle_rag_query(question: str, namespace: str, chat_history: list = None) -> dict:
     """
-    Handle a RAG query. Call this from your Next.js API route.
+    Handle a Moorcheh RAG query. Call this from your Next.js API route.
     
     Usage in Next.js (app/api/rag/route.ts):
     
@@ -23,13 +32,13 @@ def handle_rag_query(question: str, namespace: str) -> dict:
     const execAsync = promisify(exec);
     
     export async function POST(request: NextRequest) {
-      const { question, namespace } = await request.json();
+      const { question, namespace, chatHistory } = await request.json();
       
       const script = `
     import sys
+    import json
     sys.path.insert(0, './rag_model')
     from nextjs_integration import handle_rag_query
-    import json
     
     result = handle_rag_query('${question}', '${namespace}')
     print(json.dumps(result))
@@ -48,6 +57,7 @@ def handle_rag_query(question: str, namespace: str) -> dict:
     result = chat_service.answer_question(
         question=question,
         namespace=namespace,
+        chat_history=chat_history or [],
         return_sources=True
     )
     return result
@@ -59,7 +69,7 @@ def handle_rag_query(question: str, namespace: str) -> dict:
 
 def list_available_namespaces() -> list:
     """
-    List all available document namespaces.
+    List all available document namespaces from Moorcheh.
     
     Usage in Next.js (app/api/namespaces/route.ts):
     
@@ -67,9 +77,9 @@ def list_available_namespaces() -> list:
     export async function GET() {
       const script = `
     import sys
+    import json
     sys.path.insert(0, './rag_model')
     from nextjs_integration import list_available_namespaces
-    import json
     
     result = list_available_namespaces()
     print(json.dumps({'namespaces': result}))
@@ -92,9 +102,9 @@ def list_available_namespaces() -> list:
 # Example 3: Upload PDF (requires file path)
 # ============================================================================
 
-def handle_pdf_upload(pdf_path: str, namespace: str, create_new: bool = False) -> dict:
+def handle_pdf_upload(pdf_path: str, namespace: str, metadata: dict = None) -> dict:
     """
-    Upload a PDF to a namespace.
+    Upload a PDF to Moorcheh namespace.
     
     Note: You need to save the uploaded file to disk first in Next.js,
     then pass the file path to this function.
@@ -119,9 +129,9 @@ def handle_pdf_upload(pdf_path: str, namespace: str, create_new: bool = False) -
       // Call Python
       const script = `
     import sys
+    import json
     sys.path.insert(0, './rag_model')
     from nextjs_integration import handle_pdf_upload
-    import json
     
     result = handle_pdf_upload('${tempPath}', '${namespace}')
     print(json.dumps(result))
@@ -140,7 +150,7 @@ def handle_pdf_upload(pdf_path: str, namespace: str, create_new: bool = False) -
     result = doc_service.upload_pdf(
         pdf_path=pdf_path,
         namespace=namespace,
-        create_new=create_new
+        metadata=metadata
     )
     return result
 
@@ -187,4 +197,3 @@ if __name__ == "__main__":
     else:
         print(f"Unknown command: {command}")
         sys.exit(1)
-

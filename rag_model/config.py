@@ -2,81 +2,77 @@
 Configuration for RAG system
 
 Centralized configuration management for the RAG model.
+Uses Moorcheh API for vector storage and retrieval.
 Environment variables are used for sensitive data.
 """
 
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 
 
 @dataclass
-class MilvusConfig:
-    """Milvus vector database configuration."""
+class MoorchehConfig:
+    """Moorcheh API configuration."""
 
-    host: str = os.getenv("MILVUS_HOST", "localhost")
-    port: str = os.getenv("MILVUS_PORT", "19530")
-    user: str = os.getenv("MILVUS_USER", "")
-    password: str = os.getenv("MILVUS_PASSWORD", "")
+    api_key: str = os.getenv("MOORCHEH_API_KEY", "")
+    api_endpoint: str = os.getenv("MOORCHEH_API_ENDPOINT", "https://api.moorcheh.ai/v1/answer")
+    upload_endpoint: str = os.getenv("MOORCHEH_UPLOAD_ENDPOINT", "https://api.moorcheh.ai/v1/upload")
+    namespaces_endpoint: str = os.getenv("MOORCHEH_NAMESPACES_ENDPOINT", "https://api.moorcheh.ai/v1/namespaces")
 
     @property
-    def connection_args(self) -> dict:
-        """Get connection arguments for Milvus."""
-        args = {
-            "host": self.host,
-            "port": self.port,
-        }
-        if self.user:
-            args["user"] = self.user
-        if self.password:
-            args["password"] = self.password
-        return args
-
-
-@dataclass
-class EmbeddingConfig:
-    """Embedding model configuration."""
-
-    model: str = "models/embedding-001"  # Google's embedding model
-    dimension: int = 768  # Embedding dimension
+    def headers(self) -> dict:
+        """Get HTTP headers for Moorcheh API."""
+        return {"Content-Type": "application/json", "x-api-key": self.api_key}
 
 
 @dataclass
 class LLMConfig:
-    """Large Language Model configuration."""
+    """Large Language Model configuration for Moorcheh."""
 
-    model: str = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
-    temperature: float = 0.0  # Deterministic for RAG
+    # Moorcheh supports multiple models - defaulting to Claude (AWS Bedrock format)
+    model: str = os.getenv("AI_MODEL", "anthropic.claude-sonnet-4-20250514-v1:0")
+    temperature: float = float(os.getenv("TEMPERATURE", "0.0"))
     max_tokens: Optional[int] = None
 
 
 @dataclass
 class RAGConfig:
-    """RAG system configuration."""
+    """RAG system configuration for Moorcheh."""
 
-    chunk_size: int = 1000  # Characters per chunk
-    chunk_overlap: int = 200  # Overlap between chunks
-    top_k: int = 3  # Number of chunks to retrieve
-    similarity_threshold: float = 0.7  # Minimum similarity (0-1)
+    top_k: int = int(os.getenv("TOP_K", "15"))  # Number of chunks to retrieve
+    threshold: float = float(os.getenv("THRESHOLD", "0.01"))  # Minimum similarity
+    kiosk_mode: bool = os.getenv("KIOSK_MODE", "true").lower() == "true"
+    type: str = os.getenv("NAMESPACE_TYPE", "vector")  # Document type in Moorcheh (vector or text)
 
 
 @dataclass
 class Config:
-    """Main configuration class."""
+    """Main configuration class for Moorcheh RAG system."""
 
     # API Keys
-    google_api_key: str = os.getenv("GOOGLE_API_KEY", "")
+    moorcheh_api_key: str = field(default_factory=lambda: os.getenv("MOORCHEH_API_KEY", ""))
 
     # Sub-configurations
-    milvus: MilvusConfig = MilvusConfig()
-    embedding: EmbeddingConfig = EmbeddingConfig()
-    llm: LLMConfig = LLMConfig()
-    rag: RAGConfig = RAGConfig()
+    moorcheh: MoorchehConfig = field(default_factory=MoorchehConfig)
+    llm: LLMConfig = field(default_factory=LLMConfig)
+    rag: RAGConfig = field(default_factory=RAGConfig)
+
+    # Prompts (can be customized)
+    header_prompt: str = os.getenv(
+        "HEADER_PROMPT",
+        "You are a helpful AI assistant. Based on the provided context and chat history, " "please answer the user's query. If the context is not sufficient, say you don't have enough information.",
+    )
+
+    footer_prompt: str = os.getenv(
+        "FOOTER_PROMPT",
+        "Base your answers on the context provided. When using context chunks, prioritize information " "from chunks with higher relevance labels. If the context is not relevant, say you don't know.",
+    )
 
     def validate(self) -> None:
         """Validate configuration."""
-        if not self.google_api_key:
-            raise ValueError("GOOGLE_API_KEY environment variable not set.\n" "Set it with: export GOOGLE_API_KEY='your-api-key-here'")
+        if not self.moorcheh_api_key:
+            raise ValueError("MOORCHEH_API_KEY environment variable not set.\n" "Set it with: export MOORCHEH_API_KEY='your-api-key-here'")
 
     @classmethod
     def from_env(cls) -> "Config":

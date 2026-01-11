@@ -1,8 +1,5 @@
-"""Core modules for RAG system."""
+"""Core modules for Moorcheh RAG system."""
 
-from .embeddings import get_embeddings
-from .llm import get_llm
-from .vector_store import VectorStoreManager
+from .moorcheh_client import MoorchehClient
 
-__all__ = ["get_embeddings", "get_llm", "VectorStoreManager"]
-
+__all__ = ["MoorchehClient"]

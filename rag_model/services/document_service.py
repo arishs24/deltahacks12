@@ -1,177 +1,134 @@
 """
 Document Service
 
-Handles PDF processing, chunking, and indexing into vector database.
+Handles PDF processing and uploading to Moorcheh namespaces using SDK.
+Supports both TEXT and VECTOR namespaces.
 """
 
 from pathlib import Path
-from typing import List
-from langchain_core.documents import Document
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-
-from ..core.vector_store import VectorStoreManager
-from ..utils.pdf_utils import load_pdf
-from ..config import config
+from typing import List, Dict, Any
+import PyPDF2
+from ..core.moorcheh_client import MoorchehClient
+from ..utils.pdf_utils import validate_pdf, get_pdf_metadata
 
 
 class DocumentService:
-    """Service for document processing and indexing."""
+    """Service for document processing and uploading to Moorcheh."""
     
     def __init__(self):
         """Initialize document service."""
-        self.vector_store_manager = VectorStoreManager()
-        self.text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=config.rag.chunk_size,
-            chunk_overlap=config.rag.chunk_overlap,
-            length_function=len,
-            separators=["\n\n", "\n", " ", ""]
-        )
+        self.client = MoorchehClient()
     
-    def process_pdf(self, pdf_path: str) -> List[Document]:
+    def extract_text_from_pdf(self, pdf_path: str) -> str:
         """
-        Load and process a single PDF file.
+        Extract text from a PDF file.
         
         Args:
             pdf_path: Path to the PDF file
             
         Returns:
-            List of processed documents
+            Extracted text
         """
-        # Load PDF
-        documents = load_pdf(pdf_path)
+        validate_pdf(pdf_path)
         
-        # Chunk documents
-        chunks = self.text_splitter.split_documents(documents)
+        text = ""
+        with open(pdf_path, 'rb') as file:
+            pdf_reader = PyPDF2.PdfReader(file)
+            for page in pdf_reader.pages:
+                text += page.extract_text() + "\n"
         
-        return chunks
-    
-    def process_multiple_pdfs(self, pdf_paths: List[str]) -> List[Document]:
-        """
-        Process multiple PDF files.
-        
-        Args:
-            pdf_paths: List of paths to PDF files
-            
-        Returns:
-            List of processed document chunks from all PDFs
-        """
-        all_chunks = []
-        for pdf_path in pdf_paths:
-            chunks = self.process_pdf(pdf_path)
-            all_chunks.extend(chunks)
-        return all_chunks
-    
-    def index_documents(
-        self,
-        documents: List[Document],
-        namespace: str,
-        create_new: bool = False
-    ) -> None:
-        """
-        Index documents into a vector store namespace (collection).
-        
-        Args:
-            documents: List of document chunks to index
-            namespace: Name of the collection/namespace
-            create_new: If True, create new collection. If False, add to existing.
-        """
-        if create_new:
-            self.vector_store_manager.create_collection(
-                documents=documents,
-                collection_name=namespace
-            )
-        else:
-            # Check if collection exists
-            if not self.vector_store_manager.collection_exists(namespace):
-                # If doesn't exist, create it
-                self.vector_store_manager.create_collection(
-                    documents=documents,
-                    collection_name=namespace
-                )
-            else:
-                # Add to existing collection
-                self.vector_store_manager.add_documents(
-                    documents=documents,
-                    collection_name=namespace
-                )
+        return text.strip()
     
     def upload_pdf(
         self,
         pdf_path: str,
         namespace: str,
-        create_new: bool = False
+        metadata: Dict = None
     ) -> dict:
         """
-        Complete pipeline: process PDF and upload to namespace.
+        Upload a PDF file to Moorcheh TEXT namespace.
+        
+        Note: This only works for TEXT namespaces.
+        For VECTOR namespaces, you need to upload via Moorcheh Console.
         
         Args:
             pdf_path: Path to the PDF file
-            namespace: Name of the collection/namespace
-            create_new: If True, create new collection
+            namespace: Name of the TEXT namespace
+            metadata: Optional metadata for the document
             
         Returns:
             Dictionary with upload statistics
         """
-        # Process PDF
-        chunks = self.process_pdf(pdf_path)
+        # Extract text from PDF
+        text = self.extract_text_from_pdf(pdf_path)
+        filename = Path(pdf_path).name
         
-        # Index chunks
-        self.index_documents(chunks, namespace, create_new)
+        # Create document for Moorcheh
+        documents = [{
+            "id": filename,  # Use filename as ID
+            "text": text
+        }]
         
-        # Return statistics
+        # Upload to Moorcheh using SDK (TEXT namespace only)
+        result = self.client.upload_documents(
+            namespace=namespace,
+            documents=documents
+        )
+        
+        # Return formatted response
         return {
             "pdf_path": pdf_path,
             "namespace": namespace,
-            "chunks_created": len(chunks),
-            "status": "success"
+            "filename": filename,
+            "status": result.get('status', 'success'),
+            "moorcheh_response": result
         }
     
-    def upload_multiple_pdfs(
-        self,
-        pdf_paths: List[str],
-        namespace: str,
-        create_new: bool = False
-    ) -> dict:
+    def list_namespaces(self) -> List[Dict[str, Any]]:
         """
-        Upload multiple PDFs to a namespace.
+        List all available namespaces with their types.
         
-        Args:
-            pdf_paths: List of paths to PDF files
-            namespace: Name of the collection/namespace
-            create_new: If True, create new collection
-            
         Returns:
-            Dictionary with upload statistics
+            List of namespace dictionaries
         """
-        # Process all PDFs
-        all_chunks = self.process_multiple_pdfs(pdf_paths)
-        
-        # Index all chunks
-        self.index_documents(all_chunks, namespace, create_new)
-        
-        # Return statistics
-        return {
-            "pdf_count": len(pdf_paths),
-            "namespace": namespace,
-            "total_chunks": len(all_chunks),
-            "status": "success"
-        }
+        namespaces = self.client.list_namespaces()
+        return namespaces
     
-    def list_namespaces(self) -> List[str]:
+    def list_namespace_names(self) -> List[str]:
         """
-        List all available namespaces (collections).
+        List all available namespace names (legacy compatibility).
         
         Returns:
             List of namespace names
         """
-        return self.vector_store_manager.list_collections()
+        namespaces = self.client.list_namespaces()
+        return [ns.get('namespace_name', ns.get('name', str(ns))) for ns in namespaces]
     
-    def delete_namespace(self, namespace: str) -> None:
+    def get_namespace_type(self, namespace: str) -> str:
         """
-        Delete a namespace (collection).
+        Get the type of a namespace (text or vector).
         
         Args:
-            namespace: Name of the namespace to delete
+            namespace: Name of the namespace
+            
+        Returns:
+            "text" or "vector"
         """
-        self.vector_store_manager.delete_collection(namespace)
-
+        namespaces = self.list_namespaces()
+        for ns in namespaces:
+            if ns.get('namespace_name') == namespace:
+                return ns.get('type', 'text')
+        return 'text'  # Default to text
+    
+    def create_namespace(self, namespace: str, type: str = "text") -> Dict:
+        """
+        Create a new namespace.
+        
+        Args:
+            namespace: Name of the namespace
+            type: Type of namespace ("text" or "vector")
+            
+        Returns:
+            Creation response
+        """
+        return self.client.create_namespace(namespace, type)

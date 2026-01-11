@@ -1,14 +1,14 @@
 """
-RAG Model Package
+RAG Model Package - Moorcheh API Version
 
-A modular RAG system using Milvus (Moorcheh) and Google Gemini.
+A modular RAG system using Moorcheh's hosted vector database and AI models.
 Designed for easy integration with Next.js API routes.
 """
 
-__version__ = "1.0.0"
+__version__ = "2.0.0"
 
 from .services.chat_service import ChatService
 from .services.document_service import DocumentService
-from .services.retrieval_service import RetrievalService
+from .core.moorcheh_client import MoorchehClient
 
-__all__ = ["ChatService", "DocumentService", "RetrievalService"]
+__all__ = ["ChatService", "DocumentService", "MoorchehClient"]

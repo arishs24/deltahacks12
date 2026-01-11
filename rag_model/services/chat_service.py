@@ -1,179 +1,158 @@
 """
 Chat Service
 
-Orchestrates RAG pipeline: retrieval + generation with strict source citation.
+Handles RAG-based question answering using Moorcheh SDK.
+Supports both TEXT and VECTOR namespaces.
 """
 
 from typing import Dict, List, Optional
-from langchain_core.prompts import ChatPromptTemplate
-
-from ..core.llm import get_llm
-from .retrieval_service import RetrievalService
-from ..config import config
-
-
-# Strict RAG prompt template
-RAG_PROMPT = ChatPromptTemplate.from_messages([
-    (
-        "system",
-        """You are a helpful assistant that answers questions STRICTLY based on the provided context.
-
-Rules:
-1. ONLY use information from the context provided below
-2. If the answer is not in the context, respond with: "I don't have enough information in the knowledge base to answer this question."
-3. Always cite which source document(s) you used (by source name)
-4. Be concise and accurate
-5. Do not use external knowledge or make assumptions
-
-Context:
-{context}
-""",
-    ),
-    ("human", "{question}"),
-])
+from ..core.moorcheh_client import MoorchehClient
+from ..services.document_service import DocumentService
 
 
 class ChatService:
-    """Service for RAG-based question answering."""
+    """Service for RAG-based question answering using Moorcheh SDK."""
     
     def __init__(self):
         """Initialize chat service."""
-        self.retrieval_service = RetrievalService()
-        self.llm = get_llm()
+        self.client = MoorchehClient()
+        self.doc_service = DocumentService()
     
     def answer_question(
         self,
         question: str,
         namespace: str,
+        chat_history: List[Dict[str, str]] = None,
         top_k: Optional[int] = None,
         return_sources: bool = True
     ) -> Dict:
         """
-        Answer a question using RAG pipeline.
+        Answer a question using Moorcheh SDK.
+        Automatically detects namespace type and uses appropriate method.
         
         Args:
             question: User's question
-            namespace: Collection/namespace to search in
+            namespace: Namespace to search in
+            chat_history: Previous conversation history
             top_k: Number of documents to retrieve
             return_sources: Whether to include source information
             
         Returns:
-            Dictionary containing:
-                - answer: The generated answer
-                - sources: List of source documents (if return_sources=True)
-                - context_found: Boolean indicating if relevant context was found
+            Dictionary containing answer and sources
         """
-        # Retrieve relevant documents
         try:
-            retrieved_docs = self.retrieval_service.retrieve(
-                query=question,
+            # Detect namespace type
+            namespace_type = self.doc_service.get_namespace_type(namespace)
+            print(f"[DEBUG] Namespace type: {namespace_type}")
+            
+            # Query Moorcheh SDK
+            response = self.client.query(
+                question=question,
                 namespace=namespace,
+                namespace_type=namespace_type,
+                chat_history=chat_history,
                 top_k=top_k
             )
-        except ValueError as e:
+            
+            # Extract answer from SDK response
+            if namespace_type == "vector":
+                # Vector namespace returns formatted results
+                answer = response.get('answer', '')
+                sources = response.get('results', [])
+            else:
+                # Text namespace returns answer directly
+                answer = response.get('answer', response.get('response', str(response)))
+                sources = response.get('sources', response.get('context', []))
+            
+            # Format response
+            result = {
+                "answer": answer,
+                "context_found": bool(answer),
+                "namespace_type": namespace_type,
+                "raw_response": response
+            }
+            
+            if return_sources and sources:
+                result["sources"] = self._format_sources(sources)
+            
+            return result
+            
+        except Exception as e:
             return {
                 "answer": f"Error: {str(e)}",
                 "sources": [],
                 "context_found": False,
                 "error": str(e)
             }
-        
-        # Check if we have results
-        if not retrieved_docs:
-            return {
-                "answer": "Not found in knowledge base",
-                "sources": [],
-                "context_found": False
-            }
-        
-        # Format context
-        context = self.retrieval_service.format_context(
-            retrieved_docs,
-            include_scores=False
-        )
-        
-        # Generate answer using LLM
-        try:
-            chain = RAG_PROMPT | self.llm
-            response = chain.invoke({
-                "context": context,
-                "question": question
-            })
-            answer = response.content
-        except Exception as e:
-            return {
-                "answer": f"Error generating answer: {str(e)}",
-                "sources": [],
-                "context_found": True,
-                "error": str(e)
-            }
-        
-        # Prepare response
-        result = {
-            "answer": answer,
-            "context_found": True
-        }
-        
-        if return_sources:
-            result["sources"] = self.retrieval_service.get_sources(retrieved_docs)
-        
-        return result
     
-    def stream_answer(
+    def _format_sources(self, sources: List) -> List[Dict]:
+        """Format source information from Moorcheh response."""
+        formatted = []
+        for i, source in enumerate(sources, 1):
+            if isinstance(source, dict):
+                # Extract text from various possible locations
+                text = (
+                    source.get('text') or 
+                    source.get('content') or
+                    (source.get('metadata', {}).get('text') if isinstance(source.get('metadata'), dict) else None) or
+                    ""
+                )
+                
+                # Extract metadata
+                metadata = source.get('metadata', {})
+                if isinstance(metadata, dict):
+                    source_name = metadata.get('source', source.get('id', 'Unknown'))
+                else:
+                    source_name = source.get('filename', source.get('id', source.get('source', 'Unknown')))
+                
+                formatted.append({
+                    "index": i,
+                    "filename": source_name,
+                    "score": source.get('score', source.get('relevance', source.get('distance', 0))),
+                    "text": text,
+                    "metadata": metadata if isinstance(metadata, dict) else {}
+                })
+            else:
+                formatted.append({
+                    "index": i,
+                    "content": str(source)
+                })
+        
+        return formatted
+    
+    def chat(
         self,
         question: str,
         namespace: str,
-        top_k: Optional[int] = None
-    ):
+        chat_history: List[Dict[str, str]] = None
+    ) -> Dict:
         """
-        Stream answer generation (for real-time responses).
+        Simplified chat interface with conversation history.
         
         Args:
             question: User's question
-            namespace: Collection/namespace to search in
-            top_k: Number of documents to retrieve
+            namespace: Namespace to search in
+            chat_history: Previous conversation
             
-        Yields:
-            Chunks of the generated answer
+        Returns:
+            Response with answer and updated history
         """
-        # Retrieve relevant documents
-        retrieved_docs = self.retrieval_service.retrieve(
-            query=question,
+        result = self.answer_question(
+            question=question,
             namespace=namespace,
-            top_k=top_k
+            chat_history=chat_history or []
         )
         
-        if not retrieved_docs:
-            yield {"type": "error", "content": "Not found in knowledge base"}
-            return
+        # Update chat history
+        updated_history = (chat_history or []).copy()
+        updated_history.append({
+            "role": "user",
+            "content": question
+        })
+        updated_history.append({
+            "role": "assistant",
+            "content": result['answer']
+        })
         
-        # Format context
-        context = self.retrieval_service.format_context(
-            retrieved_docs,
-            include_scores=False
-        )
-        
-        # Stream the response
-        chain = RAG_PROMPT | self.llm
-        
-        try:
-            for chunk in chain.stream({
-                "context": context,
-                "question": question
-            }):
-                yield {
-                    "type": "content",
-                    "content": chunk.content
-                }
-            
-            # Send sources at the end
-            yield {
-                "type": "sources",
-                "sources": self.retrieval_service.get_sources(retrieved_docs)
-            }
-        except Exception as e:
-            yield {
-                "type": "error",
-                "content": f"Error: {str(e)}"
-            }
-
+        result['chat_history'] = updated_history
+        return result

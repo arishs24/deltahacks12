@@ -1,25 +1,15 @@
-# RAG Model Requirements
+# RAG Model Requirements - Moorcheh SDK Version
 # Python 3.10+
 
-# LangChain Core
-langchain==0.1.0
-langchain-core==0.1.10
-langchain-community==0.0.13
-
-# Google Gemini Integration
-langchain-google-genai==0.0.6
-google-generativeai==0.3.2
-
-# Vector Store (Milvus/Moorcheh)
-pymilvus==2.3.4
+# Moorcheh Official SDK
+moorcheh-sdk
 
 # PDF Processing
 pypdf==3.17.4
+PyPDF2==3.0.1
 
 # Utilities
 python-dotenv==1.0.0
 
-# Optional: For richer PDF processing (OCR, tables, etc.)
-# unstructured==0.11.8
-# pytesseract==0.3.10
-
+# Type hints (optional but recommended)
+typing-extensions==4.9.0

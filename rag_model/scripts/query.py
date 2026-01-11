@@ -1,16 +1,29 @@
 #!/usr/bin/env python3
 """
-RAG Query CLI
+Moorcheh RAG Query CLI
 
-Interactive command-line interface for querying the RAG system.
+Interactive command-line interface for querying the Moorcheh RAG system.
 
 Usage:
-    export GOOGLE_API_KEY="your-api-key-here"
+    # Option 1: Use .env file (recommended)
+    # Create rag_model/.env with: MOORCHEH_API_KEY=your-key
+    python query.py
+
+    # Option 2: Export environment variable
+    export MOORCHEH_API_KEY="your-api-key-here"
     python query.py
 """
 
 import sys
 from pathlib import Path
+
+# Load .env file if it exists
+try:
+    from dotenv import load_dotenv
+    env_path = Path(__file__).parent / '.env'
+    load_dotenv(dotenv_path=env_path)
+except ImportError:
+    pass  # dotenv not installed, will use system env vars
 
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -23,7 +36,7 @@ from rag_model.config import Config
 def print_header():
     """Print welcome header."""
     print("\n" + "=" * 60)
-    print("RAG System - Query Interface")
+    print("Moorcheh RAG System - Query Interface")
     print("=" * 60 + "\n")
 
 

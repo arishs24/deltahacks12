@@ -1,6 +1,20 @@
-# RAG Model - Milvus + Google Gemini
+# RAG Model - Moorcheh + Google Gemini
 
-A modular, production-ready RAG (Retrieval-Augmented Generation) system using **Milvus** (Moorcheh) vector database and **Google Gemini** LLM. Designed for easy integration with **Next.js API routes**.
+A modular, production-ready RAG (Retrieval-Augmented Generation) system using **Moorcheh's hosted vector database** and **Google Gemini** (or other AI models). Designed for easy integration with **Next.js API routes**.
+
+## 🎯 What's Moorcheh?
+
+**Moorcheh** is a hosted RAG service that handles:
+
+- ✅ PDF processing and chunking
+- ✅ Automatic embedding generation
+- ✅ Vector storage and similarity search
+- ✅ Multi-model AI support (Gemini, Claude, etc.)
+- ✅ Context retrieval with relevance scoring
+
+**You don't need to run Milvus or any vector database locally** - Moorcheh handles everything via API!
+
+---
 
 ## 📁 Project Structure
 
@@ -10,25 +24,32 @@ rag_model/
 ├── config.py                # Centralized configuration
 ├── requirements.txt         # Python dependencies
 │
+├── upload_pdf.py           # 🛠️ Main CLI: Upload PDFs (TEXT or VECTOR)
+├── chat_test.py            # 🛠️ Main CLI: Interactive chat test
+│
 ├── core/                    # Core abstractions
 │   ├── __init__.py
-│   ├── embeddings.py       # Google embeddings wrapper
-│   ├── llm.py              # Gemini LLM wrapper
-│   └── vector_store.py     # Milvus connection manager
+│   └── moorcheh_client.py  # Moorcheh API client
 │
 ├── services/                # Business logic services
 │   ├── __init__.py
-│   ├── document_service.py # PDF processing & indexing
-│   ├── retrieval_service.py # Vector similarity search
-│   └── chat_service.py     # RAG orchestration
+│   ├── document_service.py # PDF upload to Moorcheh
+│   └── chat_service.py     # RAG queries
 │
 ├── utils/                   # Utilities
 │   ├── __init__.py
-│   ├── pdf_utils.py        # PDF processing helpers
+│   ├── pdf_utils.py        # PDF validation
 │   └── validators.py       # Input validation
 │
-├── upload_pdf.py           # 🛠️ CLI: Upload PDFs to namespace
-└── query.py                # 🛠️ CLI: Query RAG system
+├── scripts/                 # Utility scripts
+│   ├── __init__.py
+│   ├── create_and_upload.py    # Create TEXT namespace & upload
+│   ├── direct_upload.py        # Direct upload (no prompts)
+│   ├── direct_query.py         # Direct query (no prompts)
+│   ├── query.py                # Interactive query interface
+│   └── nextjs_integration.py   # Next.js helper functions
+│
+└── README.md               # This file
 ```
 
 ---
@@ -42,48 +63,74 @@ cd rag_model
 pip install -r requirements.txt
 ```
 
-### 2. Start Milvus
+**No Docker needed!** Moorcheh is a hosted service.
 
-```bash
-# Using Docker
-docker run -d \
-  --name milvus-standalone \
-  -p 19530:19530 \
-  -p 9091:9091 \
-  milvusdb/milvus:latest
-```
+### 2. Get Your Moorcheh API Key
+
+1. Visit [Moorcheh Console](https://console.moorcheh.ai/api-keys)
+2. Copy your API key
 
 ### 3. Set Environment Variables
 
+**Create `rag_model/.env` file:**
+
+```bash
+# Required
+MOORCHEH_API_KEY=your-moorcheh-api-key-here
+
+# Optional: Configure model and settings
+AI_MODEL=gemini-1.5-flash
+TEMPERATURE=0.0
+TOP_K=15
+THRESHOLD=0.01
+KIOSK_MODE=true
+
+# For VECTOR namespaces (optional - only if using vector namespace)
+GOOGLE_API_KEY=your-google-api-key-here
+```
+
+**Option 2: Export environment variable**
+
 ```bash
 # Linux/Mac
-export GOOGLE_API_KEY="your-gemini-api-key"
+export MOORCHEH_API_KEY="your-moorcheh-api-key"
 
 # Windows CMD
-set GOOGLE_API_KEY=your-gemini-api-key
+set MOORCHEH_API_KEY=your-moorcheh-api-key
 
 # Windows PowerShell
-$env:GOOGLE_API_KEY="your-gemini-api-key"
+$env:MOORCHEH_API_KEY="your-moorcheh-api-key"
 ```
 
 ### 4. Upload PDFs
 
 ```bash
+# Interactive mode (recommended)
 python upload_pdf.py
+
+# Command-line mode (TEXT namespace - recommended)
+python upload_pdf.py "path/to/file.pdf" "MyNamespace" --type text
+
+# Command-line mode (VECTOR namespace - requires GOOGLE_API_KEY)
+python upload_pdf.py "path/to/file.pdf" "MyNamespace" --type vector
 ```
 
 The script will:
-- List all available namespaces (collections)
-- Let you create a new namespace or select existing
-- Upload and index your PDF into the namespace
 
-### 5. Query the System
+- List all available namespaces from Moorcheh
+- Let you choose between TEXT or VECTOR namespace type
+- Let you create a new namespace or select existing
+- Upload and process your PDF automatically
+
+### 5. Test the System
 
 ```bash
-python query.py
-```
+# Interactive chat test
+python chat_test.py
 
-Interactive CLI for asking questions!
+# Direct query (non-interactive)
+python scripts/direct_query.py MyNamespace "What is this document about?"
+```
 
 ---
 
@@ -91,96 +138,117 @@ Interactive CLI for asking questions!
 
 Edit `config.py` or use environment variables:
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `GOOGLE_API_KEY` | *(required)* | Google Gemini API key |
-| `MILVUS_HOST` | `localhost` | Milvus server host |
-| `MILVUS_PORT` | `19530` | Milvus server port |
-| `GEMINI_MODEL` | `gemini-1.5-flash` | Gemini model name |
+| Variable                       | Default                                 | Description                                 |
+| ------------------------------ | --------------------------------------- | ------------------------------------------- |
+| `MOORCHEH_API_KEY`             | _(required)_                            | Your Moorcheh API key                       |
+| `MOORCHEH_API_ENDPOINT`        | `https://api.moorcheh.ai/v1/answer`     | Query endpoint                              |
+| `MOORCHEH_UPLOAD_ENDPOINT`     | `https://api.moorcheh.ai/v1/upload`     | Upload endpoint                             |
+| `MOORCHEH_NAMESPACES_ENDPOINT` | `https://api.moorcheh.ai/v1/namespaces` | Namespaces endpoint                         |
+| `AI_MODEL`                     | `gemini-1.5-flash`                      | AI model (Claude, Gemini, etc.)             |
+| `TEMPERATURE`                  | `0.0`                                   | LLM temperature (0=deterministic)           |
+| `TOP_K`                        | `15`                                    | Number of context chunks                    |
+| `THRESHOLD`                    | `0.01`                                  | Minimum relevance threshold                 |
+| `KIOSK_MODE`                   | `true`                                  | Filter irrelevant results                   |
+| `GOOGLE_API_KEY`               | _(optional)_                            | Google API key (only for VECTOR namespaces) |
+
+---
+
+## 📚 TEXT vs VECTOR Namespaces
+
+Moorcheh supports two types of namespaces: **TEXT** and **VECTOR**. Understanding the difference is crucial for choosing the right approach.
+
+### Text Namespaces (Recommended for Most Use Cases)
+
+**What They Are:**
+
+- Text namespaces store documents as text
+- Moorcheh automatically handles chunking, embedding, and indexing
+- You simply upload text/PDFs and Moorcheh does the rest
+
+**Advantages:**
+
+- ✅ **Simplest to use** - Just upload text or PDFs
+- ✅ **Automatic processing** - Moorcheh handles chunking and embeddings
+- ✅ **RAG with LLM** - Can use `answer.generate()` for full RAG with AI responses
+- ✅ **No external dependencies** - No need for embedding models
+- ✅ **Cost effective** - Moorcheh manages embeddings efficiently
+
+**Querying Text Namespaces:**
+
+1. **`answer.generate()`** - Full RAG with LLM-generated answers
+2. **`search()`** - Similarity search returning relevant chunks
+
+### Vector Namespaces (Advanced Use Cases)
+
+**What They Are:**
+
+- Vector namespaces store pre-computed vector embeddings
+- You provide the vectors directly (not text)
+- More control but more complexity
+
+**Advantages:**
+
+- ✅ **Custom embeddings** - Use your own embedding model
+- ✅ **Fine-grained control** - Manage embedding dimensions
+- ✅ **Specialized use cases** - When you need specific embedding strategies
+
+**Disadvantages:**
+
+- ❌ **Complex setup** - Must generate embeddings yourself
+- ❌ **External dependencies** - Need Google Gemini or other embedding API
+- ❌ **No automatic RAG** - Only returns similarity search results, not LLM answers
+- ❌ **More expensive** - Pay for embedding API calls separately
+
+**Querying Vector Namespaces:**
+
+- Only **`search()`** with vector queries - Returns similar chunks based on vector similarity
+- ⚠️ **Note**: `answer.generate()` does NOT work with vector namespaces. You only get raw search results, not LLM-generated answers.
+
+### Comparison Table
+
+| Feature                   | Text Namespace               | Vector Namespace                    |
+| ------------------------- | ---------------------------- | ----------------------------------- |
+| **Setup Complexity**      | Simple                       | Complex                             |
+| **Upload Format**         | Text/PDFs                    | Pre-computed vectors                |
+| **Embedding**             | Automatic                    | Manual (your responsibility)        |
+| **RAG with LLM**          | ✅ Yes (`answer.generate()`) | ❌ No (only similarity search)      |
+| **External Dependencies** | None                         | Embedding API (e.g., Google Gemini) |
+| **Cost**                  | Lower (bundled)              | Higher (separate embedding costs)   |
+| **Full Text Storage**     | ✅ Yes                       | ❌ No (metadata preview only)       |
+| **AI Answers**            | ✅ Yes                       | ❌ No                               |
+| **Use Case**              | Most applications            | Specialized/custom embeddings       |
+
+### Recommendation
+
+**Use TEXT namespaces** unless you have a specific reason to use vectors:
+
+- Simpler setup
+- Automatic processing
+- Full RAG with LLM answers
+- Lower cost
+- Easier maintenance
+
+**Use VECTOR namespaces** only if:
+
+- You need a specific embedding model not supported by Moorcheh
+- You have existing vector data
+- You require custom embedding strategies
+- You're doing advanced similarity search
 
 ---
 
 ## 🌐 Next.js Integration
 
-### Example 1: Upload PDF API Route
+See `scripts/nextjs_integration.py` for helper functions and examples.
 
-Create `app/api/upload-pdf/route.ts`:
+### Example API Route
 
-```typescript
-import { NextRequest, NextResponse } from 'next/server';
-import { writeFile } from 'fs/promises';
-import { join } from 'path';
-import { spawn } from 'child_process';
-
-export async function POST(request: NextRequest) {
-  try {
-    const formData = await request.formData();
-    const file = formData.get('file') as File;
-    const namespace = formData.get('namespace') as string;
-
-    if (!file || !namespace) {
-      return NextResponse.json(
-        { error: 'Missing file or namespace' },
-        { status: 400 }
-      );
-    }
-
-    // Save PDF temporarily
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const tempPath = join('/tmp', file.name);
-    await writeFile(tempPath, buffer);
-
-    // Call Python service
-    const result = await uploadPdfToPython(tempPath, namespace);
-
-    return NextResponse.json(result);
-  } catch (error) {
-    return NextResponse.json(
-      { error: error.message },
-      { status: 500 }
-    );
-  }
-}
-
-async function uploadPdfToPython(pdfPath: string, namespace: string) {
-  return new Promise((resolve, reject) => {
-    const pythonScript = `
-import sys
-sys.path.insert(0, './rag_model')
-from rag_model.services.document_service import DocumentService
-
-doc_service = DocumentService()
-result = doc_service.upload_pdf('${pdfPath}', '${namespace}')
-print(result)
-`;
-
-    const python = spawn('python3', ['-c', pythonScript]);
-    let output = '';
-
-    python.stdout.on('data', (data) => {
-      output += data.toString();
-    });
-
-    python.on('close', (code) => {
-      if (code === 0) {
-        resolve(JSON.parse(output));
-      } else {
-        reject(new Error('Upload failed'));
-      }
-    });
-  });
-}
-```
-
-### Example 2: Query API Route
-
-Create `app/api/rag-query/route.ts`:
+Create `app/api/rag/route.ts`:
 
 ```typescript
-import { NextRequest, NextResponse } from 'next/server';
-import { exec } from 'child_process';
-import { promisify } from 'util';
+import { NextRequest, NextResponse } from "next/server";
+import { exec } from "child_process";
+import { promisify } from "util";
 
 const execAsync = promisify(exec);
 
@@ -188,187 +256,32 @@ export async function POST(request: NextRequest) {
   try {
     const { question, namespace } = await request.json();
 
-    if (!question || !namespace) {
-      return NextResponse.json(
-        { error: 'Missing question or namespace' },
-        { status: 400 }
-      );
-    }
-
-    // Call Python RAG service
-    const pythonScript = `
+    const script = `
 import sys
 import json
 sys.path.insert(0, './rag_model')
-from rag_model.services.chat_service import ChatService
+from scripts.nextjs_integration import handle_rag_query
 
-chat_service = ChatService()
-result = chat_service.answer_question(
-    question='${question.replace(/'/g, "\\'")}',
-    namespace='${namespace}'
-)
+result = handle_rag_query('${question.replace(/'/g, "\\'")}', '${namespace}')
 print(json.dumps(result))
-`;
+    `;
 
-    const { stdout } = await execAsync(
-      `python3 -c "${pythonScript.replace(/"/g, '\\"')}"`,
-      {
-        env: {
-          ...process.env,
-          GOOGLE_API_KEY: process.env.GOOGLE_API_KEY
-        }
-      }
-    );
+    const { stdout } = await execAsync(`python3 -c "${script}"`, {
+      env: { ...process.env, MOORCHEH_API_KEY: process.env.MOORCHEH_API_KEY },
+    });
 
-    const result = JSON.parse(stdout);
-    return NextResponse.json(result);
+    return NextResponse.json(JSON.parse(stdout));
   } catch (error) {
-    return NextResponse.json(
-      { error: error.message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 ```
 
-### Example 3: Direct Python Integration (Recommended)
-
-For better performance, use a Python child process or FastAPI bridge:
-
-**Option A: Child Process (Simple)**
-
-```typescript
-// lib/rag-client.ts
-import { spawn } from 'child_process';
-
-export async function queryRAG(question: string, namespace: string) {
-  return new Promise((resolve, reject) => {
-    const python = spawn('python3', [
-      '-c',
-      `
-import sys
-import json
-sys.path.insert(0, './rag_model')
-from rag_model.services.chat_service import ChatService
-
-chat_service = ChatService()
-result = chat_service.answer_question(
-    question=sys.argv[1],
-    namespace=sys.argv[2]
-)
-print(json.dumps(result))
-      `,
-      question,
-      namespace
-    ]);
-
-    let output = '';
-    python.stdout.on('data', (data) => {
-      output += data.toString();
-    });
-
-    python.on('close', (code) => {
-      if (code === 0) {
-        resolve(JSON.parse(output));
-      } else {
-        reject(new Error('Query failed'));
-      }
-    });
-  });
-}
-```
-
-**Option B: FastAPI Bridge (Production)**
-
-Create `rag_model/api.py`:
-
-```python
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-from typing import Optional
-
-from services.chat_service import ChatService
-from services.document_service import DocumentService
-
-app = FastAPI()
-
-chat_service = ChatService()
-doc_service = DocumentService()
-
-
-class QueryRequest(BaseModel):
-    question: str
-    namespace: str
-    top_k: Optional[int] = None
-
-
-class UploadRequest(BaseModel):
-    pdf_path: str
-    namespace: str
-    create_new: bool = False
-
-
-@app.post("/query")
-async def query(request: QueryRequest):
-    try:
-        result = chat_service.answer_question(
-            question=request.question,
-            namespace=request.namespace,
-            top_k=request.top_k
-        )
-        return result
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.post("/upload")
-async def upload(request: UploadRequest):
-    try:
-        result = doc_service.upload_pdf(
-            pdf_path=request.pdf_path,
-            namespace=request.namespace,
-            create_new=request.create_new
-        )
-        return result
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.get("/namespaces")
-async def list_namespaces():
-    try:
-        namespaces = doc_service.list_namespaces()
-        return {"namespaces": namespaces}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-```
-
-Run FastAPI:
-
-```bash
-cd rag_model
-uvicorn api:app --reload --port 8000
-```
-
-Then in Next.js:
-
-```typescript
-// lib/rag-client.ts
-export async function queryRAG(question: string, namespace: string) {
-  const response = await fetch('http://localhost:8000/query', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ question, namespace })
-  });
-  return response.json();
-}
-```
+See `scripts/nextjs_integration.py` for more examples.
 
 ---
 
-## 📚 Usage Examples
-
-### Python Direct Usage
+## 📚 Python Direct Usage
 
 ```python
 from rag_model import ChatService, DocumentService
@@ -379,7 +292,7 @@ result = doc_service.upload_pdf(
     pdf_path="./data/document.pdf",
     namespace="my_knowledge_base"
 )
-print(f"Uploaded {result['chunks_created']} chunks")
+print(f"Uploaded: {result['filename']}")
 
 # Query the system
 chat_service = ChatService()
@@ -391,126 +304,177 @@ print(result['answer'])
 print(result['sources'])
 ```
 
-### Streaming Responses
+---
 
-```python
-from rag_model.services.chat_service import ChatService
+## 🎨 Supported AI Models
 
-chat_service = ChatService()
+Moorcheh supports multiple AI models. Configure via `AI_MODEL` env var:
 
-for chunk in chat_service.stream_answer(
-    question="Explain the key concepts",
-    namespace="my_knowledge_base"
-):
-    if chunk['type'] == 'content':
-        print(chunk['content'], end='', flush=True)
-    elif chunk['type'] == 'sources':
-        print("\n\nSources:", chunk['sources'])
+- `gemini-1.5-flash` (default - fast Google Gemini)
+- `gemini-1.5-pro` (more capable Gemini)
+- `anthropic.claude-sonnet-4-20250514-v1:0` (AWS Bedrock Claude)
+- `claude-sonnet-4` (Anthropic Claude direct)
+- And more!
+
+Check [Moorcheh Console](https://console.moorcheh.ai/playground) for available models.
+
+---
+
+## 🆚 vs. Local Vector DB
+
+### Moorcheh Advantages
+
+✅ **No infrastructure** - No Docker, no Milvus setup  
+✅ **Automatic scaling** - Handles any document volume  
+✅ **Multi-model** - Switch between Gemini, Claude, etc.  
+✅ **Managed service** - Updates, security handled for you  
+✅ **Built-in chunking** - Optimal document processing  
+✅ **Relevance scoring** - Advanced ranking algorithms
+
+### When to Use Local DB
+
+- Privacy requirements (data must stay on-premise)
+- No internet access
+- Custom embedding models
+- Very high query volume (cost optimization)
+
+---
+
+## 📊 How Moorcheh RAG Works
+
 ```
-
----
-
-## 🔐 Security Notes
-
-1. **Never expose the Python process directly** - Always wrap with API routes
-2. **Validate all inputs** - Use the built-in validators
-3. **Sanitize file uploads** - Check file types and sizes
-4. **Use environment variables** - Never hardcode API keys
-5. **Namespace isolation** - Consider user-specific namespaces for multi-tenant apps
-
----
-
-## 🧪 Testing
-
-```bash
-# Test PDF upload
-python -c "
-from rag_model import DocumentService
-ds = DocumentService()
-print(ds.list_namespaces())
-"
-
-# Test query
-python -c "
-from rag_model import ChatService
-cs = ChatService()
-result = cs.answer_question('test', 'your_namespace')
-print(result)
-"
+┌─────────────┐
+│   PDF File  │
+└──────┬──────┘
+       │
+       ▼
+┌──────────────────────┐
+│  Upload to Moorcheh  │ (via API)
+└──────┬───────────────┘
+       │
+       ▼
+┌──────────────────────────┐
+│  Moorcheh Processing:    │
+│  - Extract text          │
+│  - Chunk intelligently   │
+│  - Generate embeddings   │
+│  - Store in vector DB    │
+└──────┬───────────────────┘
+       │
+       ▼
+┌──────────────────────┐
+│  User Question       │
+└──────┬───────────────┘
+       │
+       ▼
+┌──────────────────────────┐
+│  Moorcheh RAG:           │
+│  - Semantic search       │
+│  - Retrieve top-k chunks │
+│  - Rank by relevance     │
+│  - Generate answer (LLM) │
+│  - Include sources       │
+└──────┬───────────────────┘
+       │
+       ▼
+┌──────────────────────┐
+│  Answer + Sources    │
+└──────────────────────┘
 ```
-
----
-
-## 📊 Performance Tips
-
-1. **Chunk Size**: Adjust `CHUNK_SIZE` in config for your documents
-   - Larger (1500+): Better for technical docs
-   - Smaller (500-800): Better for Q&A style content
-
-2. **Top-K**: More chunks = better context but slower
-   - Start with 3-5 chunks
-   - Increase if answers lack detail
-
-3. **Embedding Caching**: Consider caching embeddings for repeated queries
-
-4. **Connection Pooling**: Reuse Milvus connections in production
 
 ---
 
 ## 🐛 Troubleshooting
 
-### "GOOGLE_API_KEY not set"
+### "MOORCHEH_API_KEY not set"
+
+Create `rag_model/.env` file with your API key:
+
 ```bash
-export GOOGLE_API_KEY="your-key-here"
+MOORCHEH_API_KEY=your-key-here
 ```
 
-### "Cannot connect to Milvus"
-```bash
-# Check if Milvus is running
-docker ps | grep milvus
+### "No namespaces found"
 
-# Restart Milvus
-docker restart milvus-standalone
-```
+- Check your Moorcheh Console: https://console.moorcheh.ai/namespaces
+- Create a namespace in the console
+- Or use `upload_pdf.py` to create one
 
-### "Collection not found"
-Make sure you've uploaded PDFs to that namespace first:
-```bash
-python upload_pdf.py
-```
+### "Upload failed"
+
+- Check PDF is not corrupted or password-protected
+- Verify file size is within Moorcheh limits
+- Check API key has upload permissions
+
+### "No relevant context found"
+
+- Upload relevant documents first
+- Try adjusting `TOP_K` and `THRESHOLD` settings
+- Check namespace has documents
+
+### Vector Namespace Issues
+
+**"GOOGLE_API_KEY not set" (for vector namespaces)**
+
+- Vector namespaces require Google API key for embeddings
+- Get one from: https://makersuite.google.com/app/apikey
+- Add to `.env`: `GOOGLE_API_KEY=your-google-api-key`
+- **Or use TEXT namespaces instead** (recommended - no Google API key needed)
+
+**"Quota limit exceeded" (for vector namespaces)**
+
+- Google Gemini embedding API has rate limits
+- Wait for quota to reset (check Google Cloud Console)
+- Consider using TEXT namespaces instead (no quota limits)
+
+**"Dimension mismatch" (for vector namespaces)**
+
+- Vector namespaces must match embedding dimension (768 for Gemini embedding-001)
+- When creating vector namespace, ensure `vector_dimension=768`
+- Or use TEXT namespaces (no dimension concerns)
+
+---
+
+## 🔐 Security Notes
+
+1. **API Keys** - Never commit API keys to git
+2. **Environment Variables** - Use `.env` files (gitignored)
+3. **Input Validation** - All inputs are validated
+4. **Namespace Isolation** - Users can only access their namespaces
+5. **HTTPS** - All API calls use encrypted connections
 
 ---
 
 ## 🚢 Production Deployment
 
-### Using Docker Compose
+### Environment Variables (Production)
 
-Create `docker-compose.yml`:
+```bash
+# Required
+MOORCHEH_API_KEY=prod-api-key-here
 
-```yaml
-version: '3.8'
+# Optional tuning
+AI_MODEL=gemini-1.5-pro  # More capable model
+TOP_K=20  # More context
+TEMPERATURE=0.1  # Slightly more creative
+KIOSK_MODE=true  # Filter irrelevant results
 
-services:
-  milvus:
-    image: milvusdb/milvus:latest
-    ports:
-      - "19530:19530"
-      - "9091:9091"
-    volumes:
-      - milvus_data:/var/lib/milvus
+# Only if using VECTOR namespaces
+GOOGLE_API_KEY=prod-google-api-key-here
+```
 
-  rag_api:
-    build: ./rag_model
-    ports:
-      - "8000:8000"
-    environment:
-      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
-      - MILVUS_HOST=milvus
-    depends_on:
-      - milvus
+### Next.js Deployment
 
-volumes:
-  milvus_data:
+Your Next.js app needs:
+
+1. Python 3.10+ installed
+2. `MOORCHEH_API_KEY` in environment variables
+3. API routes from examples above
+
+**Vercel/Netlify**: Python is supported! Just add `runtime.txt`:
+
+```
+python-3.10
 ```
 
 ---
@@ -521,7 +485,21 @@ MIT
 
 ---
 
-## 🤝 Contributing
+## 🤝 Resources
 
-Feel free to extend and customize for your needs!
+- [Moorcheh Console](https://console.moorcheh.ai) - Manage namespaces and API keys
+- [Moorcheh Docs](https://docs.moorcheh.ai) - Full API documentation
+- [Playground](https://console.moorcheh.ai/playground) - Test your RAG system
 
+---
+
+## 💡 Next Steps
+
+1. ✅ Setup complete - Test CLI tools
+2. 🌐 Integrate with Next.js - Add API routes
+3. 🎨 Build UI - Create chat interface
+4. 🚀 Deploy - Push to production
+
+---
+
+**Built for Delta Hacks 12** 🚀
