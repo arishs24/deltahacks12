@@ -6,7 +6,10 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from .config import get_config
-from .models import ExerciseRecommendationRequest, ExerciseRecommendationResponse
+from .models import (
+    ExerciseRecommendationRequest, 
+    ExerciseRecommendationResponse
+)
 from .service import ExerciseRecommendationService
 
 # Initialize FastAPI app
@@ -51,22 +54,35 @@ async def get_exercise_recommendation(request: ExerciseRecommendationRequest) ->
     Generate exercise recommendations based on biomechanical stress measurements.
 
     This endpoint:
-    1. Queries Moorcheh RAG to interpret the stress measurements
-    2. Uses Gemini LLM to generate structured exercise recommendations
-    3. Returns healthy force values for key structures and recommended exercises
+    1. Validates patient information and stress measurements
+    2. Queries Moorcheh RAG to interpret the stress measurements in clinical context
+    3. Uses Gemini LLM to generate structured rehabilitation recommendations
+    4. Returns ideal stress values for each region and recommended exercises
 
     Args:
-        request: Request containing patient info and stress measurements
+        request: Request containing patient info, injury details, and knee stress measurements
 
     Returns:
-        Exercise recommendation response with healthy forces and exercises
+        Exercise recommendation response with ideal stresses and detailed exercise recommendations
+
+    Raises:
+        HTTPException: 400 for validation errors, 500 for server errors
     """
     try:
+        # Validate request (Pydantic handles most validation, but we can add custom checks)
+        if not request.regions:
+            raise HTTPException(status_code=400, detail="At least one region measurement is required")
+        
+        if not request.patient_info.affected_structures:
+            raise HTTPException(status_code=400, detail="At least one affected structure is required")
+
         service = get_service()
         response = service.generate_recommendation(request)
         return response
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    except HTTPException:
+        raise  # Re-raise HTTP exceptions
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 

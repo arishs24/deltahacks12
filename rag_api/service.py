@@ -16,7 +16,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from rag_model.core.moorcheh_client import MoorchehClient
 from rag_model.services.document_service import DocumentService
 from .config import get_config
-from .models import ExerciseRecommendationRequest, ExerciseRecommendationResponse, HealthyForce, Exercise
+from .models import ExerciseRecommendationRequest, ExerciseRecommendationResponse, IdealStress, Exercise, VALID_STRUCTURES
 
 
 class ExerciseRecommendationService:
@@ -56,30 +56,44 @@ class ExerciseRecommendationService:
         structured_output = self._query_gemini(gemini_prompt)
 
         # Step 5: Parse and validate structured output
-        return self._parse_response(structured_output, data_sufficient, rag_interpretation=rag_response)
+        return self._parse_response(structured_output, request, rag_interpretation=rag_response)
 
     def _build_rag_prompt(self, request: ExerciseRecommendationRequest) -> str:
-        """Build prompt for Moorcheh RAG to interpret stress measurements."""
-        regions_str = "\n".join([f"- {r.region}: Stress={r.stress}, Load={r.load}" for r in request.regions])
+        """Build prompt for Moorcheh RAG to interpret knee stress measurements."""
+        regions_str = "\n".join([f"- {r.region}: Stress={r.stress} N" for r in request.regions])
+        structures_str = ", ".join(request.patient_info.affected_structures)
 
-        prompt = f"""Please provide an accurate interpretation of the following biomechanical stress and load measurements for different regions of the foot/knee.
+        prompt = f"""Please provide an accurate interpretation of the following knee biomechanical stress measurements for a patient undergoing rehabilitation.
 
 Patient Information:
-- Height: {request.patient_info.height} cm
-- Weight: {request.patient_info.weight} kg
+- Age: {request.patient_info.age} years
 - Gender: {request.patient_info.gender}
+- Height: {request.patient_info.height_cm} cm
+- Weight: {request.patient_info.weight_kg} kg
+- Injury Type: {request.patient_info.injury_type}
+- Rehabilitation Stage: {request.patient_info.rehab_stage}
+- Affected Structures: {structures_str}
 
-Measurements by Region:
+Stress Measurements by Region:
 {regions_str}
 
 Please analyze these measurements and provide:
-1. Interpretation of the stress/load values
-2. Comparison with healthy baseline values for key structures (ACL, menisci, patellar tendon, etc.)
-3. Identification of any areas of concern
-4. Clinical context for these measurements
-5. Specific exercise recommendations from the database studies that are appropriate for these measurements and patient profile
+1. Interpretation of the stress values compared to healthy baseline values
+2. Ideal stress values for each measured region based on the patient's rehabilitation stage
+3. Identification of any areas of concern or abnormal stress patterns
+4. Clinical context for these measurements in relation to the injury type and rehab stage
+5. Specific exercise recommendations from the database studies that are appropriate for:
+   - The patient's rehabilitation stage ({request.patient_info.rehab_stage})
+   - The affected structures ({structures_str})
+   - The measured stress patterns
+   - Evidence-based protocols from clinical studies
 
-IMPORTANT: When suggesting exercises, please reference specific exercises from the studies and clinical protocols in the database. Include the exercise names as they appear in the research studies and explain why these exercises are recommended based on the biomechanical measurements and clinical evidence from the database."""
+IMPORTANT: When suggesting exercises, please reference specific exercises from the studies and clinical protocols in the database. Include:
+- Exercise names as they appear in research studies
+- Detailed descriptions and instructions
+- Target structures for each exercise
+- Appropriate load levels for the rehabilitation stage
+- Clinical justification based on biomechanical measurements and evidence from the database"""
 
         return prompt
 
@@ -126,7 +140,8 @@ IMPORTANT: When suggesting exercises, please reference specific exercises from t
 
     def _build_gemini_prompt(self, request: ExerciseRecommendationRequest, rag_interpretation: str, data_sufficient: bool) -> str:
         """Build prompt for Gemini to generate structured output."""
-        regions_str = "\n".join([f"- {r.region}: Stress={r.stress}, Load={r.load}" for r in request.regions])
+        regions_str = "\n".join([f"- {r.region}: {r.stress} N" for r in request.regions])
+        structures_str = ", ".join(request.patient_info.affected_structures)
 
         data_quality_note = ""
         if not data_sufficient:
@@ -134,79 +149,71 @@ IMPORTANT: When suggesting exercises, please reference specific exercises from t
 ⚠️ IMPORTANT: The RAG system did NOT find sufficient relevant data in the knowledge base. 
 The RAG interpretation above indicates insufficient or missing information.
 In this case, you MUST:
-1. Set "data_sufficient" to FALSE
-2. Set "exercises" to an EMPTY ARRAY [] - DO NOT provide any exercise recommendations when data is insufficient
-3. Set "healthy_forces" to an EMPTY OBJECT {} - DO NOT invent or estimate specific healthy force values
-4. This indicates that without sufficient knowledge base data, we cannot provide reliable recommendations
+1. Provide conservative, general recommendations based on standard rehabilitation protocols
+2. Clearly indicate in clinical_justification that recommendations are based on general guidelines
+3. Focus on low-load exercises appropriate for the rehabilitation stage
 """
 
-        prompt = f"""You are a clinical exercise specialist. Based on the following biomechanical measurements and RAG interpretation, provide exercise recommendations in JSON format.
+        prompt = f"""You are a clinical exercise specialist specializing in knee rehabilitation. Based on the following patient information, stress measurements, and RAG interpretation from the knowledge base, provide knee rehabilitation recommendations in JSON format.
 
 Patient Information:
-- Height: {request.patient_info.height} cm
-- Weight: {request.patient_info.weight} kg
+- Age: {request.patient_info.age} years
 - Gender: {request.patient_info.gender}
+- Height: {request.patient_info.height_cm} cm
+- Weight: {request.patient_info.weight_kg} kg
+- Injury Type: {request.patient_info.injury_type}
+- Rehabilitation Stage: {request.patient_info.rehab_stage}
+- Affected Structures: {structures_str}
 
-Stress/Load Measurements:
+Stress Measurements:
 {regions_str}
 
 RAG Interpretation from Knowledge Base:
 {rag_interpretation}
 {data_quality_note}
-CRITICAL INSTRUCTIONS - STRICT ADHERENCE TO RAG DATA:
-- You MUST base your response ONLY on the RAG interpretation provided above
-- DO NOT invent, estimate, or make up ANY information that is not explicitly in the RAG interpretation
-- DO NOT use general knowledge, medical training, or any external information to fill gaps
-- DO NOT create exercises if the RAG interpretation does not explicitly mention or suggest exercises
-- If the RAG interpretation does not mention exercises, set exercises to an EMPTY ARRAY []
-- If the RAG interpretation does not provide specific healthy force values, set healthy_forces to an EMPTY OBJECT {{}}
-- Hallucination (making up information) is considered VERY BAD and must be avoided at all costs
-- If you find yourself wanting to add information not in the RAG interpretation, DO NOT add it - instead, note it in the "gemini_feedback" field
+
+CRITICAL INSTRUCTIONS:
+- You MUST base your response on the RAG interpretation provided above
+- Provide ideal stress values for EACH region mentioned in the stress measurements
+- Ensure exercises target the affected structures: {structures_str}
+- Match exercise load levels to the rehabilitation stage: {request.patient_info.rehab_stage}
+  * Initial stage: Use "low" load level
+  * Intermediate stage: Use "low" to "medium" load levels
+  * Advanced stage: Can use "medium" to "high" load levels
+- Include detailed descriptions and clinical justifications
+- Reference specific exercises from the RAG interpretation when available
+- If RAG interpretation lacks specific exercises, use evidence-based general recommendations appropriate for the injury type and rehab stage
 
 Please provide your response as a JSON object with the following EXACT structure:
 {{
-    "data_sufficient": <boolean>,
-    "healthy_forces": {{
-        // Dictionary with structure names as keys and numbers as values
-        // Examples: "acl": 150.5, "menisci": 200.3, "patellar_tendon": 180.0
-        // If data_sufficient is FALSE, use empty object {{}}
-        // ONLY include structures and values EXPLICITLY mentioned in RAG interpretation
-        // DO NOT invent or estimate values - if not in RAG, use empty object {{}}
-    }},
-    "exercises": [
-        // Array of exercise objects, each with EXACTLY one field: "name"
-        // Example: {{"name": "Hamstring Stretch"}}
-        // CRITICAL: Use "name" NOT "exercise_name", NOT "exercise", NOT "title"
-        // CRITICAL: ONLY include exercises that are EXPLICITLY mentioned or suggested in the RAG interpretation
-        // If the RAG interpretation does NOT mention exercises, use EMPTY ARRAY []
-        // DO NOT invent exercises based on general knowledge - if RAG doesn't suggest them, don't include them
-        // If data_sufficient is FALSE, use empty array []
+    "ideal_stresses": [
+        {{
+            "region": "<region name matching input regions>",
+            "ideal_stress": <number in N or Nm>
+        }}
     ],
-    "gemini_feedback": <string or null>
-    // Report any struggles, concerns, or limitations you encountered:
-    // - If you had to resist using general knowledge, mention it here
-    // - If the RAG interpretation was unclear or contradictory, mention it
-    // - If you wanted to add information not in RAG but didn't, note what was missing
-    // - If you successfully used only RAG data with no issues, set to null
-    // Examples:
-    //   null (if no issues)
-    //   "RAG interpretation did not mention specific exercises, so exercises array is empty as required"
-    //   "RAG interpretation lacked specific healthy force values for some structures mentioned in measurements"
-    //   "Had to resist adding general knowledge about knee biomechanics not present in RAG interpretation"
+    "exercises": [
+        {{
+            "name": "<exercise name>",
+            "description": "<step-by-step instructions>",
+            "target_structures": ["<structure1>", "<structure2>"],
+            "duration": "<duration string, e.g., '30 seconds', '5 minutes'>",
+            "sets_reps": "<sets and reps, e.g., '3 sets x 10 reps'>",
+            "load_level": "<'low', 'medium', or 'high'>",
+            "clinical_justification": "<rationale linking exercise to rehab goals>"
+        }}
+    ]
 }}
 
-CRITICAL FIELD REQUIREMENTS:
-- Each exercise object MUST have a field called exactly "name" (lowercase)
-- Do NOT use "exercise_name", "exercise", "title", or any other field name
-- The field must be: "name": "Exercise Name Here"
-- All other fields in exercise objects will be ignored
-- gemini_feedback: Be honest about any struggles or limitations - this helps identify when RAG data is insufficient
+VALID STRUCTURES (for target_structures):
+{', '.join(VALID_STRUCTURES)}
 
-ANTI-HALLUCINATION RULES:
-1. If RAG interpretation does NOT mention exercises → exercises = []
-2. If RAG interpretation does NOT provide healthy force values → healthy_forces = {{}}
-3. If you find yourself wanting to add information → DON'T add it, note it in gemini_feedback instead
-4. When in doubt, leave it empty and explain in gemini_feedback
+REQUIREMENTS:
+- ideal_stresses: Must include one entry for EACH region in the input
+- exercises: Should include 3-8 exercises that collectively target all affected structures
+- Each exercise must have at least one target_structure from the affected_structures list
+- load_level must match the rehabilitation stage
+- All fields are required for each exercise
 
 Return ONLY valid JSON, no additional text before or after."""
 
@@ -286,14 +293,13 @@ Return ONLY valid JSON, no additional text before or after."""
             else:
                 raise ValueError(f"Error querying Gemini: {error_msg}")
 
-    def _parse_response(self, json_text: str, data_sufficient_default: bool = True, rag_interpretation: str = None) -> ExerciseRecommendationResponse:
+    def _parse_response(self, json_text: str, request: ExerciseRecommendationRequest, rag_interpretation: str = None) -> ExerciseRecommendationResponse:
         """Parse Gemini's JSON response into structured model."""
         try:
             # Try to parse JSON
             try:
                 data = json.loads(json_text)
             except json.JSONDecodeError as json_err:
-                # If JSON parsing fails, provide helpful error message
                 error_pos = json_err.pos if hasattr(json_err, "pos") else len(json_text)
                 context_start = max(0, error_pos - 100)
                 context_end = min(len(json_text), error_pos + 100)
@@ -303,58 +309,99 @@ Return ONLY valid JSON, no additional text before or after."""
                     f"Invalid or incomplete JSON response from Gemini. "
                     f"Error at position {error_pos}: {str(json_err)}\n"
                     f"Response context: {error_context}\n"
-                    f"Full response length: {len(json_text)} characters. "
-                    f"This may indicate the response was truncated. Try reducing the number of exercises requested."
+                    f"Full response length: {len(json_text)} characters."
                 )
 
-            data_sufficient = data.get("data_sufficient", data_sufficient_default)
+            # Parse ideal stresses
+            ideal_stresses_data = data.get("ideal_stresses", [])
+            ideal_stresses = []
+            input_regions = {r.region for r in request.regions}
 
-            healthy_forces = data.get("healthy_forces", {})
-            if isinstance(healthy_forces, list):
-                healthy_forces = {item["structure"]: item["healthy_force"] for item in healthy_forces}
+            for stress_data in ideal_stresses_data:
+                if not isinstance(stress_data, dict):
+                    continue
+                region = stress_data.get("region", "")
+                ideal_stress = stress_data.get("ideal_stress", 0)
 
+                if region and ideal_stress > 0:
+                    ideal_stresses.append(IdealStress(region=region, ideal_stress=ideal_stress))
+
+            # Ensure we have ideal stresses for all input regions
+            output_regions = {s.region for s in ideal_stresses}
+            missing_regions = input_regions - output_regions
+            if missing_regions:
+                # Add default ideal stresses for missing regions (conservative estimate)
+                for region in missing_regions:
+                    # Use average of existing ideal stresses or a conservative default
+                    avg_stress = sum(s.ideal_stress for s in ideal_stresses) / len(ideal_stresses) if ideal_stresses else 100.0
+                    ideal_stresses.append(IdealStress(region=region, ideal_stress=avg_stress))
+
+            # Parse exercises
             exercises_data = data.get("exercises", [])
+            exercises = []
 
-            if not data_sufficient:
-                if healthy_forces:
-                    print(f"Warning: data_sufficient is False but healthy_forces contains values: {list(healthy_forces.keys())}. Clearing healthy_forces.")
-                    healthy_forces = {}
-                if exercises_data:
-                    print(f"Warning: data_sufficient is False but exercises contains {len(exercises_data)} items. Clearing exercises.")
-                    exercises_data = []
-                exercises = []
-            else:
-                # Normalize exercise objects - handle both "name" and "exercise_name" fields
-                exercises = []
-                for ex in exercises_data:
-                    if isinstance(ex, dict):
-                        # Try "name" first, then "exercise_name" as fallback
-                        exercise_name = ex.get("name") or ex.get("exercise_name") or ex.get("exercise") or ex.get("title")
-                        if exercise_name:
-                            # Create Exercise with only the name field (ignore other fields)
-                            exercises.append(Exercise(name=str(exercise_name)))
-                        else:
-                            print(f"Warning: Exercise object missing name field: {ex}")
-                    elif isinstance(ex, str):
-                        # If it's just a string, use it as the name
-                        exercises.append(Exercise(name=str(ex)))
-                    else:
-                        print(f"Warning: Invalid exercise format: {ex}")
+            for ex_data in exercises_data:
+                if not isinstance(ex_data, dict):
+                    continue
 
-            # Extract gemini_feedback
-            gemini_feedback = data.get("gemini_feedback")
-            if gemini_feedback and isinstance(gemini_feedback, str) and gemini_feedback.strip():
-                gemini_feedback = gemini_feedback.strip()
-            else:
-                gemini_feedback = None
+                try:
+                    # Validate and extract exercise fields
+                    name = ex_data.get("name", "").strip()
+                    description = ex_data.get("description", "").strip()
+                    target_structures = ex_data.get("target_structures", [])
+                    duration = ex_data.get("duration", "").strip()
+                    sets_reps = ex_data.get("sets_reps", "").strip()
+                    load_level = ex_data.get("load_level", "low").lower()
+                    clinical_justification = ex_data.get("clinical_justification", "").strip()
 
-            return ExerciseRecommendationResponse(
-                healthy_forces=healthy_forces,
-                exercises=exercises,
-                data_sufficient=data_sufficient,
-                rag_interpretation=rag_interpretation,
-                gemini_feedback=gemini_feedback,
-            )
+                    # Validate required fields
+                    if not name or not description or not target_structures:
+                        print(f"Warning: Skipping exercise with missing required fields: {ex_data}")
+                        continue
+
+                    # Validate load_level
+                    if load_level not in ["low", "medium", "high"]:
+                        load_level = "low"  # Default to low if invalid
+
+                    # Validate target_structures
+                    valid_targets = [s for s in target_structures if s in VALID_STRUCTURES]
+                    if not valid_targets:
+                        # If no valid targets, use first affected structure as fallback
+                        valid_targets = [request.patient_info.affected_structures[0]] if request.patient_info.affected_structures else ["quadriceps"]
+
+                    # Create exercise object
+                    exercise = Exercise(
+                        name=name,
+                        description=description,
+                        target_structures=valid_targets,
+                        duration=duration or "As prescribed",
+                        sets_reps=sets_reps or "As prescribed",
+                        load_level=load_level,
+                        clinical_justification=clinical_justification or f"Recommended for {request.patient_info.injury_type} rehabilitation at {request.patient_info.rehab_stage} stage.",
+                    )
+                    exercises.append(exercise)
+
+                except Exception as e:
+                    print(f"Warning: Error parsing exercise {ex_data}: {e}")
+                    continue
+
+            # Ensure we have at least some exercises
+            if not exercises:
+                # Add a default conservative exercise
+                default_target = request.patient_info.affected_structures[0] if request.patient_info.affected_structures else "quadriceps"
+                exercises.append(
+                    Exercise(
+                        name="Gentle Range of Motion",
+                        description="Slowly move the knee through its comfortable range of motion. Start with small movements and gradually increase as tolerated.",
+                        target_structures=[default_target],
+                        duration="5-10 minutes",
+                        sets_reps="2-3 sets x 10-15 reps",
+                        load_level="low",
+                        clinical_justification=f"Conservative exercise appropriate for {request.patient_info.rehab_stage} stage rehabilitation of {request.patient_info.injury_type}.",
+                    )
+                )
+
+            return ExerciseRecommendationResponse(ideal_stresses=ideal_stresses, exercises=exercises)
 
         except json.JSONDecodeError as e:
             raise ValueError(f"Invalid JSON response from Gemini: {str(e)}\nResponse: {json_text}")
