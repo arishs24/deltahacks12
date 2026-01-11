@@ -66,8 +66,8 @@ export async function POST(request: NextRequest) {
       injuryType: body.injuryType.trim(),
       rehabStage: body.rehabStage.toLowerCase(), // Store as lowercase: "initial", "intermediate", "advanced"
       affectedStructures: body.affectedStructures,
+      simulationStatus: 'pending', // Default to pending for newly created patients
       createdAt: new Date(),
-      // Note: simulationStatus and other fields can be added later
     };
 
     // Validate numeric fields

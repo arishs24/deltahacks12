@@ -63,3 +63,24 @@ pathlib2>=2.3.6; python_version < '3.4'  # Path handling (Python < 3.4)
 # pytest>=6.2.0          # Testing framework
 # black>=21.0.0          # Code formatting
 # flake8>=3.9.0          # Linting
+# RAG API Requirements
+# Python 3.10+
+
+# FastAPI and server
+fastapi
+uvicorn[standard]
+
+# Pydantic for data validation
+pydantic
+
+# Google Gemini API (prefer new package, fallback to old)
+google-genai
+
+# Environment variables
+python-dotenv
+
+# Dependencies from rag_model (needed to import)
+moorcheh-sdk
+pypdf
+PyPDF2
+typing-extensions

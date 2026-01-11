@@ -1,44 +1,65 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { GaitScenario, TissueType, Patient } from '@/types/clinical';
-import { mockPatients, mockExercises, generateBiomechanicsData } from '@/data/mockData';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
+import { useState, useMemo, useEffect } from 'react';
+import { GaitScenario, TissueType, Exercise } from '@/types/clinical';
+import { mockExercises, generateBiomechanicsData } from '@/data/mockData';
 import ClinicalLayout from '@/components/clinical/ClinicalLayout';
-import ToggleGroup from '@/components/clinical/ToggleGroup';
-import ChartPlaceholder from '@/components/clinical/ChartPlaceholder';
-import ExerciseCard from '@/components/clinical/ExerciseCard';
 import { useView } from '@/contexts/ViewContext';
 import STLViewer from '@/components/clinical/STLViewer';
-import { 
-  Box, 
-  Layers, 
-  Eye, 
-  EyeOff, 
-  Search,
-  BarChart3,
-  TrendingUp,
-  Activity,
-  Filter,
-  CheckCircle2,
-  AlertCircle
-} from 'lucide-react';
+import { usePatients } from '@/hooks/usePatients';
+import { LoadingState } from '@/components/dashboard/LoadingState';
+import { ErrorState } from '@/components/dashboard/ErrorState';
+import { NoPatientsState } from '@/components/dashboard/NoPatientsState';
+import { PatientSelectionCard } from '@/components/viewer/PatientSelectionCard';
+import { SelectedPatientInfo } from '@/components/viewer/SelectedPatientInfo';
+import { GaitControlsPanel } from '@/components/viewer/GaitControlsPanel';
+import { TissueVisibilityPanel } from '@/components/viewer/TissueVisibilityPanel';
+import { Model3DViewer } from '@/components/viewer/Model3DViewer';
+import { BiomechanicsStatsCards } from '@/components/viewer/BiomechanicsStatsCards';
+import { BiomechanicsChartsSection } from '@/components/viewer/BiomechanicsChartsSection';
+import { BiomechanicsInterpretationCard } from '@/components/viewer/BiomechanicsInterpretationCard';
+import { ExerciseSummaryCards } from '@/components/exercises/ExerciseSummaryCards';
+import { ExerciseFilters } from '@/components/exercises/ExerciseFilters';
+import { ExerciseList } from '@/components/exercises/ExerciseList';
+// Model Evaluation imports - moved from Dashboard
+import { ModelEvaluationCard } from '@/components/dashboard/ModelEvaluationCard';
+import { ClinicalInterpretationCard } from '@/components/dashboard/ClinicalInterpretationCard';
+import { RecommendedExercisesCard } from '@/components/dashboard/RecommendedExercisesCard';
 
 type SafetyFilter = 'all' | 'safe' | 'caution';
 type LoadFilter = 'all' | 'Low' | 'Moderate' | 'High';
 
+// Interface for Model Evaluation API response - moved from Dashboard
+interface ExerciseRecommendationResponse {
+  healthy_forces: Record<string, number>;
+  exercises: Array<{ name: string }>;
+  data_sufficient: boolean;
+  rag_interpretation?: string;
+  gemini_feedback?: string;
+}
+
 export default function ViewerPage() {
   const { isPatientView } = useView();
   
-  // Patient selection state - only used in Clinician view
-  const [selectedPatientId, setSelectedPatientId] = useState<string>(mockPatients[0]?.id || '');
-  const [searchQuery, setSearchQuery] = useState('');
+  // Fetch live patient data from MongoDB via /api/patients
+  const { patients, loading, error, refetch } = usePatients();
   
-  // In Patient view, always use John Smith (id: '1')
-  // TODO: Replace with authenticated user's patient data when backend is integrated
-  const johnSmith = useMemo(() => mockPatients.find(p => p.id === '1') || mockPatients[0], []);
+  // Patient selection state - only used in Clinician view
+  const [selectedPatientId, setSelectedPatientId] = useState<string>('');
+  
+  // Set initial selected patient once data is loaded
+  useEffect(() => {
+    if (!loading && patients.length > 0 && !selectedPatientId) {
+      setSelectedPatientId(patients[0].id);
+    }
+  }, [loading, patients, selectedPatientId]);
+  
+  // In Patient view, always show John Smith (filter by name)
+  // In a real app, this would be the authenticated user's patient record
+  const johnSmith = useMemo(() => 
+    patients.find(p => p.name === 'John Smith') || patients[0], 
+    [patients]
+  );
 
   // Model viewer state
   const [gaitScenario, setGaitScenario] = useState<GaitScenario>('standing');
@@ -50,28 +71,19 @@ export default function ViewerPage() {
   const [safetyFilter, setSafetyFilter] = useState<SafetyFilter>('all');
   const [loadFilter, setLoadFilter] = useState<LoadFilter>('all');
 
-  // Get selected patient - use John Smith in Patient view, otherwise use selected patient
+  // Model Evaluation state - moved from Dashboard
+  const [evaluationResults, setEvaluationResults] =
+    useState<ExerciseRecommendationResponse | null>(null);
+  const [isEvaluating, setIsEvaluating] = useState(false);
+  const [evaluationError, setEvaluationError] = useState<string | null>(null);
+
+  // Get selected patient - use John Smith in Patient view, otherwise use selected patient from MongoDB data
   const selectedPatient = useMemo(() => {
     if (isPatientView) {
       return johnSmith;
     }
-    return mockPatients.find(p => p.id === selectedPatientId) || mockPatients[0];
-  }, [selectedPatientId, isPatientView, johnSmith]);
-
-  // Filter patients based on search query
-  // TODO: Replace with MongoDB query when backend is integrated
-  // Future: await fetchPatientsFromMongoDB(searchQuery)
-  const filteredPatients = useMemo(() => {
-    if (!searchQuery.trim()) {
-      return mockPatients;
-    }
-    const query = searchQuery.toLowerCase();
-    return mockPatients.filter(patient =>
-      patient.name.toLowerCase().includes(query) ||
-      patient.injuryType.toLowerCase().includes(query) ||
-      patient.id.toLowerCase().includes(query)
-    );
-  }, [searchQuery]);
+    return patients.find(p => p.id === selectedPatientId) || patients[0];
+  }, [selectedPatientId, isPatientView, johnSmith, patients]);
 
   // Biomechanics data for selected patient
   // TODO: Replace with MongoDB query when backend is integrated
@@ -115,19 +127,6 @@ export default function ViewerPage() {
   const safeCount = mockExercises.filter((e) => e.safetyStatus === 'safe').length;
   const cautionCount = mockExercises.filter((e) => e.safetyStatus === 'caution').length;
 
-  const gaitOptions = [
-    { value: 'standing', label: 'Standing' },
-    { value: 'walking', label: 'Walking' },
-    { value: 'running', label: 'Running' },
-  ];
-
-  const tissues: Array<{ value: TissueType; label: string }> = [
-    { value: 'ligaments', label: 'Ligaments' },
-    { value: 'cartilage', label: 'Cartilage' },
-    { value: 'bone', label: 'Bone' },
-    { value: 'tendons', label: 'Tendons' },
-  ];
-
   const toggleTissue = (tissue: TissueType) => {
     const newVisible = new Set(visibleTissues);
     if (newVisible.has(tissue)) {
@@ -136,6 +135,78 @@ export default function ViewerPage() {
       newVisible.add(tissue);
     }
     setVisibleTissues(newVisible);
+  };
+
+  // Model Evaluation handler - moved from Dashboard
+  // Reset evaluation results when patient changes
+  useEffect(() => {
+    setEvaluationResults(null);
+    setEvaluationError(null);
+  }, [selectedPatient?.id]);
+
+  const handleEvaluateModel = async () => {
+    if (!selectedPatient) return;
+
+    setIsEvaluating(true);
+    setEvaluationError(null);
+
+    try {
+      // Prepare request data
+      const requestData = {
+        patient_info: {
+          height: selectedPatient.height,
+          weight: selectedPatient.weight,
+          gender: selectedPatient.gender,
+        },
+        regions: [
+          // Placeholder region data - in real app, this would come from biomechanics data
+          { region: "heel", stress: 120.5, load: 450.2 },
+          { region: "arch", stress: 95.3, load: 380.1 },
+          { region: "forefoot", stress: 140.7, load: 520.4 },
+        ],
+      };
+
+      const response = await fetch("/api/exercise-recommendation", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to evaluate model");
+      }
+
+      const data: ExerciseRecommendationResponse = await response.json();
+      setEvaluationResults(data);
+    } catch (error) {
+      console.error("Error evaluating model:", error);
+      setEvaluationError(
+        error instanceof Error ? error.message : "An unexpected error occurred"
+      );
+    } finally {
+      setIsEvaluating(false);
+    }
+  };
+
+  // Convert API exercises to Exercise format - moved from Dashboard
+  const convertExercises = (
+    apiExercises: Array<{ name: string }>
+  ): Exercise[] => {
+    return apiExercises.map((ex, index) => ({
+      id: `evaluated-${index}`,
+      name: ex.name,
+      targetTissue: selectedPatient?.affectedStructures[0] || "General",
+      loadLevel: "Low" as const,
+      safetyStatus: "safe" as const,
+      justification:
+        "Recommended based on biomechanical analysis and clinical guidelines.",
+      duration: "15 minutes",
+      sets: 3,
+      reps: 10,
+    }));
   };
 
   return (
@@ -149,155 +220,44 @@ export default function ViewerPage() {
           </p>
         </div>
 
-        {/* Patient Search and Selection - Only show in Clinician view */}
-        {!isPatientView && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Patient Selection</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {/* Search Input */}
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-clinical-grey-400" />
-                  <Input
-                    type="text"
-                    placeholder="Search patients by name, injury type, or ID..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
+        {/* Loading State - Fetching patient data from MongoDB */}
+        {loading && <LoadingState />}
 
-                {/* Patient List */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-                  {filteredPatients.map((patient) => (
-                    <button
-                      key={patient.id}
-                      onClick={() => setSelectedPatientId(patient.id)}
-                      className={`
-                        text-left p-4 rounded-lg border-2 transition-colors
-                        ${
-                          selectedPatientId === patient.id
-                            ? 'border-clinical-blue-600 bg-clinical-blue-50'
-                            : 'border-clinical-grey-200 hover:border-clinical-grey-300 hover:bg-clinical-grey-50'
-                        }
-                      `}
-                    >
-                      <div className="font-semibold text-clinical-grey-900 mb-1">
-                        {patient.name}
-                      </div>
-                      <div className="text-sm text-clinical-grey-600">
-                        {patient.injuryType}
-                      </div>
-                      <div className="text-xs text-clinical-grey-500 mt-1">
-                        ID: {patient.id}
-                      </div>
-                    </button>
-                  ))}
-                </div>
+        {/* Error State - Failed to fetch from MongoDB */}
+        {error && !loading && <ErrorState error={error} onRetry={refetch} />}
 
-                {filteredPatients.length === 0 && (
-                  <div className="text-center py-8 text-clinical-grey-500">
-                    No patients found matching &quot;{searchQuery}&quot;
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+        {/* No Patients State - MongoDB collection is empty */}
+        {!loading && !error && patients.length === 0 && (
+          <NoPatientsState isPatientView={isPatientView} />
         )}
+
+        {/* Main Content - Only show when data is loaded and available */}
+        {!loading && !error && patients.length > 0 && (
+          <>
+            {/* Patient Search and Selection - Only show in Clinician view - Data from MongoDB */}
+            {!isPatientView && (
+              <PatientSelectionCard
+                patients={patients}
+                selectedPatientId={selectedPatientId}
+                onPatientSelect={setSelectedPatientId}
+              />
+            )}
 
         {/* Selected Patient Info */}
-        {selectedPatient && (
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="font-semibold text-clinical-grey-900">{selectedPatient.name}</h3>
-                  <p className="text-sm text-clinical-grey-600">
-                    {selectedPatient.injuryType} • {selectedPatient.age} years, {selectedPatient.gender}
-                  </p>
-                </div>
-                <Badge
-                  variant="outline"
-                  className={
-                    selectedPatient.rehabStage === 'Initial'
-                      ? 'bg-yellow-100 text-yellow-800 border-yellow-200'
-                      : selectedPatient.rehabStage === 'Intermediate'
-                      ? 'bg-clinical-blue-100 text-clinical-blue-800 border-clinical-blue-200'
-                      : selectedPatient.rehabStage === 'Advanced'
-                      ? 'bg-green-100 text-green-800 border-green-200'
-                      : 'bg-clinical-grey-100 text-clinical-grey-800 border-clinical-grey-200'
-                  }
-                >
-                  {selectedPatient.rehabStage}
-                </Badge>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        {selectedPatient && <SelectedPatientInfo patient={selectedPatient} />}
 
         {/* 3D Model Viewer Section */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Controls Panel */}
           <div className="lg:col-span-1 space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Gait Scenario</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <ToggleGroup
-                  options={gaitOptions}
-                  value={gaitScenario}
-                  onChange={(value) => setGaitScenario(value as GaitScenario)}
-                  className="w-full flex-col"
-                />
-                <div className="p-4 bg-clinical-blue-50 rounded-lg border border-clinical-blue-100">
-                  <p className="text-sm text-clinical-grey-700">
-                    <span className="font-semibold">Current:</span> {gaitScenario.charAt(0).toUpperCase() + gaitScenario.slice(1)}
-                  </p>
-                  <p className="text-xs text-clinical-grey-600 mt-2">
-                    Switch between gait scenarios to view biomechanical changes
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Tissue Visibility</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {tissues.map((tissue) => {
-                    const isVisible = visibleTissues.has(tissue.value);
-                    return (
-                      <button
-                        key={tissue.value}
-                        onClick={() => toggleTissue(tissue.value)}
-                        className={`
-                          w-full flex items-center justify-between p-3 rounded-lg border-2 transition-colors
-                          ${
-                            isVisible
-                              ? 'border-clinical-blue-600 bg-clinical-blue-50'
-                              : 'border-clinical-grey-200 hover:border-clinical-grey-300'
-                          }
-                        `}
-                      >
-                        <span className="font-medium text-clinical-grey-900">
-                          {tissue.label}
-                        </span>
-                        {isVisible ? (
-                          <Eye className="h-5 w-5 text-clinical-blue-600" />
-                        ) : (
-                          <EyeOff className="h-5 w-5 text-clinical-grey-400" />
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-              </CardContent>
-            </Card>
+            <GaitControlsPanel
+              gaitScenario={gaitScenario}
+              onGaitChange={setGaitScenario}
+            />
+            <TissueVisibilityPanel
+              visibleTissues={visibleTissues}
+              onToggleTissue={toggleTissue}
+            />
           </div>
 
           {/* 3D STL Viewer */}
@@ -311,6 +271,29 @@ export default function ViewerPage() {
               </CardContent>
             </Card>
           </div>
+
+          {/* Evaluate Model Button */}
+          <ModelEvaluationCard
+            onEvaluate={handleEvaluateModel}
+            isEvaluating={isEvaluating}
+            error={evaluationError}
+          />
+
+          {/* Clinical Interpretation - Only show after evaluation */}
+          {evaluationResults?.rag_interpretation && (
+            <ClinicalInterpretationCard
+              interpretation={evaluationResults.rag_interpretation}
+              dataSufficient={evaluationResults.data_sufficient}
+              geminiFeedback={evaluationResults.gemini_feedback}
+            />
+          )}
+
+          {/* Recommended Exercises - Only show after evaluation */}
+          {evaluationResults && (
+            <RecommendedExercisesCard
+              exercises={convertExercises(evaluationResults.exercises)}
+            />
+          )}
         </div>
 
         {/* Biomechanics Data Panel Section */}
@@ -322,130 +305,24 @@ export default function ViewerPage() {
             </p>
           </div>
 
-          {/* Summary Statistics - Patient-specific UI: Hide numerical values in Patient view, keep structure for visual consistency */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-clinical-grey-600">Average Ligament Stress</p>
-                    {!isPatientView && (
-                      <p className="mt-1 text-2xl font-bold text-clinical-grey-900">
-                        {avgStress.toFixed(1)} MPa
-                      </p>
-                    )}
-                  </div>
-                  <div className="rounded-full bg-clinical-blue-100 p-3">
-                    <BarChart3 className="h-6 w-6 text-clinical-blue-600" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+          {/* Summary Statistics */}
+          <BiomechanicsStatsCards
+            avgStress={avgStress}
+            avgStrain={avgStrain}
+            avgStiffness={avgStiffness}
+            isPatientView={isPatientView}
+          />
 
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-clinical-grey-600">Average Strain</p>
-                    {!isPatientView && (
-                      <p className="mt-1 text-2xl font-bold text-clinical-grey-900">
-                        {(avgStrain * 100).toFixed(2)}%
-                      </p>
-                    )}
-                  </div>
-                  <div className="rounded-full bg-green-100 p-3">
-                    <TrendingUp className="h-6 w-6 text-green-600" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+          {/* Charts */}
+          <BiomechanicsChartsSection
+            ligamentStressData={ligamentStressData}
+            strainData={strainData}
+            stiffnessData={stiffnessData}
+            hideNumbers={isPatientView}
+          />
 
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-clinical-grey-600">Average Stiffness</p>
-                    {!isPatientView && (
-                      <p className="mt-1 text-2xl font-bold text-clinical-grey-900">
-                        {avgStiffness.toFixed(0)} N/m
-                      </p>
-                    )}
-                  </div>
-                  <div className="rounded-full bg-yellow-100 p-3">
-                    <Activity className="h-6 w-6 text-yellow-600" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Charts - Patient-specific UI: Hide numbers in Patient view, show visual trends only */}
-          <div className="space-y-6">
-            <ChartPlaceholder
-              title="Ligament Stress Over Time"
-              yAxisLabel="Stress"
-              xAxisLabel="Days since initial assessment"
-              data={ligamentStressData}
-              trend="down"
-              unit="MPa"
-              hideNumbers={isPatientView}
-            />
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <ChartPlaceholder
-                title="Strain Analysis"
-                yAxisLabel="Strain"
-                xAxisLabel="Days since initial assessment"
-                data={strainData}
-                trend="down"
-                unit="%"
-                hideNumbers={isPatientView}
-              />
-
-              <ChartPlaceholder
-                title="Tissue Stiffness"
-                yAxisLabel="Stiffness"
-                xAxisLabel="Days since initial assessment"
-                data={stiffnessData}
-                trend="up"
-                unit="N/m"
-                hideNumbers={isPatientView}
-              />
-            </div>
-          </div>
-
-          {/* Data Interpretation - Patient-specific UI: Remove numerical references in Patient view */}
-          <Card>
-            <CardContent className="p-6">
-              <h3 className="text-lg font-semibold text-clinical-grey-900 mb-4">Clinical Interpretation</h3>
-              <div className="space-y-4 text-sm text-clinical-grey-700">
-                <div>
-                  <h4 className="font-semibold text-clinical-grey-900 mb-2">Stress Trends</h4>
-                  <p>
-                    {isPatientView
-                      ? 'Ligament stress shows a gradual decrease over the monitoring period, indicating positive healing response. Progress is within acceptable ranges for your current rehabilitation stage.'
-                      : 'Ligament stress shows a gradual decrease over the 30-day monitoring period, indicating positive healing response. Current values are within acceptable ranges for intermediate rehabilitation stage.'}
-                  </p>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-clinical-grey-900 mb-2">Strain Analysis</h4>
-                  <p>
-                    {isPatientView
-                      ? 'Tissue strain demonstrates progressive reduction, suggesting improved tissue integrity and load distribution. Monitor for any sudden changes which may indicate overloading.'
-                      : 'Tissue strain demonstrates progressive reduction, suggesting improved tissue integrity and load distribution. Monitor for any sudden increases which may indicate overloading.'}
-                  </p>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-clinical-grey-900 mb-2">Stiffness Progression</h4>
-                  <p>
-                    {isPatientView
-                      ? 'Increasing stiffness reflects tissue healing and remodeling processes. These changes are consistent with expected rehabilitation progression for ligament injuries.'
-                      : 'Increasing stiffness values reflect tissue healing and remodeling processes. These changes are consistent with expected rehabilitation progression for ligament injuries.'}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          {/* Data Interpretation */}
+          <BiomechanicsInterpretationCard isPatientView={isPatientView} />
         </div>
 
         {/* Exercise Recommendations Section */}
@@ -458,141 +335,27 @@ export default function ViewerPage() {
           </div>
 
           {/* Summary Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-clinical-grey-600">Total Exercises</p>
-                    <p className="mt-1 text-2xl font-bold text-clinical-grey-900">
-                      {mockExercises.length}
-                    </p>
-                  </div>
-                  <div className="rounded-full bg-clinical-blue-100 p-3">
-                    <Activity className="h-6 w-6 text-clinical-blue-600" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-clinical-grey-600">Safe Exercises</p>
-                    <p className="mt-1 text-2xl font-bold text-green-600">
-                      {safeCount}
-                    </p>
-                  </div>
-                  <div className="rounded-full bg-green-100 p-3">
-                    <CheckCircle2 className="h-6 w-6 text-green-600" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-clinical-grey-600">Caution Required</p>
-                    <p className="mt-1 text-2xl font-bold text-yellow-600">
-                      {cautionCount}
-                    </p>
-                  </div>
-                  <div className="rounded-full bg-yellow-100 p-3">
-                    <AlertCircle className="h-6 w-6 text-yellow-600" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          <ExerciseSummaryCards
+            totalCount={mockExercises.length}
+            safeCount={safeCount}
+            cautionCount={cautionCount}
+          />
 
           {/* Filters */}
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4 flex-wrap">
-                <div className="flex items-center gap-2">
-                  <Filter className="h-5 w-5 text-clinical-grey-600" />
-                  <span className="font-medium text-clinical-grey-900">Filters:</span>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-clinical-grey-600">Safety:</span>
-                  <div className="flex gap-2">
-                    {(['all', 'safe', 'caution'] as SafetyFilter[]).map((filter) => (
-                      <button
-                        key={filter}
-                        onClick={() => setSafetyFilter(filter)}
-                        className={`
-                          px-3 py-1 rounded-md text-sm font-medium transition-colors
-                          ${
-                            safetyFilter === filter
-                              ? 'bg-clinical-blue-600 text-white'
-                              : 'bg-clinical-grey-100 text-clinical-grey-700 hover:bg-clinical-grey-200'
-                          }
-                        `}
-                      >
-                        {filter.charAt(0).toUpperCase() + filter.slice(1)}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-clinical-grey-600">Load:</span>
-                  <div className="flex gap-2">
-                    {(['all', 'Low', 'Moderate', 'High'] as LoadFilter[]).map((filter) => (
-                      <button
-                        key={filter}
-                        onClick={() => setLoadFilter(filter)}
-                        className={`
-                          px-3 py-1 rounded-md text-sm font-medium transition-colors
-                          ${
-                            loadFilter === filter
-                              ? 'bg-clinical-blue-600 text-white'
-                              : 'bg-clinical-grey-100 text-clinical-grey-700 hover:bg-clinical-grey-200'
-                          }
-                        `}
-                      >
-                        {filter}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {filteredExercises.length !== mockExercises.length && (
-                  <Badge variant="outline" className="bg-clinical-blue-100 text-clinical-blue-800 border-clinical-blue-200">
-                    Showing {filteredExercises.length} of {mockExercises.length}
-                  </Badge>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+          <ExerciseFilters
+            safetyFilter={safetyFilter}
+            loadFilter={loadFilter}
+            onSafetyFilterChange={setSafetyFilter}
+            onLoadFilterChange={setLoadFilter}
+            filteredCount={filteredExercises.length}
+            totalCount={mockExercises.length}
+          />
 
           {/* Exercise Cards */}
-          <div className="space-y-6">
-            {filteredExercises.length > 0 ? (
-              filteredExercises.map((exercise) => (
-                <ExerciseCard key={exercise.id} exercise={exercise} />
-              ))
-            ) : (
-              <Card>
-                <CardContent className="py-12">
-                  <div className="text-center">
-                    <Activity className="h-12 w-12 text-clinical-grey-400 mx-auto mb-4" />
-                    <p className="text-clinical-grey-600 font-medium">
-                      No exercises match the current filters
-                    </p>
-                    <p className="text-sm text-clinical-grey-500 mt-2">
-                      Try adjusting your filter criteria
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-          </div>
+          <ExerciseList exercises={filteredExercises} />
         </div>
+          </>
+        )}
       </div>
     </ClinicalLayout>
   );
