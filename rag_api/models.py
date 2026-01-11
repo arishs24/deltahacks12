@@ -52,6 +52,10 @@ class ExerciseRecommendationResponse(BaseModel):
         default=True,
         description="Indicates whether sufficient and reliable data was found in the knowledge base to provide accurate recommendations. If false, the recommendations should be treated as general guidelines only.",
     )
+    rag_interpretation: Optional[str] = Field(
+        default=None,
+        description="The RAG interpretation from Moorcheh knowledge base that was used to generate the recommendations. This shows what information was retrieved from the knowledge base.",
+    )
 
     class Config:
         json_schema_extra = {
@@ -59,5 +63,6 @@ class ExerciseRecommendationResponse(BaseModel):
                 "healthy_forces": {"acl": 150.5, "menisci": 200.3, "patellar_tendon": 180.0},
                 "exercises": [{"name": "Hamstring Stretch"}, {"name": "Quad Strengthening"}],
                 "data_sufficient": True,
+                "rag_interpretation": "Based on the biomechanical measurements, the stress values indicate...",
             }
         }

@@ -56,7 +56,7 @@ class ExerciseRecommendationService:
         structured_output = self._query_gemini(gemini_prompt)
 
         # Step 5: Parse and validate structured output
-        return self._parse_response(structured_output, data_sufficient)
+        return self._parse_response(structured_output, data_sufficient, rag_interpretation=rag_response)
 
     def _build_rag_prompt(self, request: ExerciseRecommendationRequest) -> str:
         """Build prompt for Moorcheh RAG to interpret stress measurements."""
@@ -117,7 +117,6 @@ Focus on providing medically accurate information about what these measurements 
             if not is_sufficient:
                 return "No specific biomechanical data found in knowledge base. The RAG system did not retrieve sufficient relevant information to provide accurate recommendations.", False
 
-            print(f"Moorcheh response: {answer[:200]}...")  # DEBUG
             return answer, True
 
         except Exception as e:
@@ -161,12 +160,29 @@ CRITICAL INSTRUCTIONS:
 - If specific healthy force values are not available in the RAG data, set healthy_forces to an empty object {{}} or only include values that were explicitly mentioned
 - If data is insufficient, provide only GENERAL exercise recommendations that are safe and standard for the patient profile, NOT specific to the measurements
 
-Please provide your response as a JSON object with the following structure:
+Please provide your response as a JSON object with the following EXACT structure:
 {{
     "data_sufficient": <boolean>,
-    "healthy_forces": {{}},
-    "exercises": []
+    "healthy_forces": {{
+        // Dictionary with structure names as keys and numbers as values
+        // Examples: "acl": 150.5, "menisci": 200.3, "patellar_tendon": 180.0
+        // If data_sufficient is FALSE, use empty object {{}}
+        // Only include structures explicitly mentioned in RAG interpretation
+    }},
+    "exercises": [
+        // Array of exercise objects, each with EXACTLY one field: "name"
+        // Example: {{"name": "Hamstring Stretch"}}
+        // CRITICAL: Use "name" NOT "exercise_name", NOT "exercise", NOT "title"
+        // If data_sufficient is FALSE, use empty array []
+        // If data_sufficient is TRUE, provide 5-10 exercises tailored to the measurements
+    ]
 }}
+
+CRITICAL FIELD REQUIREMENTS:
+- Each exercise object MUST have a field called exactly "name" (lowercase)
+- Do NOT use "exercise_name", "exercise", "title", or any other field name
+- The field must be: "name": "Exercise Name Here"
+- All other fields in exercise objects will be ignored
 
 Return ONLY valid JSON, no additional text before or after."""
 
@@ -180,8 +196,8 @@ Return ONLY valid JSON, no additional text before or after."""
                 contents=prompt,
                 config=types.GenerateContentConfig(
                     temperature=0.3,
-                    max_output_tokens=2048,
-                    response_mime_type="application/json",  # optional: enforce JSON only
+                    max_output_tokens=4096,  # Increased to handle longer responses
+                    response_mime_type="application/json",  # Enforce JSON only
                 ),
             )
 
@@ -193,11 +209,49 @@ Return ONLY valid JSON, no additional text before or after."""
             if "```json" in text:
                 start = text.find("```json") + 7
                 end = text.find("```", start)
+                if end == -1:
+                    # Incomplete markdown block - use rest of text
+                    end = len(text)
                 text = text[start:end].strip()
             elif "```" in text:
                 start = text.find("```") + 3
                 end = text.find("```", start)
+                if end == -1:
+                    # Incomplete markdown block - use rest of text
+                    end = len(text)
                 text = text[start:end].strip()
+
+            # Validate and attempt to fix incomplete JSON
+            text = text.strip()
+
+            # Check if JSON appears incomplete
+            if text.startswith("{") and not text.endswith("}"):
+                # Count unclosed brackets/braces
+                open_braces = text.count("{") - text.count("}")
+                open_brackets = text.count("[") - text.count("]")
+
+                # Check if exercises array is open
+                has_incomplete_exercises = '"exercises": [' in text and text.count('"exercises": [') > 0
+
+                if has_incomplete_exercises or open_brackets > 0 or open_braces > 0:
+                    # Attempt to close incomplete structures
+                    # Remove trailing comma if present
+                    text = text.rstrip().rstrip(",")
+
+                    # Close arrays first
+                    if has_incomplete_exercises and not text.rstrip().endswith("]"):
+                        text += "]"
+                        open_brackets = max(0, open_brackets - 1)
+
+                    # Close any remaining brackets
+                    text += "\n" + "]" * open_brackets if open_brackets > 0 else ""
+
+                    # Close any remaining braces
+                    text += "\n" + "}" * open_braces if open_braces > 0 else ""
+
+                    # Ensure root object is closed
+                    if not text.rstrip().endswith("}"):
+                        text += "}"
 
             return text
 
@@ -208,10 +262,26 @@ Return ONLY valid JSON, no additional text before or after."""
             else:
                 raise ValueError(f"Error querying Gemini: {error_msg}")
 
-    def _parse_response(self, json_text: str, data_sufficient_default: bool = True) -> ExerciseRecommendationResponse:
+    def _parse_response(self, json_text: str, data_sufficient_default: bool = True, rag_interpretation: str = None) -> ExerciseRecommendationResponse:
         """Parse Gemini's JSON response into structured model."""
         try:
-            data = json.loads(json_text)
+            # Try to parse JSON
+            try:
+                data = json.loads(json_text)
+            except json.JSONDecodeError as json_err:
+                # If JSON parsing fails, provide helpful error message
+                error_pos = json_err.pos if hasattr(json_err, "pos") else len(json_text)
+                context_start = max(0, error_pos - 100)
+                context_end = min(len(json_text), error_pos + 100)
+                error_context = json_text[context_start:context_end]
+
+                raise ValueError(
+                    f"Invalid or incomplete JSON response from Gemini. "
+                    f"Error at position {error_pos}: {str(json_err)}\n"
+                    f"Response context: {error_context}\n"
+                    f"Full response length: {len(json_text)} characters. "
+                    f"This may indicate the response was truncated. Try reducing the number of exercises requested."
+                )
 
             data_sufficient = data.get("data_sufficient", data_sufficient_default)
 
@@ -230,12 +300,28 @@ Return ONLY valid JSON, no additional text before or after."""
                     exercises_data = []
                 exercises = []
             else:
-                exercises = [Exercise(**ex) if isinstance(ex, dict) else Exercise(name=str(ex)) for ex in exercises_data]
+                # Normalize exercise objects - handle both "name" and "exercise_name" fields
+                exercises = []
+                for ex in exercises_data:
+                    if isinstance(ex, dict):
+                        # Try "name" first, then "exercise_name" as fallback
+                        exercise_name = ex.get("name") or ex.get("exercise_name") or ex.get("exercise") or ex.get("title")
+                        if exercise_name:
+                            # Create Exercise with only the name field (ignore other fields)
+                            exercises.append(Exercise(name=str(exercise_name)))
+                        else:
+                            print(f"Warning: Exercise object missing name field: {ex}")
+                    elif isinstance(ex, str):
+                        # If it's just a string, use it as the name
+                        exercises.append(Exercise(name=str(ex)))
+                    else:
+                        print(f"Warning: Invalid exercise format: {ex}")
 
             return ExerciseRecommendationResponse(
                 healthy_forces=healthy_forces,
                 exercises=exercises,
                 data_sufficient=data_sufficient,
+                rag_interpretation=rag_interpretation,
             )
 
         except json.JSONDecodeError as e:
