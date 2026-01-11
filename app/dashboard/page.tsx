@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { mockPatients } from '@/data/mockData';
 import { Patient } from '@/types/clinical';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import ClinicalLayout from '@/components/clinical/ClinicalLayout';
+import { useView } from '@/contexts/ViewContext';
 import { 
   User, 
   Calendar, 
@@ -19,7 +20,16 @@ import {
 } from 'lucide-react';
 
 export default function DashboardPage() {
+  const { isPatientView } = useView();
+  
+  // In Patient view, always use John Smith (id: '1')
+  // TODO: Replace with authenticated user's patient data when backend is integrated
+  const johnSmith = useMemo(() => mockPatients.find(p => p.id === '1') || mockPatients[0], []);
+  
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(mockPatients[0]);
+  
+  // Determine which patient to display based on view mode
+  const displayPatient = isPatientView ? johnSmith : selectedPatient;
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -48,54 +58,59 @@ export default function DashboardPage() {
   };
 
   return (
-    <ClinicalLayout currentPatient={selectedPatient?.name}>
+    <ClinicalLayout currentPatient={displayPatient?.name}>
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold text-clinical-grey-900">Dashboard</h1>
           <p className="mt-2 text-clinical-grey-600">
-            Select a patient to view their clinical summary and simulation status
+            {isPatientView 
+              ? 'View your clinical summary and simulation status'
+              : 'Select a patient to view their clinical summary and simulation status'
+            }
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Patient Selector */}
-          <Card className="lg:col-span-1">
-            <CardHeader>
-              <CardTitle>Patient List</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {mockPatients.map((patient) => (
-                  <button
-                    key={patient.id}
-                    onClick={() => setSelectedPatient(patient)}
-                    className={`
-                      w-full text-left p-4 rounded-lg border-2 transition-colors
-                      ${
-                        selectedPatient?.id === patient.id
-                          ? 'border-clinical-blue-600 bg-clinical-blue-50'
-                          : 'border-clinical-grey-200 hover:border-clinical-grey-300 hover:bg-clinical-grey-50'
-                      }
-                    `}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-semibold text-clinical-grey-900">
-                        {patient.name}
-                      </span>
-                      {getStatusIcon(patient.simulationStatus)}
-                    </div>
-                    <div className="text-sm text-clinical-grey-600">
-                      {patient.injuryType}
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+        <div className={`grid grid-cols-1 ${isPatientView ? '' : 'lg:grid-cols-3'} gap-6`}>
+          {/* Patient Selector - Only show in Clinician view */}
+          {!isPatientView && (
+            <Card className="lg:col-span-1">
+              <CardHeader>
+                <CardTitle>Patient List</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {mockPatients.map((patient) => (
+                    <button
+                      key={patient.id}
+                      onClick={() => setSelectedPatient(patient)}
+                      className={`
+                        w-full text-left p-4 rounded-lg border-2 transition-colors
+                        ${
+                          selectedPatient?.id === patient.id
+                            ? 'border-clinical-blue-600 bg-clinical-blue-50'
+                            : 'border-clinical-grey-200 hover:border-clinical-grey-300 hover:bg-clinical-grey-50'
+                        }
+                      `}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-semibold text-clinical-grey-900">
+                          {patient.name}
+                        </span>
+                        {getStatusIcon(patient.simulationStatus)}
+                      </div>
+                      <div className="text-sm text-clinical-grey-600">
+                        {patient.injuryType}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Patient Summary */}
-          {selectedPatient && (
-            <div className="lg:col-span-2 space-y-6">
+          {displayPatient && (
+            <div className={isPatientView ? '' : 'lg:col-span-2 space-y-6'}>
               {/* Summary Cards */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Card>
@@ -104,7 +119,7 @@ export default function DashboardPage() {
                       <div>
                         <p className="text-sm font-medium text-clinical-grey-600">Injury Type</p>
                         <p className="mt-1 text-lg font-semibold text-clinical-grey-900">
-                          {selectedPatient.injuryType}
+                          {displayPatient.injuryType}
                         </p>
                       </div>
                       <AlertCircle className="h-8 w-8 text-clinical-blue-600" />
@@ -121,16 +136,16 @@ export default function DashboardPage() {
                           <Badge
                             variant="outline"
                             className={
-                              selectedPatient.rehabStage === 'Initial'
+                              displayPatient.rehabStage === 'Initial'
                                 ? 'bg-yellow-100 text-yellow-800 border-yellow-200'
-                                : selectedPatient.rehabStage === 'Intermediate'
+                                : displayPatient.rehabStage === 'Intermediate'
                                 ? 'bg-clinical-blue-100 text-clinical-blue-800 border-clinical-blue-200'
-                                : selectedPatient.rehabStage === 'Advanced'
+                                : displayPatient.rehabStage === 'Advanced'
                                 ? 'bg-green-100 text-green-800 border-green-200'
                                 : 'bg-clinical-grey-100 text-clinical-grey-800 border-clinical-grey-200'
                             }
                           >
-                            {selectedPatient.rehabStage}
+                            {displayPatient.rehabStage}
                           </Badge>
                         </div>
                       </div>
@@ -145,9 +160,9 @@ export default function DashboardPage() {
                       <div>
                         <p className="text-sm font-medium text-clinical-grey-600">Simulation Status</p>
                         <div className="mt-2 flex items-center gap-2">
-                          {getStatusIcon(selectedPatient.simulationStatus)}
+                          {getStatusIcon(displayPatient.simulationStatus)}
                           <span className="text-sm font-medium text-clinical-grey-900">
-                            {getStatusLabel(selectedPatient.simulationStatus)}
+                            {getStatusLabel(displayPatient.simulationStatus)}
                           </span>
                         </div>
                       </div>
@@ -164,7 +179,7 @@ export default function DashboardPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
-                    {selectedPatient.affectedStructures.map((structure) => (
+                    {displayPatient.affectedStructures.map((structure) => (
                       <Badge key={structure} variant="destructive">
                         {structure}
                       </Badge>
@@ -185,7 +200,7 @@ export default function DashboardPage() {
                       <div>
                         <p className="text-sm text-clinical-grey-600">Name</p>
                         <p className="font-medium text-clinical-grey-900">
-                          {selectedPatient.name}
+                          {displayPatient.name}
                         </p>
                       </div>
                     </div>
@@ -194,7 +209,7 @@ export default function DashboardPage() {
                       <div>
                         <p className="text-sm text-clinical-grey-600">Age</p>
                         <p className="font-medium text-clinical-grey-900">
-                          {selectedPatient.age} years
+                          {displayPatient.age} years
                         </p>
                       </div>
                     </div>
@@ -203,7 +218,7 @@ export default function DashboardPage() {
                       <div>
                         <p className="text-sm text-clinical-grey-600">Gender</p>
                         <p className="font-medium text-clinical-grey-900">
-                          {selectedPatient.gender}
+                          {displayPatient.gender}
                         </p>
                       </div>
                     </div>
@@ -212,7 +227,7 @@ export default function DashboardPage() {
                       <div>
                         <p className="text-sm text-clinical-grey-600">Height</p>
                         <p className="font-medium text-clinical-grey-900">
-                          {selectedPatient.height} cm
+                          {displayPatient.height} cm
                         </p>
                       </div>
                     </div>
@@ -221,7 +236,7 @@ export default function DashboardPage() {
                       <div>
                         <p className="text-sm text-clinical-grey-600">Weight</p>
                         <p className="font-medium text-clinical-grey-900">
-                          {selectedPatient.weight} kg
+                          {displayPatient.weight} kg
                         </p>
                       </div>
                     </div>

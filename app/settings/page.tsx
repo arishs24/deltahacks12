@@ -134,7 +134,7 @@ export default function SettingsPage() {
             <div className="space-y-3 text-sm text-clinical-grey-700">
               <p>
                 For technical support, feature requests, or reporting issues, please contact the
-                development team through your organization's IT support channels.
+                development team through your organization&apos;s IT support channels.
               </p>
               <div className="flex items-center gap-2 text-clinical-grey-600">
                 <Shield className="h-4 w-4" />

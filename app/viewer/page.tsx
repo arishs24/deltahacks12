@@ -10,6 +10,7 @@ import ClinicalLayout from '@/components/clinical/ClinicalLayout';
 import ToggleGroup from '@/components/clinical/ToggleGroup';
 import ChartPlaceholder from '@/components/clinical/ChartPlaceholder';
 import ExerciseCard from '@/components/clinical/ExerciseCard';
+import { useView } from '@/contexts/ViewContext';
 import { 
   Box, 
   Layers, 
@@ -28,9 +29,15 @@ type SafetyFilter = 'all' | 'safe' | 'caution';
 type LoadFilter = 'all' | 'Low' | 'Moderate' | 'High';
 
 export default function ViewerPage() {
-  // Patient selection state
+  const { isPatientView } = useView();
+  
+  // Patient selection state - only used in Clinician view
   const [selectedPatientId, setSelectedPatientId] = useState<string>(mockPatients[0]?.id || '');
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // In Patient view, always use John Smith (id: '1')
+  // TODO: Replace with authenticated user's patient data when backend is integrated
+  const johnSmith = useMemo(() => mockPatients.find(p => p.id === '1') || mockPatients[0], []);
 
   // Model viewer state
   const [gaitScenario, setGaitScenario] = useState<GaitScenario>('standing');
@@ -42,10 +49,13 @@ export default function ViewerPage() {
   const [safetyFilter, setSafetyFilter] = useState<SafetyFilter>('all');
   const [loadFilter, setLoadFilter] = useState<LoadFilter>('all');
 
-  // Get selected patient
+  // Get selected patient - use John Smith in Patient view, otherwise use selected patient
   const selectedPatient = useMemo(() => {
+    if (isPatientView) {
+      return johnSmith;
+    }
     return mockPatients.find(p => p.id === selectedPatientId) || mockPatients[0];
-  }, [selectedPatientId]);
+  }, [selectedPatientId, isPatientView, johnSmith]);
 
   // Filter patients based on search query
   // TODO: Replace with MongoDB query when backend is integrated
@@ -138,61 +148,63 @@ export default function ViewerPage() {
           </p>
         </div>
 
-        {/* Patient Search and Selection */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Patient Selection</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {/* Search Input */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-clinical-grey-400" />
-                <Input
-                  type="text"
-                  placeholder="Search patients by name, injury type, or ID..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-
-              {/* Patient List */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-                {filteredPatients.map((patient) => (
-                  <button
-                    key={patient.id}
-                    onClick={() => setSelectedPatientId(patient.id)}
-                    className={`
-                      text-left p-4 rounded-lg border-2 transition-colors
-                      ${
-                        selectedPatientId === patient.id
-                          ? 'border-clinical-blue-600 bg-clinical-blue-50'
-                          : 'border-clinical-grey-200 hover:border-clinical-grey-300 hover:bg-clinical-grey-50'
-                      }
-                    `}
-                  >
-                    <div className="font-semibold text-clinical-grey-900 mb-1">
-                      {patient.name}
-                    </div>
-                    <div className="text-sm text-clinical-grey-600">
-                      {patient.injuryType}
-                    </div>
-                    <div className="text-xs text-clinical-grey-500 mt-1">
-                      ID: {patient.id}
-                    </div>
-                  </button>
-                ))}
-              </div>
-
-              {filteredPatients.length === 0 && (
-                <div className="text-center py-8 text-clinical-grey-500">
-                  No patients found matching &quot;{searchQuery}&quot;
+        {/* Patient Search and Selection - Only show in Clinician view */}
+        {!isPatientView && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Patient Selection</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {/* Search Input */}
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-clinical-grey-400" />
+                  <Input
+                    type="text"
+                    placeholder="Search patients by name, injury type, or ID..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10"
+                  />
                 </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+
+                {/* Patient List */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                  {filteredPatients.map((patient) => (
+                    <button
+                      key={patient.id}
+                      onClick={() => setSelectedPatientId(patient.id)}
+                      className={`
+                        text-left p-4 rounded-lg border-2 transition-colors
+                        ${
+                          selectedPatientId === patient.id
+                            ? 'border-clinical-blue-600 bg-clinical-blue-50'
+                            : 'border-clinical-grey-200 hover:border-clinical-grey-300 hover:bg-clinical-grey-50'
+                        }
+                      `}
+                    >
+                      <div className="font-semibold text-clinical-grey-900 mb-1">
+                        {patient.name}
+                      </div>
+                      <div className="text-sm text-clinical-grey-600">
+                        {patient.injuryType}
+                      </div>
+                      <div className="text-xs text-clinical-grey-500 mt-1">
+                        ID: {patient.id}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+
+                {filteredPatients.length === 0 && (
+                  <div className="text-center py-8 text-clinical-grey-500">
+                    No patients found matching &quot;{searchQuery}&quot;
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Selected Patient Info */}
         {selectedPatient && (

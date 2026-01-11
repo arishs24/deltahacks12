@@ -10,16 +10,25 @@ import {
   UserPlus
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useView } from '@/contexts/ViewContext';
 
-const navigation = [
+const clinicianNavigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Add Patient', href: '/add-patient', icon: UserPlus },
   { name: 'Model Viewer', href: '/viewer', icon: Eye },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
+const patientNavigation = [
+  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Model Viewer', href: '/viewer', icon: Eye },
+  { name: 'Settings', href: '/settings', icon: Settings },
+];
+
 export default function Sidebar() {
   const pathname = usePathname();
+  const { isClinicianView } = useView();
+  const navigation = isClinicianView ? clinicianNavigation : patientNavigation;
 
   return (
     <div className="flex h-screen w-64 flex-col bg-clinical-grey-900 text-white flex-shrink-0">

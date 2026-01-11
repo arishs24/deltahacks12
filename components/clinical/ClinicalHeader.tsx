@@ -1,12 +1,15 @@
 'use client';
 
 import { Bell, User } from 'lucide-react';
+import { useView } from '@/contexts/ViewContext';
 
 interface ClinicalHeaderProps {
   currentPatient?: string;
 }
 
 export default function ClinicalHeader({ currentPatient }: ClinicalHeaderProps) {
+  const { toggleView, isPatientView } = useView();
+
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-clinical-grey-200 bg-white px-6 shadow-sm">
       <div className="flex items-center">
@@ -27,11 +30,14 @@ export default function ClinicalHeader({ currentPatient }: ClinicalHeaderProps) 
         </button>
         <button
           type="button"
-          className="flex items-center gap-2 rounded-lg px-3 py-2 text-clinical-grey-600 hover:bg-clinical-grey-100 hover:text-clinical-grey-900"
-          aria-label="User menu"
+          onClick={toggleView}
+          className="flex items-center gap-2 rounded-lg px-3 py-2 text-clinical-grey-600 hover:bg-clinical-grey-100 hover:text-clinical-grey-900 transition-colors cursor-pointer"
+          aria-label="Toggle view mode"
         >
           <User className="h-5 w-5" />
-          <span className="text-sm font-medium">Clinician</span>
+          <span className="text-sm font-medium">
+            {isPatientView ? 'Patient View' : 'Clinician'}
+          </span>
         </button>
       </div>
     </header>

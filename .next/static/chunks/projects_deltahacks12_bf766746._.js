@@ -431,6 +431,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$
 var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$stethoscope$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Stethoscope$3e$__ = __turbopack_context__.i("[project]/projects/deltahacks12/node_modules/lucide-react/dist/esm/icons/stethoscope.js [app-client] (ecmascript) <export default as Stethoscope>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$user$2d$plus$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__UserPlus$3e$__ = __turbopack_context__.i("[project]/projects/deltahacks12/node_modules/lucide-react/dist/esm/icons/user-plus.js [app-client] (ecmascript) <export default as UserPlus>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/projects/deltahacks12/lib/utils.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$contexts$2f$ViewContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/projects/deltahacks12/contexts/ViewContext.tsx [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
 'use client';
@@ -438,7 +439,8 @@ var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
-const navigation = [
+;
+const clinicianNavigation = [
     {
         name: 'Dashboard',
         href: '/dashboard',
@@ -460,9 +462,28 @@ const navigation = [
         icon: __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$settings$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Settings$3e$__["Settings"]
     }
 ];
+const patientNavigation = [
+    {
+        name: 'Dashboard',
+        href: '/dashboard',
+        icon: __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$layout$2d$dashboard$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__LayoutDashboard$3e$__["LayoutDashboard"]
+    },
+    {
+        name: 'Model Viewer',
+        href: '/viewer',
+        icon: __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$eye$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Eye$3e$__["Eye"]
+    },
+    {
+        name: 'Settings',
+        href: '/settings',
+        icon: __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$settings$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Settings$3e$__["Settings"]
+    }
+];
 function Sidebar() {
     _s();
     const pathname = (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["usePathname"])();
+    const { isClinicianView } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$contexts$2f$ViewContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useView"])();
+    const navigation = isClinicianView ? clinicianNavigation : patientNavigation;
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "flex h-screen w-64 flex-col bg-clinical-grey-900 text-white flex-shrink-0",
         children: [
@@ -473,7 +494,7 @@ function Sidebar() {
                         className: "h-6 w-6 text-clinical-blue-400 mr-2"
                     }, void 0, false, {
                         fileName: "[project]/projects/deltahacks12/components/clinical/Sidebar.tsx",
-                        lineNumber: 27,
+                        lineNumber: 36,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -481,13 +502,13 @@ function Sidebar() {
                         children: "Knee CDS"
                     }, void 0, false, {
                         fileName: "[project]/projects/deltahacks12/components/clinical/Sidebar.tsx",
-                        lineNumber: 28,
+                        lineNumber: 37,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/projects/deltahacks12/components/clinical/Sidebar.tsx",
-                lineNumber: 26,
+                lineNumber: 35,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
@@ -503,20 +524,20 @@ function Sidebar() {
                                 className: "mr-3 h-5 w-5"
                             }, void 0, false, {
                                 fileName: "[project]/projects/deltahacks12/components/clinical/Sidebar.tsx",
-                                lineNumber: 45,
+                                lineNumber: 54,
                                 columnNumber: 15
                             }, this),
                             item.name
                         ]
                     }, item.name, true, {
                         fileName: "[project]/projects/deltahacks12/components/clinical/Sidebar.tsx",
-                        lineNumber: 35,
+                        lineNumber: 44,
                         columnNumber: 13
                     }, this);
                 })
             }, void 0, false, {
                 fileName: "[project]/projects/deltahacks12/components/clinical/Sidebar.tsx",
-                lineNumber: 30,
+                lineNumber: 39,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -527,7 +548,7 @@ function Sidebar() {
                         children: "Clinical Decision Support Tool"
                     }, void 0, false, {
                         fileName: "[project]/projects/deltahacks12/components/clinical/Sidebar.tsx",
-                        lineNumber: 52,
+                        lineNumber: 61,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -535,25 +556,26 @@ function Sidebar() {
                         children: "Version 1.0.0"
                     }, void 0, false, {
                         fileName: "[project]/projects/deltahacks12/components/clinical/Sidebar.tsx",
-                        lineNumber: 55,
+                        lineNumber: 64,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/projects/deltahacks12/components/clinical/Sidebar.tsx",
-                lineNumber: 51,
+                lineNumber: 60,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/projects/deltahacks12/components/clinical/Sidebar.tsx",
-        lineNumber: 25,
+        lineNumber: 34,
         columnNumber: 5
     }, this);
 }
-_s(Sidebar, "xbyQPtUVMO7MNj7WjJlpdWqRcTo=", false, function() {
+_s(Sidebar, "IJX4WPrfL1Ta0j3b5GeIlq1Rcrg=", false, function() {
     return [
-        __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["usePathname"]
+        __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["usePathname"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$contexts$2f$ViewContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useView"]
     ];
 });
 _c = Sidebar;
@@ -573,11 +595,16 @@ __turbopack_context__.s([
 var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/projects/deltahacks12/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$bell$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Bell$3e$__ = __turbopack_context__.i("[project]/projects/deltahacks12/node_modules/lucide-react/dist/esm/icons/bell.js [app-client] (ecmascript) <export default as Bell>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$user$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__User$3e$__ = __turbopack_context__.i("[project]/projects/deltahacks12/node_modules/lucide-react/dist/esm/icons/user.js [app-client] (ecmascript) <export default as User>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$contexts$2f$ViewContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/projects/deltahacks12/contexts/ViewContext.tsx [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature();
 'use client';
 ;
 ;
 function ClinicalHeader(param) {
     let { currentPatient } = param;
+    _s();
+    const { toggleView, isPatientView } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$contexts$2f$ViewContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useView"])();
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
         className: "sticky top-0 z-10 flex h-16 items-center justify-between border-b border-clinical-grey-200 bg-white px-6 shadow-sm",
         children: [
@@ -591,7 +618,7 @@ function ClinicalHeader(param) {
                             children: "Current Patient:"
                         }, void 0, false, {
                             fileName: "[project]/projects/deltahacks12/components/clinical/ClinicalHeader.tsx",
-                            lineNumber: 15,
+                            lineNumber: 18,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -599,18 +626,18 @@ function ClinicalHeader(param) {
                             children: currentPatient
                         }, void 0, false, {
                             fileName: "[project]/projects/deltahacks12/components/clinical/ClinicalHeader.tsx",
-                            lineNumber: 16,
+                            lineNumber: 19,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/projects/deltahacks12/components/clinical/ClinicalHeader.tsx",
-                    lineNumber: 14,
+                    lineNumber: 17,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/projects/deltahacks12/components/clinical/ClinicalHeader.tsx",
-                lineNumber: 12,
+                lineNumber: 15,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -624,53 +651,59 @@ function ClinicalHeader(param) {
                             className: "h-5 w-5"
                         }, void 0, false, {
                             fileName: "[project]/projects/deltahacks12/components/clinical/ClinicalHeader.tsx",
-                            lineNumber: 26,
+                            lineNumber: 29,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/projects/deltahacks12/components/clinical/ClinicalHeader.tsx",
-                        lineNumber: 21,
+                        lineNumber: 24,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                         type: "button",
-                        className: "flex items-center gap-2 rounded-lg px-3 py-2 text-clinical-grey-600 hover:bg-clinical-grey-100 hover:text-clinical-grey-900",
-                        "aria-label": "User menu",
+                        onClick: toggleView,
+                        className: "flex items-center gap-2 rounded-lg px-3 py-2 text-clinical-grey-600 hover:bg-clinical-grey-100 hover:text-clinical-grey-900 transition-colors cursor-pointer",
+                        "aria-label": "Toggle view mode",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$user$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__User$3e$__["User"], {
                                 className: "h-5 w-5"
                             }, void 0, false, {
                                 fileName: "[project]/projects/deltahacks12/components/clinical/ClinicalHeader.tsx",
-                                lineNumber: 33,
+                                lineNumber: 37,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                 className: "text-sm font-medium",
-                                children: "Clinician"
+                                children: isPatientView ? 'Patient View' : 'Clinician'
                             }, void 0, false, {
                                 fileName: "[project]/projects/deltahacks12/components/clinical/ClinicalHeader.tsx",
-                                lineNumber: 34,
+                                lineNumber: 38,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/projects/deltahacks12/components/clinical/ClinicalHeader.tsx",
-                        lineNumber: 28,
+                        lineNumber: 31,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/projects/deltahacks12/components/clinical/ClinicalHeader.tsx",
-                lineNumber: 20,
+                lineNumber: 23,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/projects/deltahacks12/components/clinical/ClinicalHeader.tsx",
-        lineNumber: 11,
+        lineNumber: 14,
         columnNumber: 5
     }, this);
 }
+_s(ClinicalHeader, "bfsAjoWzFtDsF3bBfmn/vM+gZ14=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$contexts$2f$ViewContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useView"]
+    ];
+});
 _c = ClinicalHeader;
 var _c;
 __turbopack_context__.k.register(_c, "ClinicalHeader");
@@ -1315,6 +1348,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$
 var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$clinical$2f$ToggleGroup$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/projects/deltahacks12/components/clinical/ToggleGroup.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$clinical$2f$ChartPlaceholder$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/projects/deltahacks12/components/clinical/ChartPlaceholder.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$clinical$2f$ExerciseCard$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/projects/deltahacks12/components/clinical/ExerciseCard.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$contexts$2f$ViewContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/projects/deltahacks12/contexts/ViewContext.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Box$3e$__ = __turbopack_context__.i("[project]/projects/deltahacks12/node_modules/lucide-react/dist/esm/icons/box.js [app-client] (ecmascript) <export default as Box>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$layers$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Layers$3e$__ = __turbopack_context__.i("[project]/projects/deltahacks12/node_modules/lucide-react/dist/esm/icons/layers.js [app-client] (ecmascript) <export default as Layers>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$eye$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Eye$3e$__ = __turbopack_context__.i("[project]/projects/deltahacks12/node_modules/lucide-react/dist/esm/icons/eye.js [app-client] (ecmascript) <export default as Eye>");
@@ -1339,12 +1373,21 @@ var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
+;
 function ViewerPage() {
     var _mockPatients_;
     _s();
-    // Patient selection state
+    const { isPatientView } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$contexts$2f$ViewContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useView"])();
+    // Patient selection state - only used in Clinician view
     const [selectedPatientId, setSelectedPatientId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(((_mockPatients_ = __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$data$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["mockPatients"][0]) === null || _mockPatients_ === void 0 ? void 0 : _mockPatients_.id) || '');
     const [searchQuery, setSearchQuery] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
+    // In Patient view, always use John Smith (id: '1')
+    // TODO: Replace with authenticated user's patient data when backend is integrated
+    const johnSmith = (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "ViewerPage.useMemo[johnSmith]": ()=>__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$data$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["mockPatients"].find({
+                "ViewerPage.useMemo[johnSmith]": (p)=>p.id === '1'
+            }["ViewerPage.useMemo[johnSmith]"]) || __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$data$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["mockPatients"][0]
+    }["ViewerPage.useMemo[johnSmith]"], []);
     // Model viewer state
     const [gaitScenario, setGaitScenario] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('standing');
     const [visibleTissues, setVisibleTissues] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(new Set([
@@ -1356,15 +1399,20 @@ function ViewerPage() {
     // Exercise filter state
     const [safetyFilter, setSafetyFilter] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('all');
     const [loadFilter, setLoadFilter] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('all');
-    // Get selected patient
+    // Get selected patient - use John Smith in Patient view, otherwise use selected patient
     const selectedPatient = (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
         "ViewerPage.useMemo[selectedPatient]": ()=>{
+            if (isPatientView) {
+                return johnSmith;
+            }
             return __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$data$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["mockPatients"].find({
                 "ViewerPage.useMemo[selectedPatient]": (p)=>p.id === selectedPatientId
             }["ViewerPage.useMemo[selectedPatient]"]) || __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$data$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["mockPatients"][0];
         }
     }["ViewerPage.useMemo[selectedPatient]"], [
-        selectedPatientId
+        selectedPatientId,
+        isPatientView,
+        johnSmith
     ]);
     // Filter patients based on search query
     // TODO: Replace with MongoDB query when backend is integrated
@@ -1474,7 +1522,7 @@ function ViewerPage() {
                             children: "Knee Model Viewer"
                         }, void 0, false, {
                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                            lineNumber: 135,
+                            lineNumber: 145,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1482,29 +1530,29 @@ function ViewerPage() {
                             children: "Interactive 3D visualization, biomechanics analysis, and exercise recommendations for patient knee models"
                         }, void 0, false, {
                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                            lineNumber: 136,
+                            lineNumber: 146,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                    lineNumber: 134,
+                    lineNumber: 144,
                     columnNumber: 9
                 }, this),
-                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
+                !isPatientView && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardHeader"], {
                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardTitle"], {
                                 children: "Patient Selection"
                             }, void 0, false, {
                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                lineNumber: 144,
-                                columnNumber: 13
+                                lineNumber: 155,
+                                columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                            lineNumber: 143,
-                            columnNumber: 11
+                            lineNumber: 154,
+                            columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1517,8 +1565,8 @@ function ViewerPage() {
                                                 className: "absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-clinical-grey-400"
                                             }, void 0, false, {
                                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                lineNumber: 150,
-                                                columnNumber: 17
+                                                lineNumber: 161,
+                                                columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
                                                 type: "text",
@@ -1528,36 +1576,36 @@ function ViewerPage() {
                                                 className: "pl-10"
                                             }, void 0, false, {
                                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                lineNumber: 151,
-                                                columnNumber: 17
+                                                lineNumber: 162,
+                                                columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                        lineNumber: 149,
-                                        columnNumber: 15
+                                        lineNumber: 160,
+                                        columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3",
                                         children: filteredPatients.map((patient)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                                 onClick: ()=>setSelectedPatientId(patient.id),
-                                                className: "\n                      text-left p-4 rounded-lg border-2 transition-colors\n                      ".concat(selectedPatientId === patient.id ? 'border-clinical-blue-600 bg-clinical-blue-50' : 'border-clinical-grey-200 hover:border-clinical-grey-300 hover:bg-clinical-grey-50', "\n                    "),
+                                                className: "\n                        text-left p-4 rounded-lg border-2 transition-colors\n                        ".concat(selectedPatientId === patient.id ? 'border-clinical-blue-600 bg-clinical-blue-50' : 'border-clinical-grey-200 hover:border-clinical-grey-300 hover:bg-clinical-grey-50', "\n                      "),
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: "font-semibold text-clinical-grey-900 mb-1",
                                                         children: patient.name
                                                     }, void 0, false, {
                                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                        lineNumber: 175,
-                                                        columnNumber: 21
+                                                        lineNumber: 186,
+                                                        columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: "text-sm text-clinical-grey-600",
                                                         children: patient.injuryType
                                                     }, void 0, false, {
                                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                        lineNumber: 178,
-                                                        columnNumber: 21
+                                                        lineNumber: 189,
+                                                        columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: "text-xs text-clinical-grey-500 mt-1",
@@ -1567,19 +1615,19 @@ function ViewerPage() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                        lineNumber: 181,
-                                                        columnNumber: 21
+                                                        lineNumber: 192,
+                                                        columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, patient.id, true, {
                                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                lineNumber: 163,
-                                                columnNumber: 19
+                                                lineNumber: 174,
+                                                columnNumber: 21
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                        lineNumber: 161,
-                                        columnNumber: 15
+                                        lineNumber: 172,
+                                        columnNumber: 17
                                     }, this),
                                     filteredPatients.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "text-center py-8 text-clinical-grey-500",
@@ -1590,25 +1638,25 @@ function ViewerPage() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                        lineNumber: 189,
-                                        columnNumber: 17
+                                        lineNumber: 200,
+                                        columnNumber: 19
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                lineNumber: 147,
-                                columnNumber: 13
+                                lineNumber: 158,
+                                columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                            lineNumber: 146,
-                            columnNumber: 11
+                            lineNumber: 157,
+                            columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                    lineNumber: 142,
-                    columnNumber: 9
+                    lineNumber: 153,
+                    columnNumber: 11
                 }, this),
                 selectedPatient && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1623,7 +1671,7 @@ function ViewerPage() {
                                             children: selectedPatient.name
                                         }, void 0, false, {
                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                            lineNumber: 203,
+                                            lineNumber: 215,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1637,13 +1685,13 @@ function ViewerPage() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                            lineNumber: 204,
+                                            lineNumber: 216,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                    lineNumber: 202,
+                                    lineNumber: 214,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
@@ -1652,23 +1700,23 @@ function ViewerPage() {
                                     children: selectedPatient.rehabStage
                                 }, void 0, false, {
                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                    lineNumber: 208,
+                                    lineNumber: 220,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                            lineNumber: 201,
+                            lineNumber: 213,
                             columnNumber: 15
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                        lineNumber: 200,
+                        lineNumber: 212,
                         columnNumber: 13
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                    lineNumber: 199,
+                    lineNumber: 211,
                     columnNumber: 11
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1684,12 +1732,12 @@ function ViewerPage() {
                                                 children: "Gait Scenario"
                                             }, void 0, false, {
                                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                lineNumber: 233,
+                                                lineNumber: 245,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                            lineNumber: 232,
+                                            lineNumber: 244,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1702,7 +1750,7 @@ function ViewerPage() {
                                                     className: "w-full flex-col"
                                                 }, void 0, false, {
                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                    lineNumber: 236,
+                                                    lineNumber: 248,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1716,7 +1764,7 @@ function ViewerPage() {
                                                                     children: "Current:"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                                    lineNumber: 244,
+                                                                    lineNumber: 256,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 " ",
@@ -1724,7 +1772,7 @@ function ViewerPage() {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                            lineNumber: 243,
+                                                            lineNumber: 255,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1732,25 +1780,25 @@ function ViewerPage() {
                                                             children: "Switch between gait scenarios to view biomechanical changes"
                                                         }, void 0, false, {
                                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                            lineNumber: 246,
+                                                            lineNumber: 258,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                    lineNumber: 242,
+                                                    lineNumber: 254,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                            lineNumber: 235,
+                                            lineNumber: 247,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                    lineNumber: 231,
+                                    lineNumber: 243,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -1760,12 +1808,12 @@ function ViewerPage() {
                                                 children: "Tissue Visibility"
                                             }, void 0, false, {
                                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                lineNumber: 255,
+                                                lineNumber: 267,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                            lineNumber: 254,
+                                            lineNumber: 266,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1782,49 +1830,49 @@ function ViewerPage() {
                                                                 children: tissue.label
                                                             }, void 0, false, {
                                                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                                lineNumber: 274,
+                                                                lineNumber: 286,
                                                                 columnNumber: 25
                                                             }, this),
                                                             isVisible ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$eye$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Eye$3e$__["Eye"], {
                                                                 className: "h-5 w-5 text-clinical-blue-600"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                                lineNumber: 278,
+                                                                lineNumber: 290,
                                                                 columnNumber: 27
                                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$eye$2d$off$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__EyeOff$3e$__["EyeOff"], {
                                                                 className: "h-5 w-5 text-clinical-grey-400"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                                lineNumber: 280,
+                                                                lineNumber: 292,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, tissue.value, true, {
                                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                        lineNumber: 262,
+                                                        lineNumber: 274,
                                                         columnNumber: 23
                                                     }, this);
                                                 })
                                             }, void 0, false, {
                                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                lineNumber: 258,
+                                                lineNumber: 270,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                            lineNumber: 257,
+                                            lineNumber: 269,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                    lineNumber: 253,
+                                    lineNumber: 265,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                            lineNumber: 230,
+                            lineNumber: 242,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1841,12 +1889,12 @@ function ViewerPage() {
                                                     className: "h-48 w-48 text-clinical-grey-300"
                                                 }, void 0, false, {
                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                    lineNumber: 297,
+                                                    lineNumber: 309,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                lineNumber: 296,
+                                                lineNumber: 308,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1859,7 +1907,7 @@ function ViewerPage() {
                                                                 className: "h-5 w-5 text-clinical-blue-600"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                                lineNumber: 303,
+                                                                lineNumber: 315,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1867,13 +1915,13 @@ function ViewerPage() {
                                                                 children: "3D Knee Model Viewer"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                                lineNumber: 304,
+                                                                lineNumber: 316,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                        lineNumber: 302,
+                                                        lineNumber: 314,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1887,7 +1935,7 @@ function ViewerPage() {
                                                                         children: "Patient:"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                                        lineNumber: 310,
+                                                                        lineNumber: 322,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     " ",
@@ -1895,7 +1943,7 @@ function ViewerPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                                lineNumber: 309,
+                                                                lineNumber: 321,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1906,7 +1954,7 @@ function ViewerPage() {
                                                                         children: "Gait Scenario:"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                                        lineNumber: 313,
+                                                                        lineNumber: 325,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     " ",
@@ -1914,7 +1962,7 @@ function ViewerPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                                lineNumber: 312,
+                                                                lineNumber: 324,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1925,7 +1973,7 @@ function ViewerPage() {
                                                                         children: "Visible Tissues:"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                                        lineNumber: 316,
+                                                                        lineNumber: 328,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     ' ',
@@ -1936,13 +1984,13 @@ function ViewerPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                                lineNumber: 315,
+                                                                lineNumber: 327,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                        lineNumber: 308,
+                                                        lineNumber: 320,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1950,13 +1998,13 @@ function ViewerPage() {
                                                         children: "This placeholder will be replaced with an interactive 3D visualization showing stress/strain distributions across knee tissues in real-time."
                                                     }, void 0, false, {
                                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                        lineNumber: 322,
+                                                        lineNumber: 334,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                lineNumber: 301,
+                                                lineNumber: 313,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1971,7 +2019,7 @@ function ViewerPage() {
                                                                     children: "Peak Stress"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                                    lineNumber: 332,
+                                                                    lineNumber: 344,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1982,13 +2030,13 @@ function ViewerPage() {
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                                    lineNumber: 333,
+                                                                    lineNumber: 345,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                            lineNumber: 331,
+                                                            lineNumber: 343,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1998,7 +2046,7 @@ function ViewerPage() {
                                                                     children: "Max Strain"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                                    lineNumber: 338,
+                                                                    lineNumber: 350,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2006,13 +2054,13 @@ function ViewerPage() {
                                                                     children: gaitScenario === 'standing' ? '0.03' : gaitScenario === 'walking' ? '0.12' : '0.24'
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                                    lineNumber: 339,
+                                                                    lineNumber: 351,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                            lineNumber: 337,
+                                                            lineNumber: 349,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2022,7 +2070,7 @@ function ViewerPage() {
                                                                     children: "Load Factor"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                                    lineNumber: 344,
+                                                                    lineNumber: 356,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2030,51 +2078,51 @@ function ViewerPage() {
                                                                     children: gaitScenario === 'standing' ? '1.0x' : gaitScenario === 'walking' ? '2.8x' : '5.2x'
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                                    lineNumber: 345,
+                                                                    lineNumber: 357,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                            lineNumber: 343,
+                                                            lineNumber: 355,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                    lineNumber: 330,
+                                                    lineNumber: 342,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                lineNumber: 329,
+                                                lineNumber: 341,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                        lineNumber: 294,
+                                        lineNumber: 306,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                    lineNumber: 293,
+                                    lineNumber: 305,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                lineNumber: 292,
+                                lineNumber: 304,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                            lineNumber: 291,
+                            lineNumber: 303,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                    lineNumber: 228,
+                    lineNumber: 240,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2087,7 +2135,7 @@ function ViewerPage() {
                                     children: "Biomechanics Data Panel"
                                 }, void 0, false, {
                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                    lineNumber: 360,
+                                    lineNumber: 372,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2095,13 +2143,13 @@ function ViewerPage() {
                                     children: "Detailed analysis of ligament stress, strain, and tissue stiffness over time"
                                 }, void 0, false, {
                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                    lineNumber: 361,
+                                    lineNumber: 373,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                            lineNumber: 359,
+                            lineNumber: 371,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2120,7 +2168,7 @@ function ViewerPage() {
                                                             children: "Average Ligament Stress"
                                                         }, void 0, false, {
                                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                            lineNumber: 372,
+                                                            lineNumber: 384,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2131,13 +2179,13 @@ function ViewerPage() {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                            lineNumber: 373,
+                                                            lineNumber: 385,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                    lineNumber: 371,
+                                                    lineNumber: 383,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2146,28 +2194,28 @@ function ViewerPage() {
                                                         className: "h-6 w-6 text-clinical-blue-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                        lineNumber: 378,
+                                                        lineNumber: 390,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                    lineNumber: 377,
+                                                    lineNumber: 389,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                            lineNumber: 370,
+                                            lineNumber: 382,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                        lineNumber: 369,
+                                        lineNumber: 381,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                    lineNumber: 368,
+                                    lineNumber: 380,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -2183,7 +2231,7 @@ function ViewerPage() {
                                                             children: "Average Strain"
                                                         }, void 0, false, {
                                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                            lineNumber: 388,
+                                                            lineNumber: 400,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2194,13 +2242,13 @@ function ViewerPage() {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                            lineNumber: 389,
+                                                            lineNumber: 401,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                    lineNumber: 387,
+                                                    lineNumber: 399,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2209,28 +2257,28 @@ function ViewerPage() {
                                                         className: "h-6 w-6 text-green-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                        lineNumber: 394,
+                                                        lineNumber: 406,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                    lineNumber: 393,
+                                                    lineNumber: 405,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                            lineNumber: 386,
+                                            lineNumber: 398,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                        lineNumber: 385,
+                                        lineNumber: 397,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                    lineNumber: 384,
+                                    lineNumber: 396,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -2246,7 +2294,7 @@ function ViewerPage() {
                                                             children: "Average Stiffness"
                                                         }, void 0, false, {
                                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                            lineNumber: 404,
+                                                            lineNumber: 416,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2257,13 +2305,13 @@ function ViewerPage() {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                            lineNumber: 405,
+                                                            lineNumber: 417,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                    lineNumber: 403,
+                                                    lineNumber: 415,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2272,34 +2320,34 @@ function ViewerPage() {
                                                         className: "h-6 w-6 text-yellow-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                        lineNumber: 410,
+                                                        lineNumber: 422,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                    lineNumber: 409,
+                                                    lineNumber: 421,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                            lineNumber: 402,
+                                            lineNumber: 414,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                        lineNumber: 401,
+                                        lineNumber: 413,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                    lineNumber: 400,
+                                    lineNumber: 412,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                            lineNumber: 367,
+                            lineNumber: 379,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2314,7 +2362,7 @@ function ViewerPage() {
                                     unit: "MPa"
                                 }, void 0, false, {
                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                    lineNumber: 419,
+                                    lineNumber: 431,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2329,7 +2377,7 @@ function ViewerPage() {
                                             unit: "%"
                                         }, void 0, false, {
                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                            lineNumber: 429,
+                                            lineNumber: 441,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$clinical$2f$ChartPlaceholder$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2341,19 +2389,19 @@ function ViewerPage() {
                                             unit: "N/m"
                                         }, void 0, false, {
                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                            lineNumber: 438,
+                                            lineNumber: 450,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                    lineNumber: 428,
+                                    lineNumber: 440,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                            lineNumber: 418,
+                            lineNumber: 430,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -2365,7 +2413,7 @@ function ViewerPage() {
                                         children: "Clinical Interpretation"
                                     }, void 0, false, {
                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                        lineNumber: 452,
+                                        lineNumber: 464,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2378,20 +2426,20 @@ function ViewerPage() {
                                                         children: "Stress Trends"
                                                     }, void 0, false, {
                                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                        lineNumber: 455,
+                                                        lineNumber: 467,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                         children: "Ligament stress shows a gradual decrease over the 30-day monitoring period, indicating positive healing response. Current values are within acceptable ranges for intermediate rehabilitation stage."
                                                     }, void 0, false, {
                                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                        lineNumber: 456,
+                                                        lineNumber: 468,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                lineNumber: 454,
+                                                lineNumber: 466,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2401,20 +2449,20 @@ function ViewerPage() {
                                                         children: "Strain Analysis"
                                                     }, void 0, false, {
                                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                        lineNumber: 463,
+                                                        lineNumber: 475,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                         children: "Tissue strain demonstrates progressive reduction, suggesting improved tissue integrity and load distribution. Monitor for any sudden increases which may indicate overloading."
                                                     }, void 0, false, {
                                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                        lineNumber: 464,
+                                                        lineNumber: 476,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                lineNumber: 462,
+                                                lineNumber: 474,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2424,43 +2472,43 @@ function ViewerPage() {
                                                         children: "Stiffness Progression"
                                                     }, void 0, false, {
                                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                        lineNumber: 471,
+                                                        lineNumber: 483,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                         children: "Increasing stiffness values reflect tissue healing and remodeling processes. These changes are consistent with expected rehabilitation progression for ligament injuries."
                                                     }, void 0, false, {
                                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                        lineNumber: 472,
+                                                        lineNumber: 484,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                lineNumber: 470,
+                                                lineNumber: 482,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                        lineNumber: 453,
+                                        lineNumber: 465,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                lineNumber: 451,
+                                lineNumber: 463,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                            lineNumber: 450,
+                            lineNumber: 462,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                    lineNumber: 358,
+                    lineNumber: 370,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2473,7 +2521,7 @@ function ViewerPage() {
                                     children: "Exercise Recommendations"
                                 }, void 0, false, {
                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                    lineNumber: 486,
+                                    lineNumber: 498,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2481,13 +2529,13 @@ function ViewerPage() {
                                     children: "AI-assisted rehabilitation exercise recommendations based on biomechanical analysis"
                                 }, void 0, false, {
                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                    lineNumber: 487,
+                                    lineNumber: 499,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                            lineNumber: 485,
+                            lineNumber: 497,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2506,7 +2554,7 @@ function ViewerPage() {
                                                             children: "Total Exercises"
                                                         }, void 0, false, {
                                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                            lineNumber: 498,
+                                                            lineNumber: 510,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2514,13 +2562,13 @@ function ViewerPage() {
                                                             children: __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$data$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["mockExercises"].length
                                                         }, void 0, false, {
                                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                            lineNumber: 499,
+                                                            lineNumber: 511,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                    lineNumber: 497,
+                                                    lineNumber: 509,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2529,28 +2577,28 @@ function ViewerPage() {
                                                         className: "h-6 w-6 text-clinical-blue-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                        lineNumber: 504,
+                                                        lineNumber: 516,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                    lineNumber: 503,
+                                                    lineNumber: 515,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                            lineNumber: 496,
+                                            lineNumber: 508,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                        lineNumber: 495,
+                                        lineNumber: 507,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                    lineNumber: 494,
+                                    lineNumber: 506,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -2566,7 +2614,7 @@ function ViewerPage() {
                                                             children: "Safe Exercises"
                                                         }, void 0, false, {
                                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                            lineNumber: 514,
+                                                            lineNumber: 526,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2574,13 +2622,13 @@ function ViewerPage() {
                                                             children: safeCount
                                                         }, void 0, false, {
                                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                            lineNumber: 515,
+                                                            lineNumber: 527,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                    lineNumber: 513,
+                                                    lineNumber: 525,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2589,28 +2637,28 @@ function ViewerPage() {
                                                         className: "h-6 w-6 text-green-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                        lineNumber: 520,
+                                                        lineNumber: 532,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                    lineNumber: 519,
+                                                    lineNumber: 531,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                            lineNumber: 512,
+                                            lineNumber: 524,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                        lineNumber: 511,
+                                        lineNumber: 523,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                    lineNumber: 510,
+                                    lineNumber: 522,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -2626,7 +2674,7 @@ function ViewerPage() {
                                                             children: "Caution Required"
                                                         }, void 0, false, {
                                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                            lineNumber: 530,
+                                                            lineNumber: 542,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2634,13 +2682,13 @@ function ViewerPage() {
                                                             children: cautionCount
                                                         }, void 0, false, {
                                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                            lineNumber: 531,
+                                                            lineNumber: 543,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                    lineNumber: 529,
+                                                    lineNumber: 541,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2649,34 +2697,34 @@ function ViewerPage() {
                                                         className: "h-6 w-6 text-yellow-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                        lineNumber: 536,
+                                                        lineNumber: 548,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                    lineNumber: 535,
+                                                    lineNumber: 547,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                            lineNumber: 528,
+                                            lineNumber: 540,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                        lineNumber: 527,
+                                        lineNumber: 539,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                    lineNumber: 526,
+                                    lineNumber: 538,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                            lineNumber: 493,
+                            lineNumber: 505,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -2692,7 +2740,7 @@ function ViewerPage() {
                                                     className: "h-5 w-5 text-clinical-grey-600"
                                                 }, void 0, false, {
                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                    lineNumber: 548,
+                                                    lineNumber: 560,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2700,13 +2748,13 @@ function ViewerPage() {
                                                     children: "Filters:"
                                                 }, void 0, false, {
                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                    lineNumber: 549,
+                                                    lineNumber: 561,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                            lineNumber: 547,
+                                            lineNumber: 559,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2717,7 +2765,7 @@ function ViewerPage() {
                                                     children: "Safety:"
                                                 }, void 0, false, {
                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                    lineNumber: 553,
+                                                    lineNumber: 565,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2732,18 +2780,18 @@ function ViewerPage() {
                                                             children: filter.charAt(0).toUpperCase() + filter.slice(1)
                                                         }, filter, false, {
                                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                            lineNumber: 556,
+                                                            lineNumber: 568,
                                                             columnNumber: 23
                                                         }, this))
                                                 }, void 0, false, {
                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                    lineNumber: 554,
+                                                    lineNumber: 566,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                            lineNumber: 552,
+                                            lineNumber: 564,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2754,7 +2802,7 @@ function ViewerPage() {
                                                     children: "Load:"
                                                 }, void 0, false, {
                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                    lineNumber: 575,
+                                                    lineNumber: 587,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2770,18 +2818,18 @@ function ViewerPage() {
                                                             children: filter
                                                         }, filter, false, {
                                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                            lineNumber: 578,
+                                                            lineNumber: 590,
                                                             columnNumber: 23
                                                         }, this))
                                                 }, void 0, false, {
                                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                    lineNumber: 576,
+                                                    lineNumber: 588,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                            lineNumber: 574,
+                                            lineNumber: 586,
                                             columnNumber: 17
                                         }, this),
                                         filteredExercises.length !== __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$data$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["mockExercises"].length && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
@@ -2795,23 +2843,23 @@ function ViewerPage() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                            lineNumber: 597,
+                                            lineNumber: 609,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                    lineNumber: 546,
+                                    lineNumber: 558,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                lineNumber: 545,
+                                lineNumber: 557,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                            lineNumber: 544,
+                            lineNumber: 556,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2820,7 +2868,7 @@ function ViewerPage() {
                                     exercise: exercise
                                 }, exercise.id, false, {
                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                    lineNumber: 609,
+                                    lineNumber: 621,
                                     columnNumber: 17
                                 }, this)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -2832,7 +2880,7 @@ function ViewerPage() {
                                                 className: "h-12 w-12 text-clinical-grey-400 mx-auto mb-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                lineNumber: 615,
+                                                lineNumber: 627,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2840,7 +2888,7 @@ function ViewerPage() {
                                                 children: "No exercises match the current filters"
                                             }, void 0, false, {
                                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                lineNumber: 616,
+                                                lineNumber: 628,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2848,49 +2896,53 @@ function ViewerPage() {
                                                 children: "Try adjusting your filter criteria"
                                             }, void 0, false, {
                                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                                lineNumber: 619,
+                                                lineNumber: 631,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                        lineNumber: 614,
+                                        lineNumber: 626,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                    lineNumber: 613,
+                                    lineNumber: 625,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                                lineNumber: 612,
+                                lineNumber: 624,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                            lineNumber: 606,
+                            lineNumber: 618,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-                    lineNumber: 484,
+                    lineNumber: 496,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-            lineNumber: 132,
+            lineNumber: 142,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/projects/deltahacks12/app/viewer/page.tsx",
-        lineNumber: 131,
+        lineNumber: 141,
         columnNumber: 5
     }, this);
 }
-_s(ViewerPage, "st+KcLhTv+gwPfFVv9AZjh5bPtE=");
+_s(ViewerPage, "HL/MpJIS0ut+kdf+2C1MuSnvwHc=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$contexts$2f$ViewContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useView"]
+    ];
+});
 _c = ViewerPage;
 var _c;
 __turbopack_context__.k.register(_c, "ViewerPage");

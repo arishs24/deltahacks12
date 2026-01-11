@@ -395,6 +395,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$
 var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$stethoscope$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Stethoscope$3e$__ = __turbopack_context__.i("[project]/projects/deltahacks12/node_modules/lucide-react/dist/esm/icons/stethoscope.js [app-client] (ecmascript) <export default as Stethoscope>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$user$2d$plus$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__UserPlus$3e$__ = __turbopack_context__.i("[project]/projects/deltahacks12/node_modules/lucide-react/dist/esm/icons/user-plus.js [app-client] (ecmascript) <export default as UserPlus>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/projects/deltahacks12/lib/utils.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$contexts$2f$ViewContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/projects/deltahacks12/contexts/ViewContext.tsx [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
 'use client';
@@ -402,7 +403,8 @@ var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
-const navigation = [
+;
+const clinicianNavigation = [
     {
         name: 'Dashboard',
         href: '/dashboard',
@@ -424,9 +426,28 @@ const navigation = [
         icon: __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$settings$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Settings$3e$__["Settings"]
     }
 ];
+const patientNavigation = [
+    {
+        name: 'Dashboard',
+        href: '/dashboard',
+        icon: __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$layout$2d$dashboard$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__LayoutDashboard$3e$__["LayoutDashboard"]
+    },
+    {
+        name: 'Model Viewer',
+        href: '/viewer',
+        icon: __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$eye$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Eye$3e$__["Eye"]
+    },
+    {
+        name: 'Settings',
+        href: '/settings',
+        icon: __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$settings$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Settings$3e$__["Settings"]
+    }
+];
 function Sidebar() {
     _s();
     const pathname = (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["usePathname"])();
+    const { isClinicianView } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$contexts$2f$ViewContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useView"])();
+    const navigation = isClinicianView ? clinicianNavigation : patientNavigation;
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "flex h-screen w-64 flex-col bg-clinical-grey-900 text-white flex-shrink-0",
         children: [
@@ -437,7 +458,7 @@ function Sidebar() {
                         className: "h-6 w-6 text-clinical-blue-400 mr-2"
                     }, void 0, false, {
                         fileName: "[project]/projects/deltahacks12/components/clinical/Sidebar.tsx",
-                        lineNumber: 27,
+                        lineNumber: 36,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -445,13 +466,13 @@ function Sidebar() {
                         children: "Knee CDS"
                     }, void 0, false, {
                         fileName: "[project]/projects/deltahacks12/components/clinical/Sidebar.tsx",
-                        lineNumber: 28,
+                        lineNumber: 37,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/projects/deltahacks12/components/clinical/Sidebar.tsx",
-                lineNumber: 26,
+                lineNumber: 35,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
@@ -467,20 +488,20 @@ function Sidebar() {
                                 className: "mr-3 h-5 w-5"
                             }, void 0, false, {
                                 fileName: "[project]/projects/deltahacks12/components/clinical/Sidebar.tsx",
-                                lineNumber: 45,
+                                lineNumber: 54,
                                 columnNumber: 15
                             }, this),
                             item.name
                         ]
                     }, item.name, true, {
                         fileName: "[project]/projects/deltahacks12/components/clinical/Sidebar.tsx",
-                        lineNumber: 35,
+                        lineNumber: 44,
                         columnNumber: 13
                     }, this);
                 })
             }, void 0, false, {
                 fileName: "[project]/projects/deltahacks12/components/clinical/Sidebar.tsx",
-                lineNumber: 30,
+                lineNumber: 39,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -491,7 +512,7 @@ function Sidebar() {
                         children: "Clinical Decision Support Tool"
                     }, void 0, false, {
                         fileName: "[project]/projects/deltahacks12/components/clinical/Sidebar.tsx",
-                        lineNumber: 52,
+                        lineNumber: 61,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -499,25 +520,26 @@ function Sidebar() {
                         children: "Version 1.0.0"
                     }, void 0, false, {
                         fileName: "[project]/projects/deltahacks12/components/clinical/Sidebar.tsx",
-                        lineNumber: 55,
+                        lineNumber: 64,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/projects/deltahacks12/components/clinical/Sidebar.tsx",
-                lineNumber: 51,
+                lineNumber: 60,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/projects/deltahacks12/components/clinical/Sidebar.tsx",
-        lineNumber: 25,
+        lineNumber: 34,
         columnNumber: 5
     }, this);
 }
-_s(Sidebar, "xbyQPtUVMO7MNj7WjJlpdWqRcTo=", false, function() {
+_s(Sidebar, "IJX4WPrfL1Ta0j3b5GeIlq1Rcrg=", false, function() {
     return [
-        __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["usePathname"]
+        __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["usePathname"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$contexts$2f$ViewContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useView"]
     ];
 });
 _c = Sidebar;
@@ -537,11 +559,16 @@ __turbopack_context__.s([
 var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/projects/deltahacks12/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$bell$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Bell$3e$__ = __turbopack_context__.i("[project]/projects/deltahacks12/node_modules/lucide-react/dist/esm/icons/bell.js [app-client] (ecmascript) <export default as Bell>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$user$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__User$3e$__ = __turbopack_context__.i("[project]/projects/deltahacks12/node_modules/lucide-react/dist/esm/icons/user.js [app-client] (ecmascript) <export default as User>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$contexts$2f$ViewContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/projects/deltahacks12/contexts/ViewContext.tsx [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature();
 'use client';
 ;
 ;
 function ClinicalHeader(param) {
     let { currentPatient } = param;
+    _s();
+    const { toggleView, isPatientView } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$contexts$2f$ViewContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useView"])();
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
         className: "sticky top-0 z-10 flex h-16 items-center justify-between border-b border-clinical-grey-200 bg-white px-6 shadow-sm",
         children: [
@@ -555,7 +582,7 @@ function ClinicalHeader(param) {
                             children: "Current Patient:"
                         }, void 0, false, {
                             fileName: "[project]/projects/deltahacks12/components/clinical/ClinicalHeader.tsx",
-                            lineNumber: 15,
+                            lineNumber: 18,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -563,18 +590,18 @@ function ClinicalHeader(param) {
                             children: currentPatient
                         }, void 0, false, {
                             fileName: "[project]/projects/deltahacks12/components/clinical/ClinicalHeader.tsx",
-                            lineNumber: 16,
+                            lineNumber: 19,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/projects/deltahacks12/components/clinical/ClinicalHeader.tsx",
-                    lineNumber: 14,
+                    lineNumber: 17,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/projects/deltahacks12/components/clinical/ClinicalHeader.tsx",
-                lineNumber: 12,
+                lineNumber: 15,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -588,53 +615,59 @@ function ClinicalHeader(param) {
                             className: "h-5 w-5"
                         }, void 0, false, {
                             fileName: "[project]/projects/deltahacks12/components/clinical/ClinicalHeader.tsx",
-                            lineNumber: 26,
+                            lineNumber: 29,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/projects/deltahacks12/components/clinical/ClinicalHeader.tsx",
-                        lineNumber: 21,
+                        lineNumber: 24,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                         type: "button",
-                        className: "flex items-center gap-2 rounded-lg px-3 py-2 text-clinical-grey-600 hover:bg-clinical-grey-100 hover:text-clinical-grey-900",
-                        "aria-label": "User menu",
+                        onClick: toggleView,
+                        className: "flex items-center gap-2 rounded-lg px-3 py-2 text-clinical-grey-600 hover:bg-clinical-grey-100 hover:text-clinical-grey-900 transition-colors cursor-pointer",
+                        "aria-label": "Toggle view mode",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$user$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__User$3e$__["User"], {
                                 className: "h-5 w-5"
                             }, void 0, false, {
                                 fileName: "[project]/projects/deltahacks12/components/clinical/ClinicalHeader.tsx",
-                                lineNumber: 33,
+                                lineNumber: 37,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                 className: "text-sm font-medium",
-                                children: "Clinician"
+                                children: isPatientView ? 'Patient View' : 'Clinician'
                             }, void 0, false, {
                                 fileName: "[project]/projects/deltahacks12/components/clinical/ClinicalHeader.tsx",
-                                lineNumber: 34,
+                                lineNumber: 38,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/projects/deltahacks12/components/clinical/ClinicalHeader.tsx",
-                        lineNumber: 28,
+                        lineNumber: 31,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/projects/deltahacks12/components/clinical/ClinicalHeader.tsx",
-                lineNumber: 20,
+                lineNumber: 23,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/projects/deltahacks12/components/clinical/ClinicalHeader.tsx",
-        lineNumber: 11,
+        lineNumber: 14,
         columnNumber: 5
     }, this);
 }
+_s(ClinicalHeader, "bfsAjoWzFtDsF3bBfmn/vM+gZ14=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$contexts$2f$ViewContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useView"]
+    ];
+});
 _c = ClinicalHeader;
 var _c;
 __turbopack_context__.k.register(_c, "ClinicalHeader");
@@ -717,6 +750,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$
 var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/projects/deltahacks12/components/ui/card.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/projects/deltahacks12/components/ui/badge.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$clinical$2f$ClinicalLayout$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/projects/deltahacks12/components/clinical/ClinicalLayout.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$contexts$2f$ViewContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/projects/deltahacks12/contexts/ViewContext.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$user$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__User$3e$__ = __turbopack_context__.i("[project]/projects/deltahacks12/node_modules/lucide-react/dist/esm/icons/user.js [app-client] (ecmascript) <export default as User>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$calendar$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Calendar$3e$__ = __turbopack_context__.i("[project]/projects/deltahacks12/node_modules/lucide-react/dist/esm/icons/calendar.js [app-client] (ecmascript) <export default as Calendar>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__ = __turbopack_context__.i("[project]/projects/deltahacks12/node_modules/lucide-react/dist/esm/icons/circle-alert.js [app-client] (ecmascript) <export default as AlertCircle>");
@@ -735,9 +769,20 @@ var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
+;
 function DashboardPage() {
     _s();
+    const { isPatientView } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$contexts$2f$ViewContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useView"])();
+    // In Patient view, always use John Smith (id: '1')
+    // TODO: Replace with authenticated user's patient data when backend is integrated
+    const johnSmith = (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "DashboardPage.useMemo[johnSmith]": ()=>__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$data$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["mockPatients"].find({
+                "DashboardPage.useMemo[johnSmith]": (p)=>p.id === '1'
+            }["DashboardPage.useMemo[johnSmith]"]) || __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$data$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["mockPatients"][0]
+    }["DashboardPage.useMemo[johnSmith]"], []);
     const [selectedPatient, setSelectedPatient] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$data$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["mockPatients"][0]);
+    // Determine which patient to display based on view mode
+    const displayPatient = isPatientView ? johnSmith : selectedPatient;
     const getStatusIcon = (status)=>{
         switch(status){
             case 'complete':
@@ -745,7 +790,7 @@ function DashboardPage() {
                     className: "h-5 w-5 text-green-600"
                 }, void 0, false, {
                     fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                    lineNumber: 27,
+                    lineNumber: 37,
                     columnNumber: 16
                 }, this);
             case 'pending':
@@ -753,7 +798,7 @@ function DashboardPage() {
                     className: "h-5 w-5 text-yellow-600"
                 }, void 0, false, {
                     fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                    lineNumber: 29,
+                    lineNumber: 39,
                     columnNumber: 16
                 }, this);
             case 'processing':
@@ -761,7 +806,7 @@ function DashboardPage() {
                     className: "h-5 w-5 text-clinical-blue-600 animate-pulse"
                 }, void 0, false, {
                     fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                    lineNumber: 31,
+                    lineNumber: 41,
                     columnNumber: 16
                 }, this);
             default:
@@ -769,7 +814,7 @@ function DashboardPage() {
                     className: "h-5 w-5 text-clinical-grey-400"
                 }, void 0, false, {
                     fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                    lineNumber: 33,
+                    lineNumber: 43,
                     columnNumber: 16
                 }, this);
         }
@@ -787,7 +832,7 @@ function DashboardPage() {
         }
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$clinical$2f$ClinicalLayout$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-        currentPatient: selectedPatient === null || selectedPatient === void 0 ? void 0 : selectedPatient.name,
+        currentPatient: displayPatient === null || displayPatient === void 0 ? void 0 : displayPatient.name,
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
             className: "space-y-6",
             children: [
@@ -798,27 +843,27 @@ function DashboardPage() {
                             children: "Dashboard"
                         }, void 0, false, {
                             fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                            lineNumber: 54,
+                            lineNumber: 64,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                             className: "mt-2 text-clinical-grey-600",
-                            children: "Select a patient to view their clinical summary and simulation status"
+                            children: isPatientView ? 'View your clinical summary and simulation status' : 'Select a patient to view their clinical summary and simulation status'
                         }, void 0, false, {
                             fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                            lineNumber: 55,
+                            lineNumber: 65,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                    lineNumber: 53,
+                    lineNumber: 63,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "grid grid-cols-1 lg:grid-cols-3 gap-6",
+                    className: "grid grid-cols-1 ".concat(isPatientView ? '' : 'lg:grid-cols-3', " gap-6"),
                     children: [
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
+                        !isPatientView && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
                             className: "lg:col-span-1",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardHeader"], {
@@ -826,20 +871,20 @@ function DashboardPage() {
                                         children: "Patient List"
                                     }, void 0, false, {
                                         fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                        lineNumber: 64,
-                                        columnNumber: 15
+                                        lineNumber: 78,
+                                        columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                    lineNumber: 63,
-                                    columnNumber: 13
+                                    lineNumber: 77,
+                                    columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "space-y-2",
                                         children: __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$data$2f$mockData$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["mockPatients"].map((patient)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                                 onClick: ()=>setSelectedPatient(patient),
-                                                className: "\n                      w-full text-left p-4 rounded-lg border-2 transition-colors\n                      ".concat((selectedPatient === null || selectedPatient === void 0 ? void 0 : selectedPatient.id) === patient.id ? 'border-clinical-blue-600 bg-clinical-blue-50' : 'border-clinical-grey-200 hover:border-clinical-grey-300 hover:bg-clinical-grey-50', "\n                    "),
+                                                className: "\n                        w-full text-left p-4 rounded-lg border-2 transition-colors\n                        ".concat((selectedPatient === null || selectedPatient === void 0 ? void 0 : selectedPatient.id) === patient.id ? 'border-clinical-blue-600 bg-clinical-blue-50' : 'border-clinical-grey-200 hover:border-clinical-grey-300 hover:bg-clinical-grey-50', "\n                      "),
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: "flex items-center justify-between mb-2",
@@ -849,48 +894,48 @@ function DashboardPage() {
                                                                 children: patient.name
                                                             }, void 0, false, {
                                                                 fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                lineNumber: 82,
-                                                                columnNumber: 23
+                                                                lineNumber: 96,
+                                                                columnNumber: 25
                                                             }, this),
                                                             getStatusIcon(patient.simulationStatus)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                        lineNumber: 81,
-                                                        columnNumber: 21
+                                                        lineNumber: 95,
+                                                        columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: "text-sm text-clinical-grey-600",
                                                         children: patient.injuryType
                                                     }, void 0, false, {
                                                         fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                        lineNumber: 87,
-                                                        columnNumber: 21
+                                                        lineNumber: 101,
+                                                        columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, patient.id, true, {
                                                 fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                lineNumber: 69,
-                                                columnNumber: 19
+                                                lineNumber: 83,
+                                                columnNumber: 21
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                        lineNumber: 67,
-                                        columnNumber: 15
+                                        lineNumber: 81,
+                                        columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                    lineNumber: 66,
-                                    columnNumber: 13
+                                    lineNumber: 80,
+                                    columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                            lineNumber: 62,
-                            columnNumber: 11
+                            lineNumber: 76,
+                            columnNumber: 13
                         }, this),
-                        selectedPatient && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "lg:col-span-2 space-y-6",
+                        displayPatient && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: isPatientView ? '' : 'lg:col-span-2 space-y-6',
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: "grid grid-cols-1 md:grid-cols-3 gap-4",
@@ -908,44 +953,44 @@ function DashboardPage() {
                                                                     children: "Injury Type"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                    lineNumber: 105,
+                                                                    lineNumber: 120,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                     className: "mt-1 text-lg font-semibold text-clinical-grey-900",
-                                                                    children: selectedPatient.injuryType
+                                                                    children: displayPatient.injuryType
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                    lineNumber: 106,
+                                                                    lineNumber: 121,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                            lineNumber: 104,
+                                                            lineNumber: 119,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
                                                             className: "h-8 w-8 text-clinical-blue-600"
                                                         }, void 0, false, {
                                                             fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                            lineNumber: 110,
+                                                            lineNumber: 125,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                    lineNumber: 103,
+                                                    lineNumber: 118,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                lineNumber: 102,
+                                                lineNumber: 117,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                            lineNumber: 101,
+                                            lineNumber: 116,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -961,52 +1006,52 @@ function DashboardPage() {
                                                                     children: "Rehab Stage"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                    lineNumber: 119,
+                                                                    lineNumber: 134,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                     className: "mt-2",
                                                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
                                                                         variant: "outline",
-                                                                        className: selectedPatient.rehabStage === 'Initial' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' : selectedPatient.rehabStage === 'Intermediate' ? 'bg-clinical-blue-100 text-clinical-blue-800 border-clinical-blue-200' : selectedPatient.rehabStage === 'Advanced' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-clinical-grey-100 text-clinical-grey-800 border-clinical-grey-200',
-                                                                        children: selectedPatient.rehabStage
+                                                                        className: displayPatient.rehabStage === 'Initial' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' : displayPatient.rehabStage === 'Intermediate' ? 'bg-clinical-blue-100 text-clinical-blue-800 border-clinical-blue-200' : displayPatient.rehabStage === 'Advanced' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-clinical-grey-100 text-clinical-grey-800 border-clinical-grey-200',
+                                                                        children: displayPatient.rehabStage
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                        lineNumber: 121,
+                                                                        lineNumber: 136,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                    lineNumber: 120,
+                                                                    lineNumber: 135,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                            lineNumber: 118,
+                                                            lineNumber: 133,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$activity$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Activity$3e$__["Activity"], {
                                                             className: "h-8 w-8 text-clinical-blue-600"
                                                         }, void 0, false, {
                                                             fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                            lineNumber: 137,
+                                                            lineNumber: 152,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                    lineNumber: 117,
+                                                    lineNumber: 132,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                lineNumber: 116,
+                                                lineNumber: 131,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                            lineNumber: 115,
+                                            lineNumber: 130,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -1022,60 +1067,60 @@ function DashboardPage() {
                                                                     children: "Simulation Status"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                    lineNumber: 146,
+                                                                    lineNumber: 161,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                     className: "mt-2 flex items-center gap-2",
                                                                     children: [
-                                                                        getStatusIcon(selectedPatient.simulationStatus),
+                                                                        getStatusIcon(displayPatient.simulationStatus),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                             className: "text-sm font-medium text-clinical-grey-900",
-                                                                            children: getStatusLabel(selectedPatient.simulationStatus)
+                                                                            children: getStatusLabel(displayPatient.simulationStatus)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                            lineNumber: 149,
+                                                                            lineNumber: 164,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                    lineNumber: 147,
+                                                                    lineNumber: 162,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                            lineNumber: 145,
+                                                            lineNumber: 160,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$check$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__CheckCircle2$3e$__["CheckCircle2"], {
                                                             className: "h-8 w-8 text-clinical-blue-600"
                                                         }, void 0, false, {
                                                             fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                            lineNumber: 154,
+                                                            lineNumber: 169,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                    lineNumber: 144,
+                                                    lineNumber: 159,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                lineNumber: 143,
+                                                lineNumber: 158,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                            lineNumber: 142,
+                                            lineNumber: 157,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                    lineNumber: 100,
+                                    lineNumber: 115,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -1085,39 +1130,39 @@ function DashboardPage() {
                                                 children: "Affected Structures"
                                             }, void 0, false, {
                                                 fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                lineNumber: 163,
+                                                lineNumber: 178,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                            lineNumber: 162,
+                                            lineNumber: 177,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
                                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 className: "flex flex-wrap gap-2",
-                                                children: selectedPatient.affectedStructures.map((structure)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
+                                                children: displayPatient.affectedStructures.map((structure)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
                                                         variant: "destructive",
                                                         children: structure
                                                     }, structure, false, {
                                                         fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                        lineNumber: 168,
+                                                        lineNumber: 183,
                                                         columnNumber: 23
                                                     }, this))
                                             }, void 0, false, {
                                                 fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                lineNumber: 166,
+                                                lineNumber: 181,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                            lineNumber: 165,
+                                            lineNumber: 180,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                    lineNumber: 161,
+                                    lineNumber: 176,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -1127,12 +1172,12 @@ function DashboardPage() {
                                                 children: "Patient Information"
                                             }, void 0, false, {
                                                 fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                lineNumber: 179,
+                                                lineNumber: 194,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                            lineNumber: 178,
+                                            lineNumber: 193,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1146,7 +1191,7 @@ function DashboardPage() {
                                                                 className: "h-5 w-5 text-clinical-grey-400"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                lineNumber: 184,
+                                                                lineNumber: 199,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1156,27 +1201,27 @@ function DashboardPage() {
                                                                         children: "Name"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                        lineNumber: 186,
+                                                                        lineNumber: 201,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                         className: "font-medium text-clinical-grey-900",
-                                                                        children: selectedPatient.name
+                                                                        children: displayPatient.name
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                        lineNumber: 187,
+                                                                        lineNumber: 202,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                lineNumber: 185,
+                                                                lineNumber: 200,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                        lineNumber: 183,
+                                                        lineNumber: 198,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1186,7 +1231,7 @@ function DashboardPage() {
                                                                 className: "h-5 w-5 text-clinical-grey-400"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                lineNumber: 193,
+                                                                lineNumber: 208,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1196,30 +1241,30 @@ function DashboardPage() {
                                                                         children: "Age"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                        lineNumber: 195,
+                                                                        lineNumber: 210,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                         className: "font-medium text-clinical-grey-900",
                                                                         children: [
-                                                                            selectedPatient.age,
+                                                                            displayPatient.age,
                                                                             " years"
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                        lineNumber: 196,
+                                                                        lineNumber: 211,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                lineNumber: 194,
+                                                                lineNumber: 209,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                        lineNumber: 192,
+                                                        lineNumber: 207,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1229,7 +1274,7 @@ function DashboardPage() {
                                                                 className: "h-5 w-5 text-clinical-grey-400"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                lineNumber: 202,
+                                                                lineNumber: 217,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1239,27 +1284,27 @@ function DashboardPage() {
                                                                         children: "Gender"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                        lineNumber: 204,
+                                                                        lineNumber: 219,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                         className: "font-medium text-clinical-grey-900",
-                                                                        children: selectedPatient.gender
+                                                                        children: displayPatient.gender
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                        lineNumber: 205,
+                                                                        lineNumber: 220,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                lineNumber: 203,
+                                                                lineNumber: 218,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                        lineNumber: 201,
+                                                        lineNumber: 216,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1269,7 +1314,7 @@ function DashboardPage() {
                                                                 className: "h-5 w-5 text-clinical-grey-400"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                lineNumber: 211,
+                                                                lineNumber: 226,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1279,30 +1324,30 @@ function DashboardPage() {
                                                                         children: "Height"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                        lineNumber: 213,
+                                                                        lineNumber: 228,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                         className: "font-medium text-clinical-grey-900",
                                                                         children: [
-                                                                            selectedPatient.height,
+                                                                            displayPatient.height,
                                                                             " cm"
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                        lineNumber: 214,
+                                                                        lineNumber: 229,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                lineNumber: 212,
+                                                                lineNumber: 227,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                        lineNumber: 210,
+                                                        lineNumber: 225,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1312,7 +1357,7 @@ function DashboardPage() {
                                                                 className: "h-5 w-5 text-clinical-grey-400"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                lineNumber: 220,
+                                                                lineNumber: 235,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1322,74 +1367,78 @@ function DashboardPage() {
                                                                         children: "Weight"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                        lineNumber: 222,
+                                                                        lineNumber: 237,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                         className: "font-medium text-clinical-grey-900",
                                                                         children: [
-                                                                            selectedPatient.weight,
+                                                                            displayPatient.weight,
                                                                             " kg"
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                        lineNumber: 223,
+                                                                        lineNumber: 238,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                                lineNumber: 221,
+                                                                lineNumber: 236,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                        lineNumber: 219,
+                                                        lineNumber: 234,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                                lineNumber: 182,
+                                                lineNumber: 197,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                            lineNumber: 181,
+                                            lineNumber: 196,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                                    lineNumber: 177,
+                                    lineNumber: 192,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                            lineNumber: 98,
+                            lineNumber: 113,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-                    lineNumber: 60,
+                    lineNumber: 73,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-            lineNumber: 52,
+            lineNumber: 62,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/projects/deltahacks12/app/dashboard/page.tsx",
-        lineNumber: 51,
+        lineNumber: 61,
         columnNumber: 5
     }, this);
 }
-_s(DashboardPage, "bNG+CLUkka4UBUDYvmFFqYORcIg=");
+_s(DashboardPage, "LQepWymn9B2qchYekGBQXOCotQo=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$projects$2f$deltahacks12$2f$contexts$2f$ViewContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useView"]
+    ];
+});
 _c = DashboardPage;
 var _c;
 __turbopack_context__.k.register(_c, "DashboardPage");
