@@ -77,8 +77,9 @@ Please analyze these measurements and provide:
 2. Comparison with healthy baseline values for key structures (ACL, menisci, patellar tendon, etc.)
 3. Identification of any areas of concern
 4. Clinical context for these measurements
+5. Specific exercise recommendations from the database studies that are appropriate for these measurements and patient profile
 
-Focus on providing medically accurate information about what these measurements indicate."""
+IMPORTANT: When suggesting exercises, please reference specific exercises from the studies and clinical protocols in the database. Include the exercise names as they appear in the research studies and explain why these exercises are recommended based on the biomechanical measurements and clinical evidence from the database."""
 
         return prompt
 
