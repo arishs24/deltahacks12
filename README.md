@@ -59,12 +59,14 @@ Open [http://localhost:3000](http://localhost:3000) to see your chat application
 - **Tailwind CSS** and Radix UI components
 - **Complete branding system** via appearance.json configuration
 - **Interactive setup flow** with live preview and automatic configuration saving
+- **🆕 RAG System** - Moorcheh-powered knowledge base with Gemini (see `rag_model/`)
 
 ## Configuration Guides
 
 - **API Setup**: `config/README.md` - Configure your AI API
 - **Branding**: `BRANDING_GUIDE.md` - Customize app name, logo, colors
 - **Themes & Fonts**: `customize/README.md` - Change appearance
+- **🆕 RAG System**: `rag_model/README.md` - Moorcheh-powered knowledge base
 
 ## Project Structure
 
@@ -78,7 +80,14 @@ your-project/
 ├── customize/              # Themes and fonts
 ├── hooks/                  # React hooks
 ├── lib/                    # Utilities
-└── public/                 # Static files
+├── public/                 # Static files
+└── rag_model/             # 🆕 RAG system (Milvus + Gemini)
+    ├── core/              # Core abstractions
+    ├── services/          # Business logic
+    ├── utils/             # Utilities
+    ├── upload_pdf.py      # CLI: Upload PDFs
+    ├── query.py           # CLI: Query system
+    └── README.md          # Full RAG documentation
 ```
 
 ## Customization
@@ -121,6 +130,44 @@ export const chatConfig = {
   }
 }
 ```
+
+## 🤖 RAG System (Moorcheh + Gemini)
+
+This project includes a complete RAG (Retrieval-Augmented Generation) system using **Moorcheh's hosted vector database**:
+
+### Quick RAG Setup
+```bash
+# 1. Install Python dependencies
+cd rag_model && pip install -r requirements.txt
+
+# 2. Set Moorcheh API key (get from https://console.moorcheh.ai/api-keys)
+# Option A: Use .env file (recommended)
+cp rag_model/.env.example rag_model/.env
+# Edit rag_model/.env and add your key
+
+# Option B: Export variable
+export MOORCHEH_API_KEY="your-moorcheh-api-key"
+
+# 3. Upload PDFs to namespaces
+python upload_pdf.py
+
+# 4. Query via CLI
+python query.py
+```
+
+### Features
+- 📄 **PDF Upload** - Automatic chunking and embedding via Moorcheh
+- 🗂️ **Namespace Management** - Multiple document collections
+- 🎯 **Strict RAG** - Model cites sources, admits when it doesn't know
+- 🔌 **Next.js Ready** - Easy API route integration
+- 🛠️ **CLI Tools** - Interactive upload and query scripts
+- ☁️ **No Infrastructure** - No Docker or vector DB setup needed!
+
+**Moorcheh handles**: Vector storage, embeddings, similarity search, and multi-model AI (Gemini, Claude, etc.)
+
+**Full documentation**: See [`rag_model/README.md`](./rag_model/README.md)
+
+---
 
 ## Deployment
 
