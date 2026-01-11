@@ -6,10 +6,10 @@ A FastAPI backend service that provides exercise recommendations based on biomec
 
 The RAG API is a FastAPI server that:
 
-1. Takes biomechanical stress measurements and patient info as input
-2. Queries Moorcheh RAG to interpret the measurements
+1. Takes knee biomechanical stress measurements and comprehensive patient info as input
+2. Queries Moorcheh RAG to interpret the measurements in clinical context
 3. Uses Google Gemini LLM to generate structured exercise recommendations
-4. Returns JSON with healthy force values and recommended exercises
+4. Returns JSON with ideal stress values for each region and detailed exercise recommendations
 
 ## Architecture
 
@@ -27,10 +27,10 @@ FastAPI → Next.js → Frontend
 
 ## API Flow
 
-1. **Input**: Client sends JSON with patient info and stress measurements
-2. **RAG Query**: Service queries Moorcheh RAG to interpret measurements
-3. **Gemini Processing**: Gemini LLM generates structured exercise recommendations
-4. **Output**: Returns JSON with healthy forces and exercise list
+1. **Input**: Client sends JSON with patient info (age, gender, height, weight, injury type, rehab stage, affected structures) and knee region stress measurements
+2. **RAG Query**: Service queries Moorcheh RAG to interpret measurements in clinical context
+3. **Gemini Processing**: Gemini LLM generates structured exercise recommendations with full details
+4. **Output**: Returns JSON with ideal stress values for each region and comprehensive exercise recommendations
 
 ## Prerequisites
 
@@ -155,20 +155,22 @@ curl -X POST "http://localhost:8000/exercise-recommendation" \
   -H "Content-Type: application/json" \
   -d '{
     "patient_info": {
-      "height": 175,
-      "weight": 70,
-      "gender": "male"
+      "age": 35,
+      "gender": "Male",
+      "height_cm": 175.0,
+      "weight_kg": 80.0,
+      "injury_type": "ACL tear",
+      "rehab_stage": "Intermediate",
+      "affected_structures": ["ACL", "medial_menisci", "quadriceps"]
     },
     "regions": [
       {
-        "region": "heel",
-        "stress": 45.2,
-        "load": 120.5
+        "region": "medial compartment",
+        "stress": 120.5
       },
       {
-        "region": "arch",
-        "stress": 32.1,
-        "load": 80.3
+        "region": "lateral compartment",
+        "stress": 95.3
       }
     ]
   }'
@@ -182,20 +184,22 @@ import requests
 url = "http://localhost:8000/exercise-recommendation"
 payload = {
     "patient_info": {
-        "height": 175,
-        "weight": 70,
-        "gender": "male"
+        "age": 35,
+        "gender": "Male",
+        "height_cm": 175.0,
+        "weight_kg": 80.0,
+        "injury_type": "ACL tear",
+        "rehab_stage": "Intermediate",
+        "affected_structures": ["ACL", "medial_menisci", "quadriceps"]
     },
     "regions": [
         {
-            "region": "heel",
-            "stress": 45.2,
-            "load": 120.5
+            "region": "medial compartment",
+            "stress": 120.5
         },
         {
-            "region": "arch",
-            "stress": 32.1,
-            "load": 80.3
+            "region": "lateral compartment",
+            "stress": 95.3
         }
     ]
 }
@@ -220,42 +224,104 @@ Expected response:
 
 ### POST `/exercise-recommendation`
 
-Generates exercise recommendations based on biomechanical measurements.
+Generates knee rehabilitation exercise recommendations based on biomechanical stress measurements and patient information.
 
 **Request Body:**
 
 ```json
 {
   "patient_info": {
-    "height": 175.0,
-    "weight": 70.0,
-    "gender": "male"
+    "age": 35,
+    "gender": "Male",
+    "height_cm": 175.0,
+    "weight_kg": 80.0,
+    "injury_type": "ACL tear",
+    "rehab_stage": "Intermediate",
+    "affected_structures": ["ACL", "medial_menisci", "quadriceps"]
   },
   "regions": [
     {
-      "region": "heel",
-      "stress": 45.2,
-      "load": 120.5
+      "region": "medial compartment",
+      "stress": 120.5
+    },
+    {
+      "region": "lateral compartment",
+      "stress": 95.3
     }
   ]
 }
 ```
 
+**Request Field Descriptions:**
+
+- `patient_info.age`: Patient age in years (0-150)
+- `patient_info.gender`: Patient gender (string)
+- `patient_info.height_cm`: Patient height in centimeters (must be > 0)
+- `patient_info.weight_kg`: Patient weight in kilograms (must be > 0)
+- `patient_info.injury_type`: Type of knee injury (string, e.g., "ACL tear", "Meniscus injury")
+- `patient_info.rehab_stage`: Rehabilitation stage (string, e.g., "Initial", "Intermediate", "Advanced")
+- `patient_info.affected_structures`: Array of affected knee structures (must include at least one)
+  - Valid values: `"ACL"`, `"PCL"`, `"MCL"`, `"LCL"`, `"femur"`, `"tibia"`, `"patella"`, `"articular_cartilage"`, `"medial_menisci"`, `"lateral_menisci"`, `"quadriceps"`, `"hamstrings"`, `"gastrocnemius"`
+- `regions`: Array of stress measurements for knee regions (must include at least one)
+  - `region`: Knee region name (e.g., "medial compartment", "lateral compartment", "patellofemoral")
+  - `stress`: Stress measurement value in N or Nm (must be > 0)
+
 **Response:**
 
 ```json
 {
-  "healthy_forces": {
-    "acl": 150.5,
-    "menisci": 200.3,
-    "patellar_tendon": 180.0
-  },
+  "ideal_stresses": [
+    {
+      "region": "medial compartment",
+      "ideal_stress": 150.5
+    },
+    {
+      "region": "lateral compartment",
+      "ideal_stress": 120.3
+    }
+  ],
   "exercises": [
-    { "name": "Hamstring Stretch" },
-    { "name": "Quad Strengthening" }
+    {
+      "name": "Quadriceps Isometric Contraction",
+      "description": "Sit with leg extended. Tighten quadriceps muscle and hold for 10 seconds. Relax and repeat.",
+      "target_structures": ["quadriceps", "patella"],
+      "duration": "10 seconds per contraction",
+      "sets_reps": "3 sets x 10 reps",
+      "load_level": "low",
+      "clinical_justification": "Low-load isometric exercise to maintain muscle activation without excessive stress on healing ACL graft. Evidence supports early isometric exercises in ACL rehabilitation protocols."
+    },
+    {
+      "name": "Hamstring Stretch",
+      "description": "Sit on floor with one leg extended. Reach forward toward toes, hold for 30 seconds. Repeat on other leg.",
+      "target_structures": ["hamstrings"],
+      "duration": "30 seconds per stretch",
+      "sets_reps": "3 sets x 3 reps",
+      "load_level": "low",
+      "clinical_justification": "Gentle stretching to maintain flexibility and prevent muscle tightness during ACL rehabilitation."
+    }
   ]
 }
 ```
+
+**Response Field Descriptions:**
+
+- `ideal_stresses`: Array of ideal stress values for each input region
+  - `region`: Knee region name (matches input regions)
+  - `ideal_stress`: Ideal stress value in N or Nm (based on rehabilitation stage and clinical guidelines)
+- `exercises`: Array of recommended rehabilitation exercises
+  - `name`: Descriptive name of the exercise
+  - `description`: Step-by-step instructions for performing the exercise
+  - `target_structures`: Array of target structures from the valid structures list
+  - `duration`: Recommended duration (e.g., "30 seconds", "5 minutes")
+  - `sets_reps`: Sets and reps recommendation (e.g., "3 sets x 10 reps")
+  - `load_level`: Qualitative load level - `"low"`, `"medium"`, or `"high"` (matched to rehabilitation stage)
+  - `clinical_justification`: Rationale linking exercise to rehab goals and injury type
+
+**Load Level Guidelines:**
+
+- **Initial stage**: Exercises use `"low"` load level
+- **Intermediate stage**: Exercises use `"low"` to `"medium"` load levels
+- **Advanced stage**: Exercises can use `"medium"` to `"high"` load levels
 
 ### GET `/health`
 
@@ -285,13 +351,27 @@ rag_api/
 ## Key Features
 
 - ✅ FastAPI with automatic API documentation (Swagger UI)
-- ✅ Structured input/output using Pydantic models
-- ✅ Extensible data models (easy to add fields)
-- ✅ Integration with Moorcheh RAG
+- ✅ Structured input/output using Pydantic models with comprehensive validation
+- ✅ Knee-specific rehabilitation recommendations with full exercise details
+- ✅ Integration with Moorcheh RAG for evidence-based recommendations
 - ✅ Google Gemini LLM for structured output generation
+- ✅ Automatic load level matching to rehabilitation stage
+- ✅ Validates affected structures against clinical anatomy list
 - ✅ CORS configured for Next.js frontend
-- ✅ Error handling and validation
+- ✅ Comprehensive error handling and validation
 - ✅ Lazy configuration loading
+
+## Valid Structures
+
+The API validates that all `affected_structures` and `target_structures` use values from this clinical anatomy list:
+
+- **Ligaments**: `ACL`, `PCL`, `MCL`, `LCL`
+- **Bones**: `femur`, `tibia`, `patella`
+- **Cartilage**: `articular_cartilage`
+- **Menisci**: `medial_menisci`, `lateral_menisci`
+- **Muscles**: `quadriceps`, `hamstrings`, `gastrocnemius`
+
+Any structure not in this list will result in a validation error.
 
 ## Frontend Integration
 
@@ -310,27 +390,53 @@ This Next.js API route (`app/api/exercise-recommendation/route.ts`) automaticall
 ```typescript
 interface Request {
   patient_info: {
-    height: number;
-    weight: number;
-    gender: string;
+    age: number; // 0-150
+    gender: string; // e.g., "Male", "Female"
+    height_cm: number; // > 0
+    weight_kg: number; // > 0
+    injury_type: string; // e.g., "ACL tear"
+    rehab_stage: string; // e.g., "Initial", "Intermediate", "Advanced"
+    affected_structures: string[]; // At least one from valid list
   };
   regions: Array<{
-    region: string;
-    stress: number;
-    load: number;
+    region: string; // Knee region name
+    stress: number; // Stress in N or Nm (> 0)
   }>;
 }
+
+// Valid structures for affected_structures and target_structures:
+type ValidStructure =
+  | "ACL"
+  | "PCL"
+  | "MCL"
+  | "LCL"
+  | "femur"
+  | "tibia"
+  | "patella"
+  | "articular_cartilage"
+  | "medial_menisci"
+  | "lateral_menisci"
+  | "quadriceps"
+  | "hamstrings"
+  | "gastrocnemius";
 ```
 
 ### Response Format
 
 ```typescript
 interface Response {
-  healthy_forces: {
-    [structure: string]: number; // e.g., "acl": 150.5
-  };
+  ideal_stresses: Array<{
+    region: string; // Matches input region names
+    ideal_stress: number; // Ideal stress value in N or Nm
+  }>;
   exercises: Array<{
-    name: string;
+    name: string; // Exercise name
+    description: string; // Step-by-step instructions
+    target_structures: string[]; // Array of valid structures
+    duration: string; // e.g., "30 seconds", "5 minutes"
+    sets_reps: string; // e.g., "3 sets x 10 reps"
+    load_level: "low" | "medium" | "high";
+    clinical_justification: string; // Rationale for the exercise
   }>;
 }
 ```
@@ -343,20 +449,24 @@ const response = await fetch("/api/exercise-recommendation", {
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
     patient_info: {
-      height: 175,
-      weight: 70,
-      gender: "male",
+      age: 35,
+      gender: "Male",
+      height_cm: 175.0,
+      weight_kg: 80.0,
+      injury_type: "ACL tear",
+      rehab_stage: "Intermediate",
+      affected_structures: ["ACL", "medial_menisci", "quadriceps"],
     },
     regions: [
-      { region: "heel", stress: 45.2, load: 120.5 },
-      { region: "arch", stress: 32.1, load: 80.3 },
+      { region: "medial compartment", stress: 120.5 },
+      { region: "lateral compartment", stress: 95.3 },
     ],
   }),
 });
 
 const data = await response.json();
-console.log(data.healthy_forces);
-console.log(data.exercises);
+console.log(data.ideal_stresses); // Array of { region, ideal_stress }
+console.log(data.exercises); // Array of full exercise objects
 ```
 
 ## Development Workflow
@@ -388,23 +498,37 @@ Edit `rag_api/models.py`:
 
 ```python
 class PatientInfo(BaseModel):
-    height: float
-    weight: float
+    age: int
     gender: str
-    age: int  # New field
-    # ... add more fields
+    height_cm: float
+    weight_kg: float
+    injury_type: str
+    rehab_stage: str
+    affected_structures: List[str]
+    # Add new fields here, e.g.:
+    # medical_history: Optional[str]
+    # previous_surgeries: Optional[List[str]]
 ```
 
 ### Adding More Details to Exercises
 
-Edit `rag_api/models.py`:
+The `Exercise` model already includes comprehensive fields:
+
+- `name`: Exercise name
+- `description`: Step-by-step instructions
+- `target_structures`: Target structures array
+- `duration`: Recommended duration
+- `sets_reps`: Sets and reps
+- `load_level`: Load level (low/medium/high)
+- `clinical_justification`: Clinical rationale
+
+To add additional fields, edit `rag_api/models.py`:
 
 ```python
 class Exercise(BaseModel):
-    name: str
-    description: str  # New field
-    reps: int        # New field
-    sets: int        # New field
+    # ... existing fields ...
+    difficulty: str  # New field
+    equipment_needed: List[str]  # New field
     # ... add more fields
 ```
 
@@ -482,6 +606,37 @@ Example production command:
 gunicorn rag_api.main:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
 ```
 
+## Validation and Error Handling
+
+### Input Validation
+
+The API performs comprehensive validation:
+
+- **Patient Info**: Age must be 0-150, height/weight must be > 0
+- **Affected Structures**: Must include at least one structure, all must be from valid list
+- **Regions**: Must include at least one region measurement
+- **Stress Values**: Must be positive numbers
+
+### Error Responses
+
+- **400 Bad Request**: Invalid input (validation errors, missing required fields)
+- **500 Internal Server Error**: Server-side errors (RAG/Gemini failures, parsing errors)
+
+Example error response:
+
+```json
+{
+  "detail": "Invalid structures: ['invalid_structure']. Valid structures are: ['ACL', 'PCL', ...]"
+}
+```
+
+### Response Guarantees
+
+- `ideal_stresses` will always include one entry for each input region
+- `exercises` will always include at least one exercise (default conservative exercise if RAG data is insufficient)
+- All exercises will have at least one `target_structure` from the affected structures list
+- `load_level` will match the rehabilitation stage
+
 ## Notes
 
 - The API does NOT modify the `rag_model` folder - it only imports from it
@@ -489,3 +644,7 @@ gunicorn rag_api.main:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8
 - The service is designed to be easily extensible
 - Error handling is built into the service layer
 - The API automatically detects available Gemini models if the specified model is not found
+- Exercises are evidence-based and aligned with the patient's rehabilitation stage
+- Ideal stresses are calculated based on rehabilitation stage and clinical guidelines
+- All stress values are in Newtons (N) or Newton-meters (Nm)
+- Height is in centimeters (cm), weight is in kilograms (kg)
