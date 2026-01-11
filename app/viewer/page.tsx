@@ -7,6 +7,7 @@ import ClinicalLayout from '@/components/clinical/ClinicalLayout';
 import { useView } from '@/contexts/ViewContext';
 import STLViewer from '@/components/clinical/STLViewer';
 import { usePatients } from '@/hooks/usePatients';
+import { Card, CardContent } from '@/components/ui/card';
 import { LoadingState } from '@/components/dashboard/LoadingState';
 import { ErrorState } from '@/components/dashboard/ErrorState';
 import { NoPatientsState } from '@/components/dashboard/NoPatientsState';
@@ -264,10 +265,7 @@ export default function ViewerPage() {
           <div className="lg:col-span-3">
             <Card>
               <CardContent className="p-6 h-[600px]">
-                <STLViewer
-                  stlPath="/examples/Knee_Anatomy.stl"
-                  isLoading={false}
-                />
+                <STLViewer stlPath="/examples/Knee_Anatomy.stl" />
               </CardContent>
             </Card>
           </div>
