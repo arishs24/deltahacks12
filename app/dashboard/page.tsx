@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { mockPatients } from '@/data/mockData';
+import { useState, useMemo, useEffect } from 'react';
 import { Patient } from '@/types/clinical';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import ClinicalLayout from '@/components/clinical/ClinicalLayout';
 import { useView } from '@/contexts/ViewContext';
+import { usePatients } from '@/hooks/usePatients';
 import { 
   User, 
   Calendar, 
@@ -16,17 +16,31 @@ import {
   Clock,
   XCircle,
   Ruler,
-  Weight
+  Weight,
+  Loader2
 } from 'lucide-react';
 
 export default function DashboardPage() {
   const { isPatientView } = useView();
   
-  // In Patient view, always use John Smith (id: '1')
-  // TODO: Replace with authenticated user's patient data when backend is integrated
-  const johnSmith = useMemo(() => mockPatients.find(p => p.id === '1') || mockPatients[0], []);
+  // Fetch live patient data from MongoDB via /api/patients
+  const { patients, loading, error, refetch } = usePatients();
   
-  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(mockPatients[0]);
+  // In Patient view, always show John Smith (filter by name)
+  // In a real app, this would be the authenticated user's patient record
+  const johnSmith = useMemo(() => 
+    patients.find(p => p.name === 'John Smith') || patients[0], 
+    [patients]
+  );
+  
+  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+  
+  // Set initial selected patient once data is loaded
+  useEffect(() => {
+    if (!loading && patients.length > 0 && !selectedPatient) {
+      setSelectedPatient(patients[0]);
+    }
+  }, [loading, patients, selectedPatient]);
   
   // Determine which patient to display based on view mode
   const displayPatient = isPatientView ? johnSmith : selectedPatient;
@@ -70,16 +84,68 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        <div className={`grid grid-cols-1 ${isPatientView ? '' : 'lg:grid-cols-3'} gap-6`}>
-          {/* Patient Selector - Only show in Clinician view */}
-          {!isPatientView && (
-            <Card className="lg:col-span-1">
-              <CardHeader>
-                <CardTitle>Patient List</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {mockPatients.map((patient) => (
+        {/* Loading State - Fetching patient data from MongoDB */}
+        {loading && (
+          <Card>
+            <CardContent className="py-12">
+              <div className="flex flex-col items-center justify-center">
+                <Loader2 className="h-12 w-12 animate-spin text-clinical-blue-600 mb-4" />
+                <p className="text-clinical-grey-600 font-medium">Loading patient data from MongoDB...</p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Error State - Failed to fetch from MongoDB */}
+        {error && !loading && (
+          <Card className="border-red-200 bg-red-50">
+            <CardContent className="py-6">
+              <div className="flex items-center gap-3">
+                <XCircle className="h-6 w-6 text-red-600 flex-shrink-0" />
+                <div>
+                  <p className="font-semibold text-red-900">Failed to load patients</p>
+                  <p className="text-sm text-red-700 mt-1">{error}</p>
+                  <button
+                    onClick={refetch}
+                    className="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
+                  >
+                    Retry
+                  </button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* No Patients State - MongoDB collection is empty */}
+        {!loading && !error && patients.length === 0 && (
+          <Card>
+            <CardContent className="py-12">
+              <div className="text-center">
+                <User className="h-12 w-12 text-clinical-grey-400 mx-auto mb-4" />
+                <p className="text-clinical-grey-600 font-medium">No patients found</p>
+                <p className="text-sm text-clinical-grey-500 mt-2">
+                  {isPatientView 
+                    ? 'Your patient record is not available yet.'
+                    : 'Add a patient using the "Add Patient" tab to get started.'}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Main Content - Only show when data is loaded and available */}
+        {!loading && !error && patients.length > 0 && (
+          <div className={`grid grid-cols-1 ${isPatientView ? '' : 'lg:grid-cols-3'} gap-6`}>
+            {/* Patient Selector - Only show in Clinician view - Data from MongoDB */}
+            {!isPatientView && (
+              <Card className="lg:col-span-1">
+                <CardHeader>
+                  <CardTitle>Patient List ({patients.length})</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {patients.map((patient) => (
                     <button
                       key={patient.id}
                       onClick={() => setSelectedPatient(patient)}
@@ -246,7 +312,8 @@ export default function DashboardPage() {
               </Card>
             </div>
           )}
-        </div>
+          </div>
+        )}
       </div>
     </ClinicalLayout>
   );

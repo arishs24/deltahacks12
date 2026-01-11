@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -46,6 +47,8 @@ interface PatientFormData {
 }
 
 export default function AddPatientPage() {
+  const router = useRouter();
+  
   // Form state - Client-side state management
   // Server-side MongoDB operations are handled via /api/patients API route
   const [formData, setFormData] = useState<PatientFormData>({
@@ -142,6 +145,12 @@ export default function AddPatientPage() {
       
       // Show success toast notification
       setShowSuccessToast(true);
+      
+      // Redirect to dashboard after 2 seconds to show the success toast
+      // Dashboard will automatically fetch the updated patient list from MongoDB
+      setTimeout(() => {
+        router.push('/dashboard');
+      }, 2000);
     } catch (error) {
       // Handle network errors or API errors
       console.error('Error saving patient:', error);

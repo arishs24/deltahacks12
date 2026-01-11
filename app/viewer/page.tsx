@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { GaitScenario, TissueType, Patient } from '@/types/clinical';
-import { mockPatients, mockExercises, generateBiomechanicsData } from '@/data/mockData';
+import { mockExercises, generateBiomechanicsData } from '@/data/mockData';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -11,6 +11,7 @@ import ToggleGroup from '@/components/clinical/ToggleGroup';
 import ChartPlaceholder from '@/components/clinical/ChartPlaceholder';
 import ExerciseCard from '@/components/clinical/ExerciseCard';
 import { useView } from '@/contexts/ViewContext';
+import { usePatients } from '@/hooks/usePatients';
 import { 
   Box, 
   Layers, 
@@ -22,7 +23,10 @@ import {
   Activity,
   Filter,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Loader2,
+  XCircle,
+  User
 } from 'lucide-react';
 
 type SafetyFilter = 'all' | 'safe' | 'caution';
@@ -31,13 +35,26 @@ type LoadFilter = 'all' | 'Low' | 'Moderate' | 'High';
 export default function ViewerPage() {
   const { isPatientView } = useView();
   
+  // Fetch live patient data from MongoDB via /api/patients
+  const { patients, loading, error, refetch } = usePatients();
+  
   // Patient selection state - only used in Clinician view
-  const [selectedPatientId, setSelectedPatientId] = useState<string>(mockPatients[0]?.id || '');
+  const [selectedPatientId, setSelectedPatientId] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState('');
   
-  // In Patient view, always use John Smith (id: '1')
-  // TODO: Replace with authenticated user's patient data when backend is integrated
-  const johnSmith = useMemo(() => mockPatients.find(p => p.id === '1') || mockPatients[0], []);
+  // Set initial selected patient once data is loaded
+  useEffect(() => {
+    if (!loading && patients.length > 0 && !selectedPatientId) {
+      setSelectedPatientId(patients[0].id);
+    }
+  }, [loading, patients, selectedPatientId]);
+  
+  // In Patient view, always show John Smith (filter by name)
+  // In a real app, this would be the authenticated user's patient record
+  const johnSmith = useMemo(() => 
+    patients.find(p => p.name === 'John Smith') || patients[0], 
+    [patients]
+  );
 
   // Model viewer state
   const [gaitScenario, setGaitScenario] = useState<GaitScenario>('standing');
@@ -49,28 +66,27 @@ export default function ViewerPage() {
   const [safetyFilter, setSafetyFilter] = useState<SafetyFilter>('all');
   const [loadFilter, setLoadFilter] = useState<LoadFilter>('all');
 
-  // Get selected patient - use John Smith in Patient view, otherwise use selected patient
+  // Get selected patient - use John Smith in Patient view, otherwise use selected patient from MongoDB data
   const selectedPatient = useMemo(() => {
     if (isPatientView) {
       return johnSmith;
     }
-    return mockPatients.find(p => p.id === selectedPatientId) || mockPatients[0];
-  }, [selectedPatientId, isPatientView, johnSmith]);
+    return patients.find(p => p.id === selectedPatientId) || patients[0];
+  }, [selectedPatientId, isPatientView, johnSmith, patients]);
 
-  // Filter patients based on search query
-  // TODO: Replace with MongoDB query when backend is integrated
-  // Future: await fetchPatientsFromMongoDB(searchQuery)
+  // Filter patients based on search query - Data from MongoDB
+  // Client-side filtering for search functionality
   const filteredPatients = useMemo(() => {
     if (!searchQuery.trim()) {
-      return mockPatients;
+      return patients;
     }
     const query = searchQuery.toLowerCase();
-    return mockPatients.filter(patient =>
+    return patients.filter(patient =>
       patient.name.toLowerCase().includes(query) ||
       patient.injuryType.toLowerCase().includes(query) ||
       patient.id.toLowerCase().includes(query)
     );
-  }, [searchQuery]);
+  }, [searchQuery, patients]);
 
   // Biomechanics data for selected patient
   // TODO: Replace with MongoDB query when backend is integrated
@@ -148,8 +164,61 @@ export default function ViewerPage() {
           </p>
         </div>
 
-        {/* Patient Search and Selection - Only show in Clinician view */}
-        {!isPatientView && (
+        {/* Loading State - Fetching patient data from MongoDB */}
+        {loading && (
+          <Card>
+            <CardContent className="py-12">
+              <div className="flex flex-col items-center justify-center">
+                <Loader2 className="h-12 w-12 animate-spin text-clinical-blue-600 mb-4" />
+                <p className="text-clinical-grey-600 font-medium">Loading patient data from MongoDB...</p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Error State - Failed to fetch from MongoDB */}
+        {error && !loading && (
+          <Card className="border-red-200 bg-red-50">
+            <CardContent className="py-6">
+              <div className="flex items-center gap-3">
+                <XCircle className="h-6 w-6 text-red-600 flex-shrink-0" />
+                <div>
+                  <p className="font-semibold text-red-900">Failed to load patients</p>
+                  <p className="text-sm text-red-700 mt-1">{error}</p>
+                  <button
+                    onClick={refetch}
+                    className="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
+                  >
+                    Retry
+                  </button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* No Patients State - MongoDB collection is empty */}
+        {!loading && !error && patients.length === 0 && (
+          <Card>
+            <CardContent className="py-12">
+              <div className="text-center">
+                <User className="h-12 w-12 text-clinical-grey-400 mx-auto mb-4" />
+                <p className="text-clinical-grey-600 font-medium">No patients found</p>
+                <p className="text-sm text-clinical-grey-500 mt-2">
+                  {isPatientView 
+                    ? 'Your patient record is not available yet.'
+                    : 'Add a patient using the "Add Patient" tab to get started.'}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Main Content - Only show when data is loaded and available */}
+        {!loading && !error && patients.length > 0 && (
+          <>
+            {/* Patient Search and Selection - Only show in Clinician view - Data from MongoDB */}
+            {!isPatientView && (
           <Card>
             <CardHeader>
               <CardTitle>Patient Selection</CardTitle>
@@ -653,6 +722,8 @@ export default function ViewerPage() {
             )}
           </div>
         </div>
+          </>
+        )}
       </div>
     </ClinicalLayout>
   );
