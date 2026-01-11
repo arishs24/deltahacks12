@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { Patient, Exercise } from "@/types/clinical";
+import { Patient } from "@/types/clinical";
 import ClinicalLayout from "@/components/clinical/ClinicalLayout";
 import { useView } from "@/contexts/ViewContext";
 import { usePatients } from "@/hooks/usePatients";
@@ -12,17 +12,6 @@ import { PatientListCard } from "@/components/dashboard/PatientListCard";
 import { SummaryCards } from "@/components/dashboard/SummaryCards";
 import { AffectedStructuresCard } from "@/components/dashboard/AffectedStructuresCard";
 import { PatientInformationCard } from "@/components/dashboard/PatientInformationCard";
-import { ModelEvaluationCard } from "@/components/dashboard/ModelEvaluationCard";
-import { ClinicalInterpretationCard } from "@/components/dashboard/ClinicalInterpretationCard";
-import { RecommendedExercisesCard } from "@/components/dashboard/RecommendedExercisesCard";
-
-interface ExerciseRecommendationResponse {
-  healthy_forces: Record<string, number>;
-  exercises: Array<{ name: string }>;
-  data_sufficient: boolean;
-  rag_interpretation?: string;
-  gemini_feedback?: string;
-}
 
 export default function DashboardPage() {
   const { isPatientView } = useView();
@@ -45,84 +34,9 @@ export default function DashboardPage() {
       setSelectedPatient(patients[0]);
     }
   }, [loading, patients, selectedPatient]);
-  const [evaluationResults, setEvaluationResults] =
-    useState<ExerciseRecommendationResponse | null>(null);
-  const [isEvaluating, setIsEvaluating] = useState(false);
-  const [evaluationError, setEvaluationError] = useState<string | null>(null);
 
   // Determine which patient to display based on view mode
   const displayPatient = isPatientView ? johnSmith : selectedPatient;
-
-  // Reset evaluation results when patient changes
-  useEffect(() => {
-    setEvaluationResults(null);
-    setEvaluationError(null);
-  }, [displayPatient?.id]);
-
-  const handleEvaluateModel = async () => {
-    if (!displayPatient) return;
-
-    setIsEvaluating(true);
-    setEvaluationError(null);
-
-    try {
-      // Prepare request data
-      const requestData = {
-        patient_info: {
-          height: displayPatient.height,
-          weight: displayPatient.weight,
-          gender: displayPatient.gender,
-        },
-        regions: [
-          // Placeholder region data - in real app, this would come from biomechanics data
-          { region: "heel", stress: 120.5, load: 450.2 },
-          { region: "arch", stress: 95.3, load: 380.1 },
-          { region: "forefoot", stress: 140.7, load: 520.4 },
-        ],
-      };
-
-      const response = await fetch("/api/exercise-recommendation", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestData),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to evaluate model");
-      }
-
-      const data: ExerciseRecommendationResponse = await response.json();
-      setEvaluationResults(data);
-    } catch (error) {
-      console.error("Error evaluating model:", error);
-      setEvaluationError(
-        error instanceof Error ? error.message : "An unexpected error occurred"
-      );
-    } finally {
-      setIsEvaluating(false);
-    }
-  };
-
-  // Convert API exercises to Exercise format with placeholder data
-  const convertExercises = (
-    apiExercises: Array<{ name: string }>
-  ): Exercise[] => {
-    return apiExercises.map((ex, index) => ({
-      id: `evaluated-${index}`,
-      name: ex.name,
-      targetTissue: displayPatient?.affectedStructures[0] || "General",
-      loadLevel: "Low" as const,
-      safetyStatus: "safe" as const,
-      justification:
-        "Recommended based on biomechanical analysis and clinical guidelines.",
-      duration: "15 minutes",
-      sets: 3,
-      reps: 10,
-    }));
-  };
 
   return (
     <ClinicalLayout currentPatient={displayPatient?.name}>
@@ -181,28 +95,7 @@ export default function DashboardPage() {
               {/* Patient Details - Improved spacing: Consistent padding and grid alignment */}
               <PatientInformationCard patient={displayPatient} isPatientView={isPatientView} />
 
-              {/* Evaluate Model Button */}
-              <ModelEvaluationCard
-                onEvaluate={handleEvaluateModel}
-                isEvaluating={isEvaluating}
-                error={evaluationError}
-              />
-
-              {/* Clinical Interpretation - Only show after evaluation */}
-              {evaluationResults?.rag_interpretation && (
-                <ClinicalInterpretationCard
-                  interpretation={evaluationResults.rag_interpretation}
-                  dataSufficient={evaluationResults.data_sufficient}
-                  geminiFeedback={evaluationResults.gemini_feedback}
-                />
-              )}
-
-              {/* Clinical Exercises - Only show after evaluation */}
-              {evaluationResults && (
-                <RecommendedExercisesCard
-                  exercises={convertExercises(evaluationResults.exercises)}
-                />
-              )}
+              {/* Note: Model Evaluation section has been moved to the Model Viewer tab for better integration with 3D visualization and biomechanics data */}
             </div>
           )}
           </div>

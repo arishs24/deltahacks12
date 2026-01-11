@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
-import { GaitScenario, TissueType } from '@/types/clinical';
+import { GaitScenario, TissueType, Exercise } from '@/types/clinical';
 import { mockExercises, generateBiomechanicsData } from '@/data/mockData';
 import ClinicalLayout from '@/components/clinical/ClinicalLayout';
 import { useView } from '@/contexts/ViewContext';
@@ -20,9 +20,22 @@ import { BiomechanicsInterpretationCard } from '@/components/viewer/Biomechanics
 import { ExerciseSummaryCards } from '@/components/exercises/ExerciseSummaryCards';
 import { ExerciseFilters } from '@/components/exercises/ExerciseFilters';
 import { ExerciseList } from '@/components/exercises/ExerciseList';
+// Model Evaluation imports - moved from Dashboard
+import { ModelEvaluationCard } from '@/components/dashboard/ModelEvaluationCard';
+import { ClinicalInterpretationCard } from '@/components/dashboard/ClinicalInterpretationCard';
+import { RecommendedExercisesCard } from '@/components/dashboard/RecommendedExercisesCard';
 
 type SafetyFilter = 'all' | 'safe' | 'caution';
 type LoadFilter = 'all' | 'Low' | 'Moderate' | 'High';
+
+// Interface for Model Evaluation API response - moved from Dashboard
+interface ExerciseRecommendationResponse {
+  healthy_forces: Record<string, number>;
+  exercises: Array<{ name: string }>;
+  data_sufficient: boolean;
+  rag_interpretation?: string;
+  gemini_feedback?: string;
+}
 
 export default function ViewerPage() {
   const { isPatientView } = useView();
@@ -56,6 +69,12 @@ export default function ViewerPage() {
   // Exercise filter state
   const [safetyFilter, setSafetyFilter] = useState<SafetyFilter>('all');
   const [loadFilter, setLoadFilter] = useState<LoadFilter>('all');
+
+  // Model Evaluation state - moved from Dashboard
+  const [evaluationResults, setEvaluationResults] =
+    useState<ExerciseRecommendationResponse | null>(null);
+  const [isEvaluating, setIsEvaluating] = useState(false);
+  const [evaluationError, setEvaluationError] = useState<string | null>(null);
 
   // Get selected patient - use John Smith in Patient view, otherwise use selected patient from MongoDB data
   const selectedPatient = useMemo(() => {
@@ -115,6 +134,78 @@ export default function ViewerPage() {
       newVisible.add(tissue);
     }
     setVisibleTissues(newVisible);
+  };
+
+  // Model Evaluation handler - moved from Dashboard
+  // Reset evaluation results when patient changes
+  useEffect(() => {
+    setEvaluationResults(null);
+    setEvaluationError(null);
+  }, [selectedPatient?.id]);
+
+  const handleEvaluateModel = async () => {
+    if (!selectedPatient) return;
+
+    setIsEvaluating(true);
+    setEvaluationError(null);
+
+    try {
+      // Prepare request data
+      const requestData = {
+        patient_info: {
+          height: selectedPatient.height,
+          weight: selectedPatient.weight,
+          gender: selectedPatient.gender,
+        },
+        regions: [
+          // Placeholder region data - in real app, this would come from biomechanics data
+          { region: "heel", stress: 120.5, load: 450.2 },
+          { region: "arch", stress: 95.3, load: 380.1 },
+          { region: "forefoot", stress: 140.7, load: 520.4 },
+        ],
+      };
+
+      const response = await fetch("/api/exercise-recommendation", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to evaluate model");
+      }
+
+      const data: ExerciseRecommendationResponse = await response.json();
+      setEvaluationResults(data);
+    } catch (error) {
+      console.error("Error evaluating model:", error);
+      setEvaluationError(
+        error instanceof Error ? error.message : "An unexpected error occurred"
+      );
+    } finally {
+      setIsEvaluating(false);
+    }
+  };
+
+  // Convert API exercises to Exercise format - moved from Dashboard
+  const convertExercises = (
+    apiExercises: Array<{ name: string }>
+  ): Exercise[] => {
+    return apiExercises.map((ex, index) => ({
+      id: `evaluated-${index}`,
+      name: ex.name,
+      targetTissue: selectedPatient?.affectedStructures[0] || "General",
+      loadLevel: "Low" as const,
+      safetyStatus: "safe" as const,
+      justification:
+        "Recommended based on biomechanical analysis and clinical guidelines.",
+      duration: "15 minutes",
+      sets: 3,
+      reps: 10,
+    }));
   };
 
   return (
@@ -177,6 +268,40 @@ export default function ViewerPage() {
               isPatientView={isPatientView}
             />
           </div>
+        </div>
+
+        {/* Model Evaluation Section - Relocated from Dashboard */}
+        {/* This section allows clinicians to evaluate the biomechanical model and receive AI-generated exercise recommendations */}
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-2xl font-bold text-clinical-grey-900">Model Evaluation</h2>
+            <p className="mt-1 text-clinical-grey-600">
+              Evaluate the biomechanical model to receive AI-powered exercise recommendations
+            </p>
+          </div>
+
+          {/* Evaluate Model Button */}
+          <ModelEvaluationCard
+            onEvaluate={handleEvaluateModel}
+            isEvaluating={isEvaluating}
+            error={evaluationError}
+          />
+
+          {/* Clinical Interpretation - Only show after evaluation */}
+          {evaluationResults?.rag_interpretation && (
+            <ClinicalInterpretationCard
+              interpretation={evaluationResults.rag_interpretation}
+              dataSufficient={evaluationResults.data_sufficient}
+              geminiFeedback={evaluationResults.gemini_feedback}
+            />
+          )}
+
+          {/* Recommended Exercises - Only show after evaluation */}
+          {evaluationResults && (
+            <RecommendedExercisesCard
+              exercises={convertExercises(evaluationResults.exercises)}
+            />
+          )}
         </div>
 
         {/* Biomechanics Data Panel Section */}
