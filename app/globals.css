@@ -105,6 +105,28 @@
   --font-primary: var(--font-saira), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-heading: var(--font-saira), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono: var(--font-fira-code), ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+
+  /* Clinical color palette */
+  --clinical-blue-50: #e6f2ff;
+  --clinical-blue-100: #cce5ff;
+  --clinical-blue-200: #99cbff;
+  --clinical-blue-300: #66b1ff;
+  --clinical-blue-400: #3397ff;
+  --clinical-blue-500: #007dff;
+  --clinical-blue-600: #0064cc;
+  --clinical-blue-700: #004b99;
+  --clinical-blue-800: #003266;
+  --clinical-blue-900: #001933;
+  --clinical-grey-50: #f9fafb;
+  --clinical-grey-100: #f3f4f6;
+  --clinical-grey-200: #e5e7eb;
+  --clinical-grey-300: #d1d5db;
+  --clinical-grey-400: #9ca3af;
+  --clinical-grey-500: #6b7280;
+  --clinical-grey-600: #4b5563;
+  --clinical-grey-700: #374151;
+  --clinical-grey-800: #1f2937;
+  --clinical-grey-900: #111827;
 }
 
 @layer base {
@@ -120,7 +142,67 @@
     -moz-osx-font-smoothing: grayscale;
     /* Prevent horizontal scroll on mobile */
     overflow-x: hidden;
+    margin: 0;
+    padding: 0;
   }
+
+  /* Clinical color utilities */
+  .clinical-blue-50 { color: var(--clinical-blue-50); }
+  .clinical-blue-100 { color: var(--clinical-blue-100); }
+  .clinical-blue-200 { color: var(--clinical-blue-200); }
+  .clinical-blue-300 { color: var(--clinical-blue-300); }
+  .clinical-blue-400 { color: var(--clinical-blue-400); }
+  .clinical-blue-500 { color: var(--clinical-blue-500); }
+  .clinical-blue-600 { color: var(--clinical-blue-600); }
+  .clinical-blue-700 { color: var(--clinical-blue-700); }
+  .clinical-blue-800 { color: var(--clinical-blue-800); }
+  .clinical-blue-900 { color: var(--clinical-blue-900); }
+  .bg-clinical-blue-50 { background-color: var(--clinical-blue-50); }
+  .bg-clinical-blue-100 { background-color: var(--clinical-blue-100); }
+  .bg-clinical-blue-200 { background-color: var(--clinical-blue-200); }
+  .bg-clinical-blue-300 { background-color: var(--clinical-blue-300); }
+  .bg-clinical-blue-400 { background-color: var(--clinical-blue-400); }
+  .bg-clinical-blue-500 { background-color: var(--clinical-blue-500); }
+  .bg-clinical-blue-600 { background-color: var(--clinical-blue-600); }
+  .bg-clinical-blue-700 { background-color: var(--clinical-blue-700); }
+  .bg-clinical-blue-800 { background-color: var(--clinical-blue-800); }
+  .bg-clinical-blue-900 { background-color: var(--clinical-blue-900); }
+  .border-clinical-blue-200 { border-color: var(--clinical-blue-200); }
+  .border-clinical-blue-600 { border-color: var(--clinical-blue-600); }
+  
+  .clinical-grey-50 { color: var(--clinical-grey-50); }
+  .clinical-grey-100 { color: var(--clinical-grey-100); }
+  .clinical-grey-200 { color: var(--clinical-grey-200); }
+  .clinical-grey-300 { color: var(--clinical-grey-300); }
+  .clinical-grey-400 { color: var(--clinical-grey-400); }
+  .clinical-grey-500 { color: var(--clinical-grey-500); }
+  .clinical-grey-600 { color: var(--clinical-grey-600); }
+  .clinical-grey-700 { color: var(--clinical-grey-700); }
+  .clinical-grey-800 { color: var(--clinical-grey-800); }
+  .clinical-grey-900 { color: var(--clinical-grey-900); }
+  .bg-clinical-grey-50 { background-color: var(--clinical-grey-50); }
+  .bg-clinical-grey-100 { background-color: var(--clinical-grey-100); }
+  .bg-clinical-grey-200 { background-color: var(--clinical-grey-200); }
+  .bg-clinical-grey-300 { background-color: var(--clinical-grey-300); }
+  .bg-clinical-grey-400 { background-color: var(--clinical-grey-400); }
+  .bg-clinical-grey-500 { background-color: var(--clinical-grey-500); }
+  .bg-clinical-grey-600 { background-color: var(--clinical-grey-600); }
+  .bg-clinical-grey-700 { background-color: var(--clinical-grey-700); }
+  .bg-clinical-grey-800 { background-color: var(--clinical-grey-800); }
+  .bg-clinical-grey-900 { background-color: var(--clinical-grey-900); }
+  .text-clinical-grey-50 { color: var(--clinical-grey-50); }
+  .text-clinical-grey-100 { color: var(--clinical-grey-100); }
+  .text-clinical-grey-200 { color: var(--clinical-grey-200); }
+  .text-clinical-grey-300 { color: var(--clinical-grey-300); }
+  .text-clinical-grey-400 { color: var(--clinical-grey-400); }
+  .text-clinical-grey-500 { color: var(--clinical-grey-500); }
+  .text-clinical-grey-600 { color: var(--clinical-grey-600); }
+  .text-clinical-grey-700 { color: var(--clinical-grey-700); }
+  .text-clinical-grey-800 { color: var(--clinical-grey-800); }
+  .text-clinical-grey-900 { color: var(--clinical-grey-900); }
+  .border-clinical-grey-200 { border-color: var(--clinical-grey-200); }
+  .border-clinical-grey-300 { border-color: var(--clinical-grey-300); }
+  .border-clinical-grey-800 { border-color: var(--clinical-grey-800); }
 
   /* Typography classes */
   .font-primary {
@@ -314,5 +396,34 @@
 
   .safe-area-right {
     padding-right: env(safe-area-inset-right);
+  }
+
+  /* Toast notification animations */
+  @keyframes slide-in-from-right {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes shrink-width {
+    from {
+      width: 100%;
+    }
+    to {
+      width: 0%;
+    }
+  }
+
+  .animate-slide-in-from-right {
+    animation: slide-in-from-right 0.3s ease-out;
+  }
+
+  .animate-shrink-width {
+    animation: shrink-width linear;
   }
 }

@@ -14,10 +14,8 @@ export function validateEnvironment(): { isValid: boolean; errors: string[] } {
   const errors: string[] = [];
   const env = process.env as EnvConfig;
 
-  // Required environment variables
-  if (!env.NEXT_PUBLIC_MOORCHEH_API_KEY) {
-    errors.push('NEXT_PUBLIC_MOORCHEH_API_KEY is required');
-  } else if (env.NEXT_PUBLIC_MOORCHEH_API_KEY.length < 10) {
+  // API key is optional - only validate if provided (for clinical UI, API key is not required)
+  if (env.NEXT_PUBLIC_MOORCHEH_API_KEY && env.NEXT_PUBLIC_MOORCHEH_API_KEY.length < 10) {
     errors.push('NEXT_PUBLIC_MOORCHEH_API_KEY appears to be invalid (too short)');
   }
 

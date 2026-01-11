@@ -3,18 +3,13 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { 
-  Sparkles, 
-  Settings, 
-  Palette, 
-  Type, 
-  Rocket
-} from "lucide-react";
+import { Palette, Type, Sparkles } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import ThemeSelector from "../../components/ui/ThemeSelector";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../components/ui/dialog";
-
-import SpotlightCard from "../../components/ui/spotlight";
+import { HeroSection } from "../../components/landing/HeroSection";
+import { FeatureCard } from "../../components/landing/FeatureCard";
+import { StatusCard } from "../../components/landing/StatusCard";
 
 export default function LandingPage() {
   const router = useRouter();
@@ -47,70 +42,11 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto">
           
           {/* Hero Section */}
-          <motion.div 
-            className="text-center mb-16 space-y-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <motion.div 
-              className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2, duration: 0.4 }}
-            >
-              <Sparkles className="w-4 h-4" />
-              Moorcheh Chat Boilerplate
-            </motion.div>
-            
-            <motion.h1 
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
-            >
-              Build Your
-              <span className="block text-transparent bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text">
-                AI Chat Experience
-              </span>
-            </motion.h1>
-            
-            <motion.p 
-              className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.6 }}
-            >
-              A powerful, customizable chat boilerplate with beautiful themes, flexible fonts, 
-              and seamless AI integration. Get your chat application running in minutes.
-            </motion.p>
-            
-            <motion.div 
-              className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.6 }}
-            >
-              <Button 
-                size="lg" 
-                className="px-8 py-3 text-lg font-semibold cursor-pointer"
-                onClick={handleGetStarted}
-              >
-                <Rocket className="w-5 h-5 mr-2" />
-                {hasApiKey ? 'Customize Your Chat' : 'Get Started'}
-              </Button>
-              
-              <Button 
-                variant="outline" 
-                size="lg" 
-                className="px-8 py-3 text-lg cursor-pointer"
-                onClick={() => router.push('/demo')}
-              >
-                <Settings className="w-5 h-5 mr-2" />
-                View Demo
-              </Button>
-            </motion.div>
-          </motion.div>
+          <HeroSection
+            hasApiKey={hasApiKey}
+            onGetStarted={handleGetStarted}
+            onViewDemo={() => router.push('/demo')}
+          />
 
           {/* Features Grid */}
           <motion.div 
@@ -168,69 +104,19 @@ export default function LandingPage() {
                 )
               }
             ].map((feature, index) => (
-              <motion.div
+              <FeatureCard
                 key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 + (index * 0.1), duration: 0.5 }}
-                whileHover={{ y: -4, transition: { duration: 0.2 } }}
-              >
-                <SpotlightCard 
-                  className="h-full p-6"
-                  spotlightColor="hsl(var(--primary) / 0.3)"
-                >
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                    {feature.icon}
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2 text-card-foreground">{feature.title}</h3>
-                  <p className="text-muted-foreground mb-4">
-                    {feature.description}
-                  </p>
-                  <div className="mt-auto">
-                    {feature.content}
-                  </div>
-                </SpotlightCard>
-              </motion.div>
+                icon={feature.icon}
+                title={feature.title}
+                description={feature.description}
+                content={feature.content}
+                index={index}
+              />
             ))}
           </motion.div>
 
           {/* Status Section */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.0, duration: 0.6 }}
-          >
-            <SpotlightCard 
-              className="p-6 text-center"
-              spotlightColor={hasApiKey ? "hsl(var(--primary) / 0.25)" : "hsl(25 95% 53% / 0.25)"}
-            >
-              <h3 className="text-lg font-semibold mb-2 text-card-foreground">Quick Setup Status</h3>
-              <div className="flex items-center justify-center gap-4 text-sm">
-                <div className={`flex items-center gap-2 ${hasApiKey ? 'text-green-600' : 'text-orange-600'}`}>
-                  <div className={`w-2 h-2 rounded-full ${hasApiKey ? 'bg-green-500' : 'bg-orange-500'}`}></div>
-                  API Key: {hasApiKey ? 'Configured' : 'Needs Setup'}
-                </div>
-                <div className="text-muted-foreground">
-                  •
-                </div>
-                <div className="text-muted-foreground">
-                  Themes: Ready
-                </div>
-                <div className="text-muted-foreground">
-                  •
-                </div>
-                <div className="text-muted-foreground">
-                  Fonts: Ready
-                </div>
-              </div>
-              
-              {!hasApiKey && (
-                <p className="text-muted-foreground mt-3 text-sm">
-                  Complete the setup process to configure your API key and customize your chat experience
-                </p>
-              )}
-            </SpotlightCard>
-          </motion.div>
+          <StatusCard hasApiKey={hasApiKey} />
         </div>
       </main>
 
