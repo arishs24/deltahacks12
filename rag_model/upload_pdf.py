@@ -37,7 +37,8 @@ from rag_model.utils.pdf_utils import extract_text_from_pdf
 # Optional imports for vector namespace
 try:
     from moorcheh_sdk import MoorchehClient as MoorchehSDK, MoorchehError
-    import google.generativeai as genai
+    from google import genai
+    from google.genai import types
 
     VECTOR_AVAILABLE = True
 except ImportError:
@@ -57,12 +58,16 @@ def chunk_text(text: str, chunk_size: int = 1000, overlap: int = 200) -> list[st
     return chunks
 
 
-def embed_text_with_gemini(text: str, model_name: str = "models/embedding-001", max_retries: int = 3, base_delay: float = 0.5) -> list[float]:
+def embed_text_with_gemini(client, text: str, model_name: str = "text-embedding-004", max_retries: int = 3, base_delay: float = 0.5) -> list[float]:
     """Generate embedding for text using Google Gemini with retry logic."""
     for attempt in range(max_retries):
         try:
-            result = genai.embed_content(model=model_name, content=text, task_type="retrieval_document")
-            return result["embedding"]
+            result = client.models.embed_content(
+                model=model_name,
+                contents=text,
+                config=types.EmbedContentConfig(task_type="RETRIEVAL_DOCUMENT")
+            )
+            return result.embeddings[0].values
         except Exception as e:
             error_str = str(e).lower()
             is_quota_error = "quota" in error_str or "rate limit" in error_str or "resource_exhausted" in error_str or "429" in error_str or "quota_metric" in error_str
@@ -147,9 +152,9 @@ def upload_to_vector_namespace(pdf_path: str, namespace: str):
     chunks = chunk_text(text, chunk_size=1000, overlap=200)
     print(f"[OK] Created {len(chunks)} chunks")
 
-    # 3. Initialize Gemini
+    # 3. Initialize Gemini Client
     print(f"\n[3/5] Initializing Google Gemini...")
-    genai.configure(api_key=gemini_api_key)
+    client = genai.Client(api_key=gemini_api_key)
     print("[OK] Gemini configured")
 
     # 4. Generate embeddings
@@ -159,7 +164,7 @@ def upload_to_vector_namespace(pdf_path: str, namespace: str):
 
     for i, chunk in enumerate(chunks, 1):
         print(f"  Processing chunk {i}/{len(chunks)}...", end="\r")
-        embedding = embed_text_with_gemini(chunk)
+        embedding = embed_text_with_gemini(client, chunk)
         if embedding:
             vectors.append(
                 {"id": f"{Path(pdf_path).stem}_chunk_{i}", "vector": embedding, "metadata": {"source": Path(pdf_path).name, "chunk_index": i, "text": chunk[:200]}}  # Store first 200 chars as preview
