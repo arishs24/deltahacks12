@@ -27,10 +27,8 @@ export default function RootLayout({
         <ErrorBoundary>
           <ViewProvider>
             <CustomizationInitializer />
-            <div className="min-h-screen bg-background text-foreground transition-colors duration-200">
-              <main className="relative">
-                {children}
-              </main>
+            <div className="bg-background text-foreground transition-colors duration-200">
+              {children}
             </div>
           </ViewProvider>
         </ErrorBoundary>

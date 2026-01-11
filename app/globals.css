@@ -142,6 +142,8 @@
     -moz-osx-font-smoothing: grayscale;
     /* Prevent horizontal scroll on mobile */
     overflow-x: hidden;
+    margin: 0;
+    padding: 0;
   }
 
   /* Clinical color utilities */
