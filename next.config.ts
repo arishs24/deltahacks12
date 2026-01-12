@@ -15,6 +15,7 @@ const nextConfig: NextConfig = {
     trailingSlash: true, // Required for GitHub Pages
   }),
   
+  
   // Optimize bundle size for Vercel
   webpack: (config, { isServer }) => {
     if (isServer) {
@@ -79,6 +80,14 @@ const nextConfig: NextConfig = {
   // Experimental optimizations
   experimental: {
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
+    // Exclude cache and git from serverless function output
+    outputFileTracingExcludes: {
+      '*': [
+        '.next/cache/**',
+        '.git/**',
+        'node_modules/.cache/**',
+      ],
+    },
   },
 };
 

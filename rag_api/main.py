@@ -6,10 +6,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from .config import get_config
-from .models import (
-    ExerciseRecommendationRequest, 
-    ExerciseRecommendationResponse
-)
+from .models import ExerciseRecommendationRequest, ExerciseRecommendationResponse
 from .service import ExerciseRecommendationService
 
 # Initialize FastAPI app
@@ -77,7 +74,7 @@ async def get_exercise_recommendation(request: ExerciseRecommendationRequest) ->
         # Validate request (Pydantic handles most validation, but we can add custom checks)
         if not request.regions:
             raise HTTPException(status_code=400, detail="At least one region measurement is required")
-        
+
         if not request.patient_info.affected_structures:
             raise HTTPException(status_code=400, detail="At least one affected structure is required")
 

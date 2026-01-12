@@ -1,6 +1,10 @@
 # Exclude unnecessary files from Vercel deployment
 node_modules/.cache
 .next/cache
+.next/cache/**
+.git
+.git/**
+.gitignore
 .venv
 venv
 env

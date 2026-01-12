@@ -6,11 +6,7 @@ from typing import List, Dict, Optional, Literal
 from pydantic import BaseModel, Field, validator
 
 
-VALID_STRUCTURES = [
-    "ACL", "PCL", "MCL", "LCL", "femur", "tibia", "patella",
-    "articular_cartilage", "medial_menisci", "lateral_menisci",
-    "quadriceps", "hamstrings", "gastrocnemius"
-]
+VALID_STRUCTURES = ["ACL", "PCL", "MCL", "LCL", "femur", "tibia", "patella", "articular_cartilage", "medial_menisci", "lateral_menisci", "quadriceps", "hamstrings", "gastrocnemius"]
 
 
 class PatientInfo(BaseModel):
@@ -83,10 +79,7 @@ class ExerciseRecommendationResponse(BaseModel):
     class Config:
         json_schema_extra = {
             "example": {
-                "ideal_stresses": [
-                    {"region": "medial compartment", "ideal_stress": 150.5},
-                    {"region": "lateral compartment", "ideal_stress": 120.3}
-                ],
+                "ideal_stresses": [{"region": "medial compartment", "ideal_stress": 150.5}, {"region": "lateral compartment", "ideal_stress": 120.3}],
                 "exercises": [
                     {
                         "name": "Quadriceps Isometric Contraction",
@@ -95,8 +88,8 @@ class ExerciseRecommendationResponse(BaseModel):
                         "duration": "10 seconds per contraction",
                         "sets_reps": "3 sets x 10 reps",
                         "load_level": "low",
-                        "clinical_justification": "Low-load isometric exercise to maintain muscle activation without excessive stress on healing ACL graft. Evidence supports early isometric exercises in ACL rehabilitation protocols."
+                        "clinical_justification": "Low-load isometric exercise to maintain muscle activation without excessive stress on healing ACL graft. Evidence supports early isometric exercises in ACL rehabilitation protocols.",
                     }
-                ]
+                ],
             }
         }

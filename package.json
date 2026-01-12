@@ -6,6 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "build:static": "GITHUB_ACTIONS=true next build",
+    "build:vercel": "rm -rf .next/cache && next build",
     "start": "next start",
     "lint": "next lint",
     "export": "next build && next export"
