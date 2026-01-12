@@ -7,6 +7,10 @@ import { NextRequest, NextResponse } from 'next/server';
  * running on http://localhost:8000 (or the port specified in process.env.RAG_API_PORT).
  */
 
+// Use Edge Runtime for smaller bundle size (no Node.js dependencies)
+export const runtime = 'edge';
+export const maxDuration = 30;
+
 const FASTAPI_URL = process.env.RAG_API_URL || 'http://localhost:8000';
 const FASTAPI_ENDPOINT = `${FASTAPI_URL}/exercise-recommendation`;
 

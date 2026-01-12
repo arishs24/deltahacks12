@@ -42,10 +42,10 @@ export default function AddPatientPage() {
   const [showErrorToast, setShowErrorToast] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const handleInputChange = (field: keyof PatientFormData, value: string) => {
+  const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({
       ...prev,
-      [field]: value,
+      [field as keyof PatientFormData]: value,
     }));
   };
 
@@ -106,7 +106,6 @@ export default function AddPatientPage() {
       }
 
       // Success - reset form and show success toast
-      const patientName = formData.name;
       setFormData({
         name: '',
         age: '',

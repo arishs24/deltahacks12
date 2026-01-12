@@ -10,7 +10,6 @@
  */
 
 import apiConfigJson from '../config/api-config.json';
-import { logger } from './logger';
 import { VALIDATION_CONSTANTS } from './constants';
 
 export interface ApiRequestBody {
@@ -52,7 +51,9 @@ export function buildApiRequestBody(
   const template = getApiRequestTemplate();
   
   // Merge template with overrides, excluding query and chatHistory which are handled separately
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { query: _unusedQuery, chatHistory: _unusedChatHistory, ...templateWithoutDynamic } = template;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { query: _unusedOverrideQuery, chatHistory: _unusedOverrideChatHistory, ...overridesWithoutDynamic } = overrides;
   
   // Build the base request body

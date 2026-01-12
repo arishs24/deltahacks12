@@ -180,10 +180,10 @@ export default function SetupFlow() {
         throw new Error('Failed to update appearance configuration');
       }
 
-      const result = await response.json();
+      await response.json();
       // Appearance config updated successfully
       return JSON.stringify(config, null, 2);
-    } catch (error) {
+    } catch {
       // Error saving appearance config - fallback to manual update
       throw new Error('Failed to save appearance configuration. Please manually update config/appearance.json');
     }
@@ -255,7 +255,7 @@ export default function SetupFlow() {
         setTimeout(() => {
           setCurrentStep(5);
         }, 2000);
-      } catch (error) {
+      } catch {
         // Failed to save appearance configuration
         // Still show celebration but user will need to manually update appearance.json
         setShowCelebration(true);

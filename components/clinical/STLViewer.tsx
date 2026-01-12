@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, Suspense, useCallback } from 'react';
 import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber';
-import { OrbitControls, Text } from '@react-three/drei';
+import { OrbitControls } from '@react-three/drei';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 import * as THREE from 'three';
 import { Loader2, Upload, X } from 'lucide-react';
@@ -10,7 +10,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 // Knee part regions (approximate positions - adjust based on your STL)
-const KNEE_PARTS = [
+type KneePart = {
+  name: string;
+  position: [number, number, number];
+  color: string;
+};
+
+const KNEE_PARTS: KneePart[] = [
   { name: 'Femur', position: [0, 2, 0], color: '#8B4513' },
   { name: 'Tibia', position: [0, -2, 0], color: '#654321' },
   { name: 'Femoral Cartilage', position: [0, 1, 0.5], color: '#90EE90' },
@@ -56,19 +62,19 @@ function STLModel({ stlPath, onHover, hoveredPart }: {
         // Determine which part based on intersection point
         const point = intersects[0].point;
         // Find closest part based on position
-        let closestPart: typeof KNEE_PARTS[0] | null = null;
+        let closestPart: KneePart | null = null;
         let minDistance = Infinity;
 
-        KNEE_PARTS.forEach((part) => {
+        for (const part of KNEE_PARTS) {
           const partPos = new THREE.Vector3(...part.position);
           const distance = point.distanceTo(partPos);
           if (distance < minDistance && distance < 1.5) {
             minDistance = distance;
             closestPart = part;
           }
-        });
+        }
 
-        if (closestPart) {
+        if (closestPart !== null) {
           onHover(closestPart.name);
         } else {
           onHover(null);

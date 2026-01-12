@@ -34,7 +34,7 @@ export default function MessageList({ messages, isLoading, onSendExample }: Mess
       await navigator.clipboard.writeText(text);
       setCopiedMessageId(messageId);
       setTimeout(() => setCopiedMessageId(null), 2000);
-    } catch (err) {
+    } catch {
       // Failed to copy text - error handled silently
     }
   };

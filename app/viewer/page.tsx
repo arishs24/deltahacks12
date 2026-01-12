@@ -5,8 +5,18 @@ import { GaitScenario, TissueType, Exercise } from '@/types/clinical';
 import { mockExercises, generateBiomechanicsData } from '@/data/mockData';
 import ClinicalLayout from '@/components/clinical/ClinicalLayout';
 import { useView } from '@/contexts/ViewContext';
-import STLViewer from '@/components/clinical/STLViewer';
+import dynamic from 'next/dynamic';
 import { usePatients } from '@/hooks/usePatients';
+
+// Dynamically import STLViewer to reduce initial bundle size (Three.js is large)
+const STLViewer = dynamic(() => import('@/components/clinical/STLViewer'), {
+  ssr: false, // Three.js requires browser APIs
+  loading: () => (
+    <div className="flex items-center justify-center h-full">
+      <div className="text-clinical-grey-600">Loading 3D viewer...</div>
+    </div>
+  ),
+});
 import { Card, CardContent } from '@/components/ui/card';
 import { LoadingState } from '@/components/dashboard/LoadingState';
 import { ErrorState } from '@/components/dashboard/ErrorState';
@@ -15,7 +25,6 @@ import { PatientSelectionCard } from '@/components/viewer/PatientSelectionCard';
 import { SelectedPatientInfo } from '@/components/viewer/SelectedPatientInfo';
 import { GaitControlsPanel } from '@/components/viewer/GaitControlsPanel';
 import { TissueVisibilityPanel } from '@/components/viewer/TissueVisibilityPanel';
-import { Model3DViewer } from '@/components/viewer/Model3DViewer';
 import { BiomechanicsStatsCards } from '@/components/viewer/BiomechanicsStatsCards';
 import { BiomechanicsChartsSection } from '@/components/viewer/BiomechanicsChartsSection';
 import { BiomechanicsInterpretationCard } from '@/components/viewer/BiomechanicsInterpretationCard';
@@ -89,7 +98,7 @@ export default function ViewerPage() {
   // Biomechanics data for selected patient
   // TODO: Replace with MongoDB query when backend is integrated
   // Future: const biomechanicsData = await fetchPatientBiomechanicsData(selectedPatientId)
-  const biomechanicsData = useMemo(() => generateBiomechanicsData(), [selectedPatientId]);
+  const biomechanicsData = useMemo(() => generateBiomechanicsData(), []);
 
   // Process data for charts
   const ligamentStressData = biomechanicsData.map((d, i) => ({
